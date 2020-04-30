@@ -1,9 +1,7 @@
-'From Cuis 5.0 [latest update: #3817] on 1 July 2019 at 5:55:41 pm'!
+'From Cuis 5.0 [latest update: #4127] on 30 April 2020 at 9:52:35 am'!
 'Description '!
-!provides: 'OpenCL' 1 41!
-!requires: 'ImageProcessing' 1 nil nil!
+!provides: 'OpenCL' 1 47!
 !requires: 'FFI' 1 nil nil!
-!requires: 'LinearAlgebra' 1 nil nil!
 SystemOrganization addCategory: #'OpenCL-Constants'!
 SystemOrganization addCategory: #OpenCL!
 SystemOrganization addCategory: #'OpenCL-Examples'!
@@ -244,7 +242,7 @@ OpenCLContextObject class
 
 !classDefinition: #OpenCLBuffer category: #OpenCL!
 OpenCLContextObject subclass: #OpenCLBuffer
-	instanceVariableNames: 'byteSize'
+	instanceVariableNames: 'byteSize smalltalkObject'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'OpenCL'!
@@ -651,10 +649,10 @@ Encapsulates a CLContext, and provides convenience methods for accessing its pro
 !OpenCLContextObject commentStamp: 'jcg 2/12/2010 09:20' prior: 0!
 Represents an object that is associated with a particular OpenCL context.  When destroyed, the reference to the context is released.!
 
-!OpenCLBuffer commentStamp: 'jcg 1/14/2010 01:57' prior: 0!
+!OpenCLBuffer commentStamp: '<historical>' prior: 0!
 Encapsulates a CLMem that has been allocated as a buffer (as opposed to an image), and provides convenience methods for accessing its properties.  See the "buffer creation" methods in OpenCLContext.  
 
-NOTE: we don't expose all of OpenCL's functionality for instantiating new buffers, in particular buffers allocated in host memory.!
+NOTE: we don't expose all of OpenCL's functionality for instantiating new buffers, in particular buffers allocated in host memory. But we do allow wrapping a Smalltalk object. For this, we pin the memory and unpin it on buffer destruction.!
 
 !OpenCLCommandQueue commentStamp: 'jcg 1/14/2010 01:57' prior: 0!
 Encapsulates a CLCommandQueue and provides convenience methods for accessing its properties.!
@@ -1903,18 +1901,6 @@ useRainbowToneMap
 	"Generate a tone-map that cycles through the color-wheel.."
 	self initializeJuliaIfNecessary.
 	julia useRainbowToneMap! !
-
-!OpenCLJuliaSetMorph class methodsFor: '*OpenCL-eToys' stamp: 'jcg 5/1/2010 01:45'!
-additionsToViewerCategories
-	"Answer a list of (<categoryName> <list of category specs>) pairs that characterize the phrases this kind of morph wishes to add to various Viewer categories."
-
-	^ #((fractal (
-(slot real 'The "real" parameter of the Julia set' Number readWrite Player getJuliaReal Player setJuliaReal:)
-(slot imaginary 'The "imaginary" parameter of the Julia set' Number readWrite Player getJuliaImaginary Player setJuliaImaginary:)
-)))
-
-
-! !
 
 !OpenCLTest methodsFor: 'running' stamp: 'jmv 1/31/2018 15:35:51'!
 setUp
@@ -3230,6 +3216,44 @@ shortReportAndQuit
 
 	Smalltalk snapshot: false andQuit: true embedded: false clearAllClassState: false! !
 
+!OpenCLPlatform class methodsFor: 'devices' stamp: 'jmv 7/17/2019 14:33:04'!
+allCPUs
+	"Answer some device. If possible, answer some GPU. If none is available, answer some CPU.
+	If none is available, answer nil
+	OpenCLPlatform allCPUs
+	"
+	| platforms |
+	platforms := OpenCLPlatform allPlatforms.
+	^ Array streamContents: [ :strm |
+		platforms do: [ :platform | platform allCPUs do: [ :device | strm nextPut: device ]]]! !
+
+!OpenCLPlatform class methodsFor: 'devices' stamp: 'jmv 7/17/2019 14:11:23'!
+allDevices
+	"Answer some device. If possible, answer some GPU. If none is available, answer some CPU.
+	If none is available, answer nil
+	OpenCLPlatform someDevice
+	"
+	| platforms |
+	platforms := OpenCLPlatform allPlatforms.
+	^ Array streamContents: [ :strm |
+		platforms do: [ :platform | platform allDevices do: [ :device | strm nextPut: device ]]]! !
+
+!OpenCLPlatform class methodsFor: 'devices' stamp: 'jmv 7/17/2019 14:21:38'!
+allGPUs
+	"Answer some device. If possible, answer some GPU. If none is available, answer some CPU.
+	If none is available, answer nil
+	OpenCLPlatform someDevice
+	"
+	| platforms |
+	platforms := OpenCLPlatform allPlatforms.
+	^ Array streamContents: [ :strm |
+		platforms do: [ :platform | platform allGPUs do: [ :device | strm nextPut: device ]]]! !
+
+!OpenCLPlatform class methodsFor: 'devices' stamp: 'jmv 4/2/2020 17:39:40'!
+cpu
+	self allPlatforms do: [ :platform | platform allCPUs do: [ :cpu | ^ cpu ]].
+	^ nil! !
+
 !OpenCLPlatform class methodsFor: 'devices' stamp: 'pb 6/18/2019 01:55:43'!
 preferredDevice
 	^ PreferredDevice ifNil: [self someDevice]! !
@@ -3331,15 +3355,33 @@ readOnlyBufferOfSize: byteSize
 	"Create an OpenCLBuffer that is only readable."
 	^self newBuffer: CL_MEM_READ_ONLY ofSize: byteSize! !
 
+!OpenCLContext methodsFor: 'buffer creation' stamp: 'jmv 4/24/2020 17:50:22'!
+readOnlyBufferOn: bytes
+	"Create an OpenCLBuffer that is only readable. It will work directly on the contents of the 'bytes' argument.
+	The 'bytes' argument will be pinned as long as this buffer exists."
+	^self newBuffer: CL_MEM_READ_ONLY on: bytes! !
+
 !OpenCLContext methodsFor: 'buffer creation' stamp: 'jmv 9/9/2015 11:48'!
 readWriteBufferOfSize: byteSize
 	"Create an OpenCLBuffer that is both readable and writeable."
 	^self newBuffer: CL_MEM_READ_WRITE ofSize: byteSize! !
 
+!OpenCLContext methodsFor: 'buffer creation' stamp: 'jmv 4/24/2020 19:00:00'!
+readWriteBufferOn: bytes
+	"Create an OpenCLBuffer that is both readable and writable. It will work directly on the contents of the 'bytes' argument.
+	The 'bytes' argument will be pinned as long as this buffer exists."
+	^self newBuffer: CL_MEM_READ_WRITE on: bytes! !
+
 !OpenCLContext methodsFor: 'buffer creation' stamp: 'jmv 9/9/2015 11:45'!
 writeOnlyBufferOfSize: byteSize
 	"Create an OpenCLBuffer that is only writeable."
 	^self newBuffer: CL_MEM_WRITE_ONLY ofSize: byteSize! !
+
+!OpenCLContext methodsFor: 'buffer creation' stamp: 'jmv 4/24/2020 19:00:07'!
+writeOnlyBufferOn: bytes
+	"Create an OpenCLBuffer that is only readable. It will work directly on the contents of the 'bytes' argument.
+	The 'bytes' argument will be pinned as long as this buffer exists."
+	^self newBuffer: CL_MEM_WRITE_ONLY on: bytes! !
 
 !OpenCLContext methodsFor: 'deprecated in OpenCL 2.0' stamp: 'jmv 10/29/2015 15:40'!
 commandQueueOn: anOpenCLDevice
@@ -3404,20 +3446,20 @@ externalStringFor: aString
 	addr unsignedByteAt: aString size + 1 put: 0.
 	^addr! !
 
-!OpenCLContext methodsFor: 'private' stamp: 'jmv 9/9/2015 12:27'!
+!OpenCLContext methodsFor: 'private' stamp: 'jmv 4/24/2020 17:25:30'!
 newBuffer: flags copyFrom: bytes
 	| mem result |
 	result := IntegerArray new: 1.
 	mem := OpenCLPrimitiveInterface current
 				clCreateBuffer__cl_context: id
 							cl_mem_flags: (flags+CL_MEM_COPY_HOST_PTR)
-							size_t: bytes size
+							size_t: bytes byteSize
 							void__ptr: bytes
 							cl_int__ptr: result.
 	result := result first.
 	OpenCLError check: result text: 'failed to create buffer'.
 	mem := OpenCLBuffer wrappingHandle: mem.
-	mem context: self byteSize: bytes size.
+	mem context: self byteSize: bytes byteSize.
 	^mem
 	
 	! !
@@ -3439,6 +3481,28 @@ newBuffer: flags ofSize: byteSize
 	^mem
 	
 	! !
+
+!OpenCLContext methodsFor: 'private' stamp: 'jmv 4/24/2020 17:42:02'!
+newBuffer: flags on: bytes
+	"Using a Smalltalk object from OpenCL requires pinning it.
+	You might unpit it when done."
+	| mem result mustPinUnpin |
+	mustPinUnpin _ bytes isPinned not.
+	mustPinUnpin ifTrue: [ bytes pin ].
+	result := IntegerArray new: 1.
+	mem := OpenCLPrimitiveInterface current
+				clCreateBuffer__cl_context: id
+							cl_mem_flags: (flags+CL_MEM_USE_HOST_PTR)
+							size_t: bytes byteSize
+							void__ptr: bytes
+							cl_int__ptr: result.
+	result := result first.
+	OpenCLError check: result text: 'failed to create buffer'.
+	mem := OpenCLBuffer wrappingHandle: mem.
+	mem context: self byteSize: bytes byteSize.
+	mustPinUnpin ifTrue: [
+		mem smalltalkObject: bytes].
+	^mem! !
 
 !OpenCLContext methodsFor: 'private' stamp: 'jcg 1/14/2010 00:17'!
 privateDestroy
@@ -3649,12 +3713,27 @@ byteSize
 	"Answer the size of memory allocated for this buffer, in bytes."
 	^byteSize! !
 
+!OpenCLBuffer methodsFor: 'accessing' stamp: 'jmv 4/24/2020 17:41:45'!
+smalltalkObject: bytes
+	smalltalkObject _ bytes! !
+
 !OpenCLBuffer methodsFor: 'initialize' stamp: 'jcg 1/14/2010 01:21'!
 context: anOpenCLContext byteSize: sz
 	"Set the context that this buffer was created for, and it's size in bytes."
 	context := anOpenCLContext.
 	byteSize := sz.
 ! !
+
+!OpenCLBuffer methodsFor: 'private' stamp: 'jmv 4/24/2020 17:45:12'!
+privateDestroy
+	"If we were created on a Smalltalk object, it was pinned if needed.
+	If so, unpin it, and don't reference it anymore so it can be collected.
+	
+	Note: Creating two different OpenCLBuffers on the same byte object is not supported wither by OpenCL or by this code"
+	super privateDestroy.
+	smalltalkObject notNil ifTrue: [
+		smalltalkObject unpin.
+		smalltalkObject  _ nil ].! !
 
 !OpenCLCommandQueue methodsFor: 'deprecated in OpenCL 1.2' stamp: 'jmv 10/29/2015 16:39'!
 barrier
@@ -4101,15 +4180,6 @@ wrapEventHandle: aCLEvent
 	"Answer an event corresponding to an enqueued command."
 	^(OpenCLEvent wrappingHandle: aCLEvent) commandQueue: self! !
 
-!OpenCLImage2D methodsFor: 'initialize' stamp: 'jcg 1/29/2010 02:08'!
-context: anOpenCLContext format: fmt "a CLImageFormatStruct" width: w height: h rowPitch: rp 
-	"Set the context that this buffer was created for, as well as its dimensions and format." 
-	context := anOpenCLContext.
-	format := fmt.
-	width := w.
-	height := h.
-	rowPitch := rp.! !
-
 !OpenCLImage2D methodsFor: 'accessing' stamp: 'jcg 4/28/2010 00:07'!
 extent
 	^width@height! !
@@ -4126,16 +4196,14 @@ rowPitch
 width
 	^width! !
 
-!OpenCLImage3D methodsFor: 'initialize' stamp: 'jmv 5/4/2016 12:41'!
-context: anOpenCLContext format: fmt "a CLImageFormatStruct" width: w height: h depth: d rowPitch: rp slicePitch: sp
+!OpenCLImage2D methodsFor: 'initialize' stamp: 'jcg 1/29/2010 02:08'!
+context: anOpenCLContext format: fmt "a CLImageFormatStruct" width: w height: h rowPitch: rp 
 	"Set the context that this buffer was created for, as well as its dimensions and format." 
 	context := anOpenCLContext.
 	format := fmt.
 	width := w.
 	height := h.
-	depth := d.
-	rowPitch := rp.
-	slicePitch := sp! !
+	rowPitch := rp.! !
 
 !OpenCLImage3D methodsFor: 'accessing' stamp: 'jcg 1/29/2010 02:18'!
 depth
@@ -4156,6 +4224,17 @@ slicePitch
 !OpenCLImage3D methodsFor: 'accessing' stamp: 'jcg 1/29/2010 02:18'!
 width
 	^width! !
+
+!OpenCLImage3D methodsFor: 'initialize' stamp: 'jmv 5/4/2016 12:41'!
+context: anOpenCLContext format: fmt "a CLImageFormatStruct" width: w height: h depth: d rowPitch: rp slicePitch: sp
+	"Set the context that this buffer was created for, as well as its dimensions and format." 
+	context := anOpenCLContext.
+	format := fmt.
+	width := w.
+	height := h.
+	depth := d.
+	rowPitch := rp.
+	slicePitch := sp! !
 
 !OpenCLProgram methodsFor: 'building' stamp: 'jcg 2/15/2010 12:53'!
 build
@@ -4366,9 +4445,9 @@ generateWaitList: eventOrListOrNil
 	events withIndexDo: [:evt :i | bytes replaceFrom: (i-1*handleSize+1) to: (i*handleSize) with: evt id getHandle].
 	^{events size. CLEvent new setHandle: bytes}! !
 
-!OpenCLEvent class methodsFor: 'waiting' stamp: 'jmv 9/9/2015 12:54'!
+!OpenCLEvent class methodsFor: 'waiting' stamp: 'jmv 4/1/2020 22:21:59'!
 waitForEvents: events "single OpenCLEvent, or list of them"
-	"Blocking wait until all of the listed events are completed.  Eventually, this will be replaced with a mechanism that blocks only the current Squeak Process rather than the whole VM (see class comment of OpenCLPlugin)."
+	"Blocking wait until all of the listed events are completed.  Eventually, this will be replaced with a mechanism that blocks only the current Squeak Process rather than the whole VM (see class comment of OpenCLPlugin). Note that this would require us to pin any objects passed as arguments, or disable GC (someway) until OpenCL is done..."
 	| waitList result |
 	waitList := OpenCLEvent generateWaitList: events.
 	result := OpenCLPrimitiveInterface current 
@@ -4513,6 +4592,16 @@ argAt: index putPointer: anOpenCLContextObject
 							const__void__ptr: openCLArg.
 	OpenCLError check: result text: 'failed to set kernel argument ', index printString! !
 
+!OpenCLKernel methodsFor: 'arguments' stamp: 'jmv 4/29/2020 09:32:59'!
+argAt: index putUnsignedInt: aNumber
+	"To be used with arguments declared in OpenCL as int.
+	They are 32 bit unsigned integer.
+
+	Argument to this method is a Smalltalk object. Argument passed to #argAt:putBytesOf: is also a Smalltalk object.
+	Given that bytes are copied right away, there's no problem with Garbage Collection moving or reclaiming them."
+
+	^ self argAt: index putBytesOf: (WordArray with: aNumber)! !
+
 !OpenCLKernel methodsFor: 'accessing' stamp: 'jcg 2/15/2010 13:35'!
 context
 	^program context! !
@@ -4525,6 +4614,44 @@ program
 program: anOpenCLProgram
 	"Set the program that this kernel was created for."
 	program := anOpenCLProgram.! !
+
+!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 8/20/2015 13:09'!
+initialize
+	"OpenCLPrimitiveInterface initialize"
+	Smalltalk addToStartUpList: self.
+	Smalltalk addToShutDownList: self! !
+
+!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 8/20/2015 13:03'!
+libraryForCurrentPlatform
+	"Answer the name of the OpenCL library on the current platform."
+	self error: 'Unknown platform'.
+	^nil! !
+
+!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 5/17/2017 12:32:26'!
+subclassForCurrentPlatform
+	"
+	OpenCLPrimitiveInterface subclassForCurrentPlatform
+	"
+	"Explicit references to subclasses, so they are not accidentally erased, for example, by doing #reduceCuis. Add any new subclass to this list!!"
+	^Smalltalk wordSize = 8
+		ifTrue: [
+			Smalltalk platformName caseOf: {
+				[ 'unix' ] -> [ OpenCLUnixInterface ].
+				[ 'Win32' ] -> [ OpenCLWindowsInterface ].
+				[ 'Mac OS' ] -> [ OpenCLMacOSInterface ]
+			}
+			otherwise: [ self error: 'OpenCL not yet supported on your platform' ]]
+		ifFalse: [
+			Smalltalk platformName caseOf: {
+				[ 'unix' ] -> [ OpenCLUnix32BitsInterface ].
+				[ 'Win32' ] -> [ OpenCLWindows32BitsInterface ].
+				[ 'Mac OS' ] -> [ OpenCLMacOS32BitsInterface ]
+			}
+			otherwise: [ self error: 'OpenCL not yet supported on your platform' ]]! !
+
+!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 8/20/2015 13:13'!
+supportedPlatform
+	^nil! !
 
 !OpenCLPrimitiveInterface class methodsFor: 'code generation' stamp: 'jmv 3/6/2018 17:41:34'!
 adaptType: cTypeString
@@ -6856,44 +6983,6 @@ finalizationRegistry
 !OpenCLPrimitiveInterface class methodsFor: 'finalization' stamp: 'jmv 8/20/2015 13:05'!
 finalizeValues
 	self finalizationRegistry finalizeValues! !
-
-!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 8/20/2015 13:09'!
-initialize
-	"OpenCLPrimitiveInterface initialize"
-	Smalltalk addToStartUpList: self.
-	Smalltalk addToShutDownList: self! !
-
-!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 8/20/2015 13:03'!
-libraryForCurrentPlatform
-	"Answer the name of the OpenCL library on the current platform."
-	self error: 'Unknown platform'.
-	^nil! !
-
-!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 5/17/2017 12:32:26'!
-subclassForCurrentPlatform
-	"
-	OpenCLPrimitiveInterface subclassForCurrentPlatform
-	"
-	"Explicit references to subclasses, so they are not accidentally erased, for example, by doing #reduceCuis. Add any new subclass to this list!!"
-	^Smalltalk wordSize = 8
-		ifTrue: [
-			Smalltalk platformName caseOf: {
-				[ 'unix' ] -> [ OpenCLUnixInterface ].
-				[ 'Win32' ] -> [ OpenCLWindowsInterface ].
-				[ 'Mac OS' ] -> [ OpenCLMacOSInterface ]
-			}
-			otherwise: [ self error: 'OpenCL not yet supported on your platform' ]]
-		ifFalse: [
-			Smalltalk platformName caseOf: {
-				[ 'unix' ] -> [ OpenCLUnix32BitsInterface ].
-				[ 'Win32' ] -> [ OpenCLWindows32BitsInterface ].
-				[ 'Mac OS' ] -> [ OpenCLMacOS32BitsInterface ]
-			}
-			otherwise: [ self error: 'OpenCL not yet supported on your platform' ]]! !
-
-!OpenCLPrimitiveInterface class methodsFor: 'class initialization' stamp: 'jmv 8/20/2015 13:13'!
-supportedPlatform
-	^nil! !
 
 !OpenCL64BitsPrimitiveInterface class methodsFor: 'code generation' stamp: 'jmv 5/17/2017 12:27:52'!
 generateFFICall: returnType name: funcName args: args cat: category
@@ -26168,15 +26257,6 @@ asOpenCLArg
 asOpenCLBoolean
 	"Assume that we're already CLTrue or CLFalse (if not, there will be an error anyway)."
 	^self! !
-
-!FloatMatrix methodsFor: '*OpenCL' stamp: 'jmv 3/30/2016 11:12'!
-asOpenCLArg
-	"Pass pointer to our FloatArray."
-	^elements! !
-
-!ShortWordMatrix methodsFor: '*OpenCL' stamp: 'lpc 8/5/2016 15:42:11'!
-asOpenCLArg 
-	^ elements! !
 
 !Form methodsFor: '*OpenCL' stamp: 'jcg 2/18/2010 03:05'!
 asOpenCLArg

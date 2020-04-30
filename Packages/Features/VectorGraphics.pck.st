@@ -1,8 +1,7 @@
-'From Cuis 5.0 [latest update: #3826] on 14 July 2019 at 3:26:05 pm'!
+'From Cuis 5.0 [latest update: #4127] on 30 April 2020 at 9:52:17 am'!
 'Description '!
-!provides: 'VectorGraphics' 1 81!
-!requires: 'Color-Extras' 1 nil nil!
-!requires: 'Collections-CompactArrays' 1 2 nil!
+!provides: 'VectorGraphics' 1 131!
+!requires: 'Collections-CompactArrays' 1 10 nil!
 SystemOrganization addCategory: #'VectorGraphics-Kernel'!
 SystemOrganization addCategory: #'VectorGraphics-TrueType'!
 SystemOrganization addCategory: #'VectorGraphics-Experiments'!
@@ -21,7 +20,7 @@ PathCommandError class
 
 !classDefinition: #TrueTypeFont category: #'VectorGraphics-TrueType'!
 AbstractFont subclass: #TrueTypeFont
-	instanceVariableNames: 'ttFontDescription pointSize emphasis replacedGlyphs glyphForms family baseFont derivativeFonts'
+	instanceVariableNames: 'ttFontDescription pointSize emphasis glyphForms glyphFormsByUtf8 family baseFont derivativeFonts'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-TrueType'!
@@ -71,7 +70,7 @@ M3Exp03Morph class
 
 !classDefinition: #VectorCanvas category: #'VectorGraphics-Kernel'!
 MorphicCanvas subclass: #VectorCanvas
-	instanceVariableNames: 'engine'
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-Kernel'!
@@ -79,14 +78,34 @@ MorphicCanvas subclass: #VectorCanvas
 VectorCanvas class
 	instanceVariableNames: ''!
 
-!classDefinition: #VectorEngine category: #'VectorGraphics-Kernel'!
-Object subclass: #VectorEngine
-	instanceVariableNames: 'targetForm targetWidth targetHeight antiAliasingWidth subPixelDelta strokeWidth strokeAlpha strokeRed strokeGreen strokeBlue fillAlpha fillRed fillGreen fillBlue doStroke doFill clipLeft clipTop clipRight clipBottom currentMorph currentOwnerIfClips boundsLeft boundsTop boundsRight boundsBottom morphAtPixel morphBoundsLeft morphBoundsRight morphBoundsTop morphBoundsBottom mask edgeCountPerPixel hopsPerPixel auxBitBlt firstX firstY currentX currentY trajectoryPoints fragmentStartIndexes geometryTransformation lastClientX lastClientY lastControlX lastControlY'
+!classDefinition: #VectorEngineAbstract category: #'VectorGraphics-Kernel'!
+Object subclass: #VectorEngineAbstract
+	instanceVariableNames: 'targetForm targetWidth morphIdAtPixel alphaMask edgeCountPerPixel antiAliasingWidth subPixelDelta strokeWidth geometryTransformation strokeColor fillColor currentMorphId clippingMorphId clipLeft clipTop clipRight clipBottom auxAntiAliasingWidthScaledInverse auxStrokeWidthDilatedHalf auxStrokeWidthDilatedHalfSquared auxStrokeWidthErodedHalfSquared morphBoundsLeft morphBoundsRight morphBoundsTop morphBoundsBottom blendBoundsLeft blendBoundsTop blendBoundsRight blendBoundsBottom hopsPerPixel auxBitBlt pathFirstX pathFirstY pathCurrentX pathCurrentY prevYTruncated previousCallX previousCallY previousCallControlX previousCallControlY'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-Kernel'!
-!classDefinition: 'VectorEngine class' category: #'VectorGraphics-Kernel'!
-VectorEngine class
+!classDefinition: 'VectorEngineAbstract class' category: #'VectorGraphics-Kernel'!
+VectorEngineAbstract class
+	instanceVariableNames: ''!
+
+!classDefinition: #VectorEngineBasic category: #'VectorGraphics-Kernel'!
+VectorEngineAbstract subclass: #VectorEngineBasic
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'VectorEngineBasic class' category: #'VectorGraphics-Kernel'!
+VectorEngineBasic class
+	instanceVariableNames: ''!
+
+!classDefinition: #VectorEngineParallelizable category: #'VectorGraphics-Kernel'!
+VectorEngineAbstract subclass: #VectorEngineParallelizable
+	instanceVariableNames: 'pathPrimitiveKernelHeight pathPrimitiveKernelWidth kernelI kernelJ pathPrimitivePixelY pathPrimitivePixelX pathPrimitivePixelIndex pathPrimitiveAlphaWord pathPrimitiveRedAlpha pathPrimitiveGreenAlpha pathPrimitiveBlueAlpha pathPrimitivePreviousRedAlpha pathPreviousGreenAlpha pathPreviousBlueAlpha'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'VectorGraphics-Kernel'!
+!classDefinition: 'VectorEngineParallelizable class' category: #'VectorGraphics-Kernel'!
+VectorEngineParallelizable class
 	instanceVariableNames: ''!
 
 !classDefinition: #FormGlyph category: #'VectorGraphics-TrueType'!
@@ -111,7 +130,7 @@ TTContourConstruction class
 
 !classDefinition: #TTFontDescription category: #'VectorGraphics-TrueType'!
 Object subclass: #TTFontDescription
-	instanceVariableNames: 'glyphTable glyphs kernPairs copyright familyName fullName subfamilyName uniqueName versionName postscriptName trademark bounds unitsPerEm ascent descent lineGap letterMTopSideBearing'
+	instanceVariableNames: 'contourDataForIso8859s15 contourDataIndexesByIso8859s15 contourDataIndexesForSmalltalkGlyphs contourDataForUtf8 contourDataIndexesByUtf8 kernPairs copyright familyName fullName subfamilyName uniqueName versionName postscriptName trademark bounds unitsPerEm ascent descent lineGap letterMTopSideBearing'
 	classVariableNames: 'Descriptions'
 	poolDictionaries: ''
 	category: 'VectorGraphics-TrueType'!
@@ -119,34 +138,14 @@ Object subclass: #TTFontDescription
 TTFontDescription class
 	instanceVariableNames: ''!
 
-!classDefinition: #TTCFontDescription category: #'VectorGraphics-TrueType'!
-TTFontDescription subclass: #TTCFontDescription
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'VectorGraphics-TrueType'!
-!classDefinition: 'TTCFontDescription class' category: #'VectorGraphics-TrueType'!
-TTCFontDescription class
-	instanceVariableNames: ''!
-
 !classDefinition: #TTFontReader category: #'VectorGraphics-TrueType'!
 Object subclass: #TTFontReader
-	instanceVariableNames: 'charMap glyphs nGlyphs kernPairs infoBar fontDescription'
+	instanceVariableNames: 'glyphs nGlyphs kernPairs fontDescription'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-TrueType'!
 !classDefinition: 'TTFontReader class' category: #'VectorGraphics-TrueType'!
 TTFontReader class
-	instanceVariableNames: ''!
-
-!classDefinition: #TTCFontReader category: #'VectorGraphics-TrueType'!
-TTFontReader subclass: #TTCFontReader
-	instanceVariableNames: 'fonts'
-	classVariableNames: 'EncodingTag'
-	poolDictionaries: ''
-	category: 'VectorGraphics-TrueType'!
-!classDefinition: 'TTCFontReader class' category: #'VectorGraphics-TrueType'!
-TTCFontReader class
 	instanceVariableNames: ''!
 
 !classDefinition: #TTFontTableDirEntry category: #'VectorGraphics-TrueType'!
@@ -161,7 +160,7 @@ TTFontTableDirEntry class
 
 !classDefinition: #TTGlyph category: #'VectorGraphics-TrueType'!
 Object subclass: #TTGlyph
-	instanceVariableNames: 'boundsLeft boundsRight boundsTop boundsBottom contours advanceWidth leftSideBearing rightSideBearing glyphIndex'
+	instanceVariableNames: 'boundsLeft boundsRight boundsTop boundsBottom contours advanceWidth leftSideBearing rightSideBearing'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'VectorGraphics-TrueType'!
@@ -303,7 +302,7 @@ PathQuadraticCurveToSmoothCommand class
 !TrueTypeFont commentStamp: '<historical>' prior: 0!
 TrueType fonts are the most widely used format for pixel independent vector Fonts.
 
-In Cuis what is usually called TrueType Font is represented by TTFontDescription and TTCFontDescription.
+In Cuis what is usually called TrueType Font is represented by TTFontDescription.
 
 TrueTypeFonts, being part of the traditional AbstractFont hierarchy, adds a specific pointSize, and is the object used in texts.!
 
@@ -369,57 +368,48 @@ self allOwnersReverseDo: [ :m | c into: m ].
 c fullDraw: self.
 Display forceToScreen!
 
-!VectorEngine commentStamp: 'jmv 1/1/2018 12:40:28' prior: 0!
+!VectorEngineAbstract commentStamp: '<historical>' prior: 0!
 A Vector Graphics rasterizer for Morphic 3.
 Supports most SVG primitives.
 Gives exceptional quality.
 
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine abs_EllipseCenterX: 100 y: 100 radiusX: 80 radiusY: 40 rotationAngle: -0.2 start: 0 sweep: Float pi * 2 ].
 Display forceToScreen.
 
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black fillColor: Color red do: [ :engine |
 		engine abs_EllipseCenterX: 100 y: 100 radiusX: 80 radiusY: 40 rotationAngle: -0.2 start: 0 sweep: Float pi * 2 ].
 Display forceToScreen.
 
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	fillColor: Color red do: [ :engine |
 		engine abs_EllipseCenterX: 100 y: 100 radiusX: 80 radiusY: 40 rotationAngle: -0.2 start: 0 sweep: Float pi * 2 ].
 Display forceToScreen!
 
 !FormGlyph commentStamp: '<historical>' prior: 0!
+Needed only for BitBltCanvasEngine
+
 https://www.freetype.org/freetype2/docs/glyphs/glyphs-3.html
 
-leftSideBearing, topSideBearing, advanceWidth are in (possibly fractional) pixels!
+leftSideBearing, topSideBearing, advanceWidth are in (possibly fractional) pixels.!
 
 !TTContourConstruction commentStamp: '<historical>' prior: 0!
 This class represents a temporary contour structure during the construction of a TTGlyph from a TrueType file.
 
 Instance variables:
-	points	<Array of: TTPoint>	The points defining this contour!
+	points				<ShortPointArray>	The points defining this contour
+	controlPointFlags	<BitArray (ByteArray with bit content)> Flags for each point!
 
 !TTFontDescription commentStamp: '<historical>' prior: 0!
-Holds a TrueType font in memory.  Is used by TTSampleStringMorph as its font.  
+Holds a TrueType font in memory.
 
 See
 https://www.freetype.org/freetype2/docs/glyphs/glyphs-3.html!
 
-!TTCFontDescription commentStamp: '<historical>' prior: 0!
-TrueType Collection (TTC) is an extension of TrueType format that allows combining multiple fonts into a single file, creating substantial space savings for collection of fonts that only use different glyphs on some characters. 
-
-A regular TrueType font comes with .ttf extension, while a TTC comes with .ttc extension.!
-
 !TTFontReader commentStamp: '<historical>' prior: 0!
-TTFontReader constructs a TTFontDescription from a TrueType font (.ttf).!
-
-!TTCFontReader commentStamp: '<historical>' prior: 0!
-TrueType Collection (TTC) is an extension of TrueType format that allows combining multiple fonts into a single file, creating substantial space savings for collection of fonts that only use different glyphs on some characters. 
-
-A regular TrueType font comes with .ttf extension, while a TTC comes with .ttc extension.
-
-TTCFontReader constructs a TTCFontDescription from a TrueType Collection file (.ttc).!
+TTFontReader builds a TTFontDescription from a TrueType font file (.ttf).!
 
 !TTFontTableDirEntry commentStamp: '<historical>' prior: 0!
 This class represents an entry in a truetype font table directory. Used by TTFontReader only.!
@@ -428,15 +418,14 @@ This class represents an entry in a truetype font table directory. Used by TTFon
 This class represents a glyph of a TrueType font.
 
 Instance variables:
-	bounds			<Rectangle>	The receiver's bounds
-	contours		<Array of: PointArray> The compressed contours in the receiver
-	advanceWidth	<Integer>	advance width of the glyph
-	leftSideBearing	<Integer>	left side bearing
-	rightSideBearing <Integer>	right side bearing
-	glyphIndex 		<Integer>	the original index of the glyph (used for kerning)!
+	bounds					<Rectangle>	The receiver's bounds
+	contours					<Array of: TTContourConstruction>
+	advanceWidth			<Integer>	advance width of the glyph
+	leftSideBearing  		<Integer>	left side bearing
+	rightSideBearing  	<Integer>	right side bearing!
 
 !TTCompositeGlyph commentStamp: '<historical>' prior: 0!
-This class represents a composite TrueType glyph, e.g.one which contains many simple TTGlyphs.!
+This class represents a composite TrueType glyph, e.g. one which contains many simple TTGlyphs.!
 
 !TTKernPair commentStamp: '<historical>' prior: 0!
 A TTKernPair represents a TrueType kerning pair.
@@ -446,11 +435,6 @@ Instance variables:
 	right <Integer>	The glyph index for the right character.
 	value <Integer>	The amount of kerning.
 	mask <Integer>	An efficient representation for the left and the right value.!
-
-!TrueTypeFont methodsFor: 'copying' stamp: 'jmv 5/11/2019 18:04:40'!
-postCopy
-	super postCopy.
-	replacedGlyphs _ replacedGlyphs copy! !
 
 !TrueTypeFont methodsFor: 'printing' stamp: 'KenD 5/13/2019 09:03:06'!
 printOn: aStream
@@ -521,20 +505,27 @@ baseFont: aStrikeFont
 	baseFont ifNotNil: [
 		derivativeFonts _ nil ]! !
 
-!TrueTypeFont methodsFor: 'initialization' stamp: 'jmv 5/11/2019 17:24:15'!
+!TrueTypeFont methodsFor: 'initialization' stamp: 'jmv 3/22/2020 16:15:49'!
 family: aTrueTypeFontFamily ttFontDescription: aTTFontDescription pointSize: aNumber
 	ttFontDescription _ aTTFontDescription.
 	emphasis _ aTTFontDescription emphasis.
 	pointSize _ aNumber.
 	glyphForms _ Array new: 256.
-	replacedGlyphs _ Dictionary new.
+	glyphFormsByUtf8 _ Array new: 256.
 	family _ aTrueTypeFontFamily.
 	baseFont _ nil.
 	derivativeFonts _ emphasis = 0 ifTrue: [Dictionary new].! !
 
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/24/2019 20:36:59'!
+!TrueTypeFont methodsFor: 'initialization' stamp: 'jmv 3/21/2020 10:22:19'!
+resetAssignmentGlyph
+	"Uses ST80 glyphs:"
+	(emphasis anyMask: 64) ifTrue: [
+		"Re-cache glyphs that could have changed"
+		glyphForms at: $_ numericValue + 1 put: nil ].! !
+
+!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 3/2/2020 17:25:54'!
 ascent
-^ttFontDescription ascent * pointSize / ttFontDescription letterMTopSideBearing * 1.0! !
+	^ttFontDescription ascent * pointSize / ttFontDescription letterMTopSideBearing * 1.0! !
 
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/7/2019 10:11:03'!
 baseFont
@@ -550,9 +541,9 @@ baseKern
 cachedFormDepth
 ^32! !
 
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/24/2019 20:36:44'!
+!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 3/2/2020 17:26:04'!
 descent
-^ttFontDescription descent negated * pointSize / ttFontDescription letterMTopSideBearing * 1.0! !
+	^ttFontDescription descent negated * pointSize / ttFontDescription letterMTopSideBearing * 1.0! !
 
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/4/2019 15:26:55'!
 familyName
@@ -562,10 +553,9 @@ familyName
 fontDescription
 	^ ttFontDescription ! !
 
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/20/2019 09:51:32'!
-leftOffsetAt: aCharacter
-	self revisar. "Should not use cached FormGlyph. Better for VectorEngine."
-^(self glyphAt: aCharacter) leftOffset! !
+!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 3/2/2020 17:25:42'!
+lineGap
+	^ttFontDescription lineGap * pointSize / ttFontDescription letterMTopSideBearing * 1.0! !
 
 !TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/24/2019 20:27:24'!
 lineSpacing
@@ -582,35 +572,17 @@ scrollbarThickness
 "self forwarding: #pointSize printOneStack: true."
 	^pointSize! !
 
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/20/2019 09:51:27'!
-rightOffsetAt: aCharacter
-	self revisar. "Should not use cached FormGlyph. Better for VectorEngine."
-^(self glyphAt: aCharacter) rightOffset! !
-
-!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 5/9/2019 09:04:27'!
+!TrueTypeFont methodsFor: 'accessing' stamp: 'jmv 4/1/2020 11:47:08'!
 widthOf: aCharacter
 
-	| glyph toPixelsScale |
-	self revisar. "Without using cached FormGlyph. Better for VectorEngine."
-	false ifTrue: [
-		glyph _ ttFontDescription at: aCharacter.
-		toPixelsScale _ pointSize * 1.0 / ttFontDescription letterMTopSideBearing.
-		^ glyph advanceWidth * toPixelsScale ].
-	glyph _ self glyphAt: aCharacter.
-	^ glyph advanceWidth! !
+	^ (aCharacter widthInTrueTypeFontDescription: ttFontDescription useST80Glyphs: self isST80Glyphs) * pointSize! !
 
-!TrueTypeFont methodsFor: 'displaying' stamp: 'jmv 5/21/2019 10:56:54'!
-on: aGrafPort displayString: aString from: firstIndex to: lastIndex at: p color: color
+!TrueTypeFont methodsFor: 'displaying' stamp: 'jmv 4/1/2020 12:27:51'!
+onBitBltCanvasEngine: engine displayString: aString from: startIndex to: stopIndex at: p color: color
+	"Answer last affected pixel position.
+	Answer nil if nothing was done."
 
-	^ aGrafPort
-		displayString: aString
-		from: firstIndex
-		to: lastIndex
-		at: p
-		trueTypeFont: self
-		color: color
-
-! !
+	^aString displayOnBitBltCanvasEngine: engine from: startIndex to: stopIndex at: p trueTypeFont: self color: color! !
 
 !TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/11/2019 17:10:59'!
 isBaseFont
@@ -623,6 +595,10 @@ isBold
 !TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/4/2019 15:28:59'!
 isItalic
 	^self emphasis allMask: 2! !
+
+!TrueTypeFont methodsFor: 'testing' stamp: 'jmv 1/26/2020 09:45:41'!
+isST80Glyphs
+	^emphasis allMask: 64! !
 
 !TrueTypeFont methodsFor: 'testing' stamp: 'jmv 5/13/2019 23:37:58'!
 isStruckThrough
@@ -640,15 +616,15 @@ isSuperscript
 isUnderlined
 	^emphasis allMask: 4! !
 
-!TrueTypeFont methodsFor: 'glyph access' stamp: 'jmv 5/21/2019 10:52:20'!
+!TrueTypeFont methodsFor: 'glyph access' stamp: 'jmv 3/17/2020 22:59:51'!
 glyphAt: aCharacter
+	"Needed only for BitBltCanvasEngine"
 
 	| index |
 	index _ aCharacter numericValue + 1.
 	^ (glyphForms at: index) ifNil: [
-		| ttGlyph formGlyph |
-		ttGlyph _ self ttGlyphAt: aCharacter.
-		formGlyph _ (ttFontDescription formGlyphFor: ttGlyph pixelSize: pointSize)
+		| formGlyph |
+		formGlyph _ (ttFontDescription formGlyphFor: aCharacter useST80Glyphs: self isST80Glyphs pixelSize: pointSize)
 			ifNil: [#absentGlyph]
 			ifNotNil: [ :theGlyph |
 				(emphasis allMask: 4) ifTrue: [
@@ -659,23 +635,47 @@ glyphAt: aCharacter
 		glyphForms at: index put: formGlyph.
 		formGlyph ]! !
 
-!TrueTypeFont methodsFor: 'glyph access' stamp: 'jmv 5/21/2019 10:46:47'!
-ttGlyphAt: aCharacter
-	replacedGlyphs at: aCharacter ifPresent: [ :actualCharacter |
-		(ttFontDescription at: actualCharacter) ifNotNil: [ :found | ^ found ]].
-	(ttFontDescription at: aCharacter) ifNotNil: [ :found | ^ found ].
-	^ ttFontDescription at: Character null! !
+!TrueTypeFont methodsFor: 'glyph access' stamp: 'jmv 3/22/2020 16:25:02'!
+glyphAtUtf8Byte1: byte1 byte2: byte2OrNil byte3: byte3OrNil byte4: byte4OrNil
+	"Needed only for BitBltCanvasEngine"
 
-!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/21/2019 11:14:05'!
+	| lastArray lastIndex |
+	lastArray _ glyphFormsByUtf8 .
+	lastIndex _ byte1 + 1.
+	byte2OrNil notNil ifTrue: [
+		(lastArray at: lastIndex) ifNil: [ lastArray at: lastIndex put: (Array new: 64) ].
+		lastArray _ lastArray at: lastIndex.
+		lastIndex _ (byte2OrNil bitAnd: 63) + 1.
+		byte3OrNil notNil ifTrue: [
+			(lastArray at: lastIndex) ifNil: [ lastArray at: lastIndex put: (Array new: 64) ].
+			lastArray _ lastArray at: lastIndex.
+			lastIndex _ (byte3OrNil bitAnd: 63) + 1.
+			byte4OrNil notNil ifTrue: [
+				(lastArray at: lastIndex) ifNil: [ lastArray at: lastIndex put: (Array new: 64) ].
+				lastArray _ lastArray at: lastIndex.
+				lastIndex _ (byte4OrNil bitAnd: 63) + 1 ]]].
+	^ (lastArray at: lastIndex) ifNil: [
+		| formGlyph |
+		formGlyph _ (ttFontDescription formGlyphForUtf8Byte1: byte1 byte2: byte2OrNil
+								byte3: byte3OrNil byte4: byte4OrNil pixelSize: pointSize)
+			ifNil: [#absentGlyph]
+			ifNotNil: [ :theGlyph |
+				(emphasis allMask: 4) ifTrue: [
+					self makeUnderlinedGlyph: theGlyph ].
+				(emphasis allMask: 8) ifTrue: [
+					self makeStruckThroughGlyph: theGlyph ].
+				theGlyph].
+		lastArray at: lastIndex put: formGlyph.
+		formGlyph ]! !
+
+!TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 1/26/2020 16:07:11'!
 addEmphasis: code
 	"Set the integer code for emphasis. See senders."
 
 	emphasis _ code.
-	(emphasis anyMask: 4+8) ifTrue: [
+	(emphasis anyMask: 4+8+64) ifTrue: [
 		"They need to be recreated"
-		glyphForms _ Array new: 256 ].
-	(emphasis allMask: 64) ifTrue: [
-		self perform: Preferences assignmentGlyphSelector ].! !
+		glyphForms _ Array new: 256 ].! !
 
 !TrueTypeFont methodsFor: 'emphasis' stamp: 'jmv 5/7/2019 08:45:26'!
 emphasis
@@ -757,27 +757,19 @@ StrikeFont allInstances do: [ :a | a reset ].
 ('Hi ', (Text string: 'there' attribute: TextEmphasis superscript), ' how ', (Text string: 'are' attribute: TextEmphasis subscript), ' you?') edit.
 "! !
 
-!TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:31:56'!
-useLeftArrow
-	replacedGlyphs at: $_ put: Character arrowLeft.
-	replacedGlyphs at: $^ put: Character arrowUp.! !
-
-!TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:32:07'!
-useRightArrow
-	replacedGlyphs at: $_ put: Character arrowRight.
-	replacedGlyphs at: $^ put: Character arrowUp.! !
-
 !TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:18:55'!
 useShortUnderscore! !
-
-!TrueTypeFont methodsFor: 'swapping glyphs' stamp: 'jmv 5/11/2019 17:32:45'!
-useUnderscore
-	replacedGlyphs removeKey: $_.
-	replacedGlyphs removeKey: $^.! !
 
 !TrueTypeFont class methodsFor: 'instance creation' stamp: 'jmv 5/7/2019 09:25:01'!
 family: aTrueTypeFontFamily ttFontDescription: aTTFontDescription pointSize: aNumber
 	^ self new family: aTrueTypeFontFamily ttFontDescription: aTTFontDescription pointSize: aNumber! !
+
+!TrueTypeFont class methodsFor: 'initialization' stamp: 'jmv 3/21/2020 10:22:09'!
+assignmentGlyphSelectorPreferenceChanged
+	| selector |
+	selector _ Preferences assignmentGlyphSelector.
+	TTFontDescription allInstancesDo: [ :ttFontDescription | ttFontDescription perform: selector ].
+	self allInstancesDo: [ :each | each resetAssignmentGlyph ]! !
 
 !TrueTypeFontFamily methodsFor: 'initialization' stamp: 'jmv 5/7/2019 09:13:51'!
 addTTFontDescription: aTTFontDescription
@@ -826,6 +818,15 @@ pointSizes
 baseTTFontDescription: aTTFontDescription
 	^ self new baseTTFontDescription: aTTFontDescription! !
 
+!TrueTypeFontFamily class methodsFor: 'instance creation' stamp: 'KenD 4/22/2020 14:29:05'!
+fileReaderServicesForFileEntry: filename suffix: suffix
+	"FileList buttons that read a TrueType font on contents."
+
+	(#( 'ttf' ) includes: suffix) ifTrue: [
+		^ { self serviceReadTTFont } ].
+
+	^#()! !
+
 !TrueTypeFontFamily class methodsFor: 'instance creation' stamp: 'jmv 5/7/2019 09:18:36'!
 read: aDirectoryEntry
 	"
@@ -846,6 +847,31 @@ read: aDirectoryEntry
 readAdditionalFonts
 
 	TrueTypeFontFamily read: DirectoryEntry smalltalkImageDirectory / 'TrueTypeFonts'! !
+
+!TrueTypeFontFamily class methodsFor: 'instance creation' stamp: 'KenD 4/22/2020 14:25:33'!
+readTrueTypeFontEntry: ttFontFileEntry
+
+	| ttFontDescription ttFontFamily |
+	ttFontDescription := TTFontReader readTTFFrom: ttFontFileEntry binaryContents.
+	ttFontFamily := FontFamily familyNamed: ttFontDescription familyName.
+	ttFontFamily
+		ifNil: [ FontFamily addFamily:  (self new baseTTFontDescription: ttFontDescription ) ]
+		ifNotNil: [ :fam | fam  at: ttFontDescription emphasis put: ttFontDescription].
+	
+	PopUpMenu inform: 'loaded font ', ttFontDescription familyName.! !
+
+!TrueTypeFontFamily class methodsFor: 'instance creation' stamp: 'KenD 4/22/2020 13:52:56'!
+serviceReadTTFont
+	"Answer the service of reading a TrueType font"
+
+	^ (SimpleServiceEntry
+		provider: self 
+		label: 'load font'
+		selector: #readTrueTypeFontEntry:
+		description: 'load TrueType font'
+		buttonLabel: 'read font'
+		icon: ((Theme content from: 'Theme' get: {'16x16'. 'mimetypes'}) at: 'font-x-generic.png')
+		) argumentGetter: [ :fileList | fileList selectedFileEntry ]! !
 
 !M3Exp01Morph methodsFor: 'drawing' stamp: 'jmv 12/11/2017 21:34:45'!
 drawOn: aCanvas
@@ -1285,31 +1311,75 @@ multiQuadraticCurveToSmooth: coordinatesAreRelative toPoints: toPoints
 				to _ toPoints at: i.
 				engine rel_QuadraticBezierSmoothToX: to x y: to y ]]! !
 
-!VectorCanvas methodsFor: 'drawing - text' stamp: 'jmv 5/21/2019 11:01:45'!
+!VectorCanvas methodsFor: 'drawing - text' stamp: 'jmv 3/18/2020 19:52:42'!
 drawString: aString from: firstIndex to: lastIndex at: aPoint font: fontOrNil color: aColor
-
-	| font toPixelsScale loc |
-"	port colorMap: nil."
+	"
+| s c f |
+c _ VectorCanvas onForm: Display.
+c engine geometryTransformation: (AffineTransformation withRadians: 0.1).
+f _ FontFamily familyName: 'DejaVu Sans' pointSize: 72.
+s _ 'Latin text in VectorGraphics'.
+c drawString:  s from: 1 to: s size at: 10@10 font: f color: Color black.
+Display forceToScreen
+	"
 	"Slight optimization when there's nothing to do."
 	"
 	port clipHeight = 0 ifTrue: [^self].
 	port clipWidth = 0 ifTrue: [^self].
 	"
-	"mhhhhhhhh. Creo que es mejor que venga un font siempre. Y uno de M3!!"
+	| font |
 	font _ fontOrNil ifNil: [ AbstractFont default ].
-	toPixelsScale _ font pointSize * 1.0 / font fontDescription letterMTopSideBearing.
-	loc _ AffineTransformation withScale: toPixelsScale.
-	loc _ currentTransformation composedWith: loc.
-	engine geometryTransformation: loc.
 	engine
 		displayString: aString
 		from: firstIndex
 		to: lastIndex
-		at: aPoint / toPixelsScale + (0@(font fontDescription ascent + font fontDescription lineGap))
-		trueTypeFont: font
+		at: aPoint + (0@(font ascent + font lineGap-1))
+		trueTypeFont: font fontDescription
+		useST80Glyphs: font isST80Glyphs
 		color: aColor
-		canvas: self.
-	engine geometryTransformation: currentTransformation.! !
+		scaleX: 1.0 * font pointSize
+		scaleY: -1.0 * font pointSize
+		
+	"The conversion from top of glyph (morphic canvas) to baseline (engine, TrueType) is done here.
+	The conversion from Y-increases-downwards (morphic canvas) to Y-increases-upwards (engine, TrueType) is done here.
+	
+	The scaling of internal TrueType integer points to FloatingPoint where[0.0...1.0] equals #letterMTopSideBearing is done in the engine.
+	It should actually be done in TrueType. No one else cares!!"! !
+
+!VectorCanvas methodsFor: 'drawing - text' stamp: 'jmv 3/22/2020 23:46:21'!
+drawUtf8: aByteArray at: aPoint font: aTrueTypeFont color: aColor
+	"
+| c f |
+Preferences disable: #loadOnlyLatinGlyphData. 'And now load optional fonts'.
+c _ VectorCanvas onForm: Display.
+f _ FontFamily familyName: 'DejaVu Sans' pointSize: 72.
+c drawString: 'Hola' at: 10@10 font: f color: Color random.
+c drawUtf8: #[208 176 208 177 208 178 208 179 208 180 208 181 209 145 208 182 208 183 208 184 208 185 208 186 208 187 208 188 208 189 208 190 209 143 209 142 209 141 209 140 209 139 209 138 209 137 209 136 209 135 209 134 209 133 209 132 209 131 209 130 209 129 209 128 208 191] at: 10@100 font: f color: Color random.
+c drawUtf8:  #[208 146 208 190 209 130 32 208 184 208 183 32 208 181 208 189 32 208 184 208 179 208 183 208 176 208 188 208 191 208 187 32 208 190 209 132 32 208 181 208 189 32 208 152 208 189 208 179 208 187 208 184 209 136 32 209 130 208 181 208 186 209 129 209 130 32 209 128 208 184 209 130 208 189 32 208 184 208 189 32 208 180 32 208 161 208 184 209 128 208 184 208 187 208 184 208 186 32 208 176 208 187 209 132 208 176 208 177 208 181 209 130 63]  at: 10@200 font: f color: Color random.
+c drawString: 'año' at: 10@300 font: f color: Color random.
+c drawUtf8:  #[97 195 177 111 ]  at: 10@400 font: f color: Color random.
+Display forceToScreen
+	"
+	"Slight optimization when there's nothing to do."
+	"
+	port clipHeight = 0 ifTrue: [^self].
+	port clipWidth = 0 ifTrue: [^self].
+	"
+	| font |
+	font _ aTrueTypeFont ifNil: [ AbstractFont default ].
+	engine
+		displayUtf8: aByteArray
+		at: aPoint + (0@font ascent + font lineGap-1)
+		trueTypeFont: font fontDescription
+		color: aColor
+		scaleX: 1.0 * font pointSize
+		scaleY: -1.0 * font pointSize
+		
+	"The conversion from top of glyph (morphic canvas) to baseline (engine, TrueType) is done here.
+	The conversion from Y-increases-downwards (morphic canvas) to Y-increases-upwards (engine, TrueType) is done here.
+	
+	The scaling of internal TrueType integer points to FloatingPoint where[0.0...1.0] equals #letterMTopSideBearing is done in the engine.
+	It should actually be done in TrueType. No one else cares!!"! !
 
 !VectorCanvas methodsFor: 'drawing - icons' stamp: 'jmv 9/30/2014 20:02'!
 drawButtonIconFromCurrentMorph
@@ -1506,15 +1576,16 @@ isCurrentMorphVisible
 self revisar. "Of course not true. Do it right. But first, assess the need for this method at all!!"
 	^ true! !
 
-!VectorCanvas methodsFor: 'Morphic support' stamp: 'jmv 10/14/2014 09:00'!
+!VectorCanvas methodsFor: 'Morphic support' stamp: 'jmv 4/4/2020 19:32:40'!
+clippingMorph: aMorph
+	engine clippingMorph: aMorph! !
+
+!VectorCanvas methodsFor: 'Morphic support' stamp: 'jmv 1/14/2020 09:32:21'!
 clippingRectForCurrentMorph
-	"In form coordinates"
+	"In targetForm coordinates.
+	Only valid _after_ drawing currentMorph."
 
 	^engine clippingRectForCurrentMorph! !
-
-!VectorCanvas methodsFor: 'Morphic support' stamp: 'jmv 10/14/2014 16:17'!
-currentOwnerIfClips: currentMorphOwnerOrNil
-	engine currentOwnerIfClips: currentMorphOwnerOrNil! !
 
 !VectorCanvas methodsFor: 'Morphic support' stamp: 'jmv 12/31/2017 13:22:48'!
 initializeWith: aForm origin: aPoint
@@ -1534,20 +1605,21 @@ outOfMorph
 	engine currentMorph: currentMorph.
 	engine geometryTransformation: currentTransformation! !
 
-!VectorCanvas methodsFor: 'private' stamp: 'jmv 10/13/2014 16:17'!
+!VectorCanvas methodsFor: 'private' stamp: 'jmv 1/14/2020 09:32:24'!
 setClipRect: aRectangle
-	"In form coordinates"
+	"In targetForm coordinates"
 
 	super setClipRect: aRectangle.
 	engine clipRect: aRectangle! !
 
-!VectorCanvas methodsFor: 'private' stamp: 'jmv 6/10/2019 11:06:59'!
+!VectorCanvas methodsFor: 'private' stamp: 'jmv 4/28/2020 16:20:50'!
 setForm: aForm
 	"
 	World extent: World extent
 	"
+	aForm depth = 32  ifFalse: [ self error: 'VectorCanvas can only work on 32 bit destination' ].
 	form _ aForm.
-	engine _ VectorEngine onForm: form.
+	engine _ VectorEngineBasic onForm: form.
 	self newClipRect: nil.! !
 
 !VectorCanvas class methodsFor: 'BitBltCanvas protocol' stamp: 'jmv 10/9/2014 23:04'!
@@ -1588,7 +1660,7 @@ initialize
 	"
 	" AffineTransformation doIntegerTransformations: false"! !
 
-!VectorCanvas class methodsFor: 'text experiments' stamp: 'jmv 10/14/2014 22:57'!
+!VectorCanvas class methodsFor: 'text experiments' stamp: 'jmv 2/20/2020 12:01:55'!
 textex1
 "Jugando con Paragraph"
 "
@@ -1598,7 +1670,7 @@ Ejemplos como e de displayString:from:to:at:font: son mas realistas y mejores
 "
 	| t para frame |
 	t _ Text
-		initialFont: (AbstractFont familyName: 'DejaVu' pointSize: 9)
+		initialFont: (AbstractFont familyName: 'DejaVu Sans' pointSize: 9)
 		stringOrText: 'Acá vamos a escribir un poquito de texto. Esto es una prueba del renderer de texto de Morphic 3. La idea es poder reemplazar al actual en todos los casos en que sea posible. Quizás para algún pointsize especial, como 9, sigamos usando StrikeFont si se alinean los planetas. Ñandú, agüita, çå½´®¥ïøßƒ©Ý²Þ¬­ç¦µ'.
 	frame _ 10@10 extent: 320@400.
 	para _ TextComposition new.
@@ -1624,7 +1696,7 @@ Ejemplos como e de displayString:from:to:at:font: son mas realistas y mejores
 		selectionColor: Color orange.
 	Display forceToScreen! !
 
-!VectorCanvas class methodsFor: 'text experiments' stamp: 'jmv 12/11/2017 23:57:28'!
+!VectorCanvas class methodsFor: 'text experiments' stamp: 'jmv 2/20/2020 11:52:35'!
 textex2
 "Jugando con Paragraph"
 "
@@ -1633,7 +1705,7 @@ self textex2
 	| t para frame |
 	
 	t _ Text
-		initialFont: (AbstractFont familyName: 'DejaVu' pointSize: 22)
+		initialFont: (AbstractFont familyName: 'DejaVu Sans' pointSize: 22)
 		stringOrText: (String streamContents: [ :strm | (32 to: 255) do: [ :i | strm nextPut: (Character numericValue: i)]]).
 	frame _ 10@10 extent: 320@400.
 	para _ TextComposition new.
@@ -1659,7 +1731,7 @@ self textex2
 		selectionColor: Color orange.
 	Display forceToScreen! !
 
-!VectorCanvas class methodsFor: 'text experiments' stamp: 'jmv 10/9/2014 09:42'!
+!VectorCanvas class methodsFor: 'text experiments' stamp: 'jmv 2/20/2020 12:01:59'!
 textex3
 "Jugando con Paragraph"
 "
@@ -1667,7 +1739,7 @@ self textex3
 "
 	| t para frame |
 	t _ Text
-		initialFont: (AbstractFont familyName: 'DejaVu' pointSize: 9)
+		initialFont: (AbstractFont familyName: 'DejaVu Sans' pointSize: 9)
 		stringOrText: 'Acá vamos a escribir un poquito de texto. Esto es una prueba del renderer de texto de Morphic 3. La idea es poder reemplazar al actual en todos los casos en que sea posible. Quizás para algún pointsize especial, como 9, sigamos usando StrikeFont si se alinean los planetas. Ñandú, agüita, çå½´®¥ïøßƒ©Ý²Þ¬­ç¦µ'.
 	frame _ 10@10 extent: 320@400.
 	para _ TextComposition new.
@@ -1693,90 +1765,78 @@ self textex3
 		selectionColor: Color orange.
 	Display forceToScreen! !
 
-!VectorEngine methodsFor: 'accessing' stamp: 'jmv 12/16/2017 18:17:50'!
+!VectorEngineAbstract methodsFor: 'accessing' stamp: 'jmv 4/15/2020 16:54:19'!
 antiAliasingWidth: aNumber
 
-	antiAliasingWidth _ aNumber! !
+	antiAliasingWidth _ aNumber.
+	auxAntiAliasingWidthScaledInverse _ 127.0 / antiAliasingWidth! !
 
-!VectorEngine methodsFor: 'accessing' stamp: 'jmv 12/16/2017 18:17:50'!
+!VectorEngineAbstract methodsFor: 'accessing' stamp: 'jmv 1/14/2020 09:31:35'!
 clipRect: aRectangle 
 	"by convention, aRectangle includes left and top but does not include right and bottom.
 	We do draw clipRight and clipBottom but not beyond.
 	"
-	"In form coordinates"
+	"In targetForm coordinates"
 	clipLeft _ aRectangle left.
 	clipTop _ aRectangle top.
 	clipRight _ aRectangle right - 1.
 	clipBottom _ aRectangle bottom - 1! !
 
-!VectorEngine methodsFor: 'accessing' stamp: 'jmv 12/16/2017 18:17:50'!
+!VectorEngineAbstract methodsFor: 'accessing' stamp: 'jmv 4/4/2020 19:37:02'!
+clippingMorph: aMorph
+	clippingMorphId _ aMorph ifNil: [0] ifNotNil: [aMorph morphId]! !
+
+!VectorEngineAbstract methodsFor: 'accessing' stamp: 'jmv 1/14/2020 09:32:34'!
 clippingRectForCurrentMorph
-	"In form coordinates"
+	"In targetForm coordinates.
+	Only valid _after_ drawing currentMorph."
 
 	^morphBoundsLeft @ morphBoundsTop corner: morphBoundsRight @ morphBoundsBottom! !
 
-!VectorEngine methodsFor: 'accessing' stamp: 'jmv 12/16/2017 18:17:50'!
+!VectorEngineAbstract methodsFor: 'accessing' stamp: 'jmv 4/4/2020 19:49:03'!
 currentMorph: aMorph
-	currentMorph _ aMorph! !
+	currentMorphId _ aMorph ifNil: [0] ifNotNil: [aMorph morphId]! !
 
-!VectorEngine methodsFor: 'accessing' stamp: 'jmv 12/16/2017 18:17:50'!
-currentOwnerIfClips: currentMorphOwnerOrNil
-	currentOwnerIfClips _ currentMorphOwnerOrNil! !
-
-!VectorEngine methodsFor: 'accessing' stamp: 'jmv 8/17/2018 15:42:34'!
-geometryTransformation
-	^geometryTransformation! !
-
-!VectorEngine methodsFor: 'accessing' stamp: 'jmv 12/31/2017 13:22:19'!
+!VectorEngineAbstract methodsFor: 'accessing' stamp: 'jmv 4/15/2020 17:33:22'!
 geometryTransformation: aGeometryTransformation
+	"geometryTransformation is a GeometryTransformation that when applied to points in the public path protocol (i.e. Morph or domain coordinate system), it transform them into global, i.e. targetForm pixel coordinates. Therefore, the method used for converting client coordinates to actual pixel coordinates in the targetForm is #externalizePosition:, while the seldom used conversion from pixel coordinates to client coordinates is #internalizePosition:"
+
 	geometryTransformation _ aGeometryTransformation! !
 
-!VectorEngine methodsFor: 'stroke & fill' stamp: 'jmv 7/14/2019 14:09:10'!
+!VectorEngineAbstract methodsFor: 'stroke & fill' stamp: 'jmv 4/29/2020 22:30:20'!
 fillColor: aFillColor do: pathCommandsBlock
 	"Prepare parameters for drawing fill."
 
-	doStroke _ false.
-	doFill _ true.
-	strokeWidth _ 0.0.
+	self pvtStrokeWidth: 0.0.
+	strokeColor _ nil.
+	fillColor _ aFillColor.
 	hopsPerPixel _ 8.										"See #experimentHopsPerPixel3"
-
-	"Done with stroke width. Now prepare colors."
-	fillAlpha _ (aFillColor alpha * 255.0) rounded.
-	fillRed _ (aFillColor red * 255.0) rounded.
-	fillGreen _ (aFillColor green * 255.0) rounded.
-	fillBlue _ (aFillColor blue * 255.0) rounded.
-	strokeAlpha _ nil. strokeRed _ nil. strokeGreen _ nil. strokeBlue _ nil.
-
 	self initializePath.
 	pathCommandsBlock valueWithPossibleArgument: self.
 	self finishPath! !
 
-!VectorEngine methodsFor: 'stroke & fill' stamp: 'jmv 12/31/2017 14:11:22'!
+!VectorEngineAbstract methodsFor: 'stroke & fill' stamp: 'jmv 4/29/2020 23:17:24'!
 strokeWidth: clientStrokeWidth color: aStrokeColor do: pathCommandsBlock
 	"Prepare parameters for drawing stroke."
 
-	| strokeAlphaFactor aStrokeWidth |
-	doStroke _ true.
-	doFill _ false.
+	| aStrokeWidth |
 	aStrokeWidth _ geometryTransformation externalizeScalar: clientStrokeWidth.
-
-	"Strokes we want to show. They are not too thin, or maybe they are, but there's no fill. Make them wide enough to be properly sampled."
-	strokeWidth _ aStrokeWidth max: antiAliasingWidth.
-	strokeAlphaFactor _ aStrokeWidth / strokeWidth.
+	aStrokeWidth < antiAliasingWidth
+		ifTrue: [
+			"If the requested stroke width is too thin, make them wide enough to be properly sampled."
+			self pvtStrokeWidth: antiAliasingWidth.
+			strokeColor _ aStrokeColor alpha: aStrokeColor alpha * aStrokeWidth / antiAliasingWidth ]
+		ifFalse: [
+			self pvtStrokeWidth: aStrokeWidth.
+			strokeColor _ aStrokeColor ].
+	fillColor _ nil.
 	hopsPerPixel _ 10.0 / strokeWidth + 1.		"See #experimentHopsPerPixel2"
-
-	"Done with stroke width. Now prepare colors."
-	fillAlpha _ nil. fillRed _ nil. fillGreen _ nil. fillBlue _ nil.
-	strokeAlpha _ (aStrokeColor alpha * 255.0 * strokeAlphaFactor) rounded.
-	strokeRed _ (aStrokeColor red * 255.0) rounded.
-	strokeGreen _ (aStrokeColor green * 255.0) rounded.
-	strokeBlue _ (aStrokeColor blue * 255.0) rounded.
 
 	self initializePath.
 	pathCommandsBlock valueWithPossibleArgument: self.
 	self finishPath! !
 
-!VectorEngine methodsFor: 'stroke & fill' stamp: 'jmv 1/4/2018 09:44:33'!
+!VectorEngineAbstract methodsFor: 'stroke & fill' stamp: 'jmv 4/29/2020 22:30:06'!
 strokeWidth: clientStrokeWidth color: aStrokeColor fillColor: aFillColor do: pathCommandsBlock
 	"Prepare parameters for drawing stroke, fill, or both."
 
@@ -1795,42 +1855,31 @@ strokeWidth: clientStrokeWidth color: aStrokeColor fillColor: aFillColor do: pat
 		self strokeWidth: clientStrokeWidth color: aStrokeColor do: pathCommandsBlock.
 		^ self ].
 
-	doStroke _ true.
-	doFill _ true.
-	strokeWidth _ aStrokeWidth.
+	self pvtStrokeWidth: aStrokeWidth.
+	strokeColor _ aStrokeColor.
+	fillColor _ aFillColor.
 	aStrokeWidth < antiAliasingWidth
 		ifTrue: [
 			"Strokes are really thin, but strokeColor is same as fillColor, so there's no problem sampling them."
 			hopsPerPixel _ 8 ]								"See #experimentHopsPerPixel1"
 		ifFalse: [
-			"Strokes are not too thin. Make them wide enough to be properly sampled."
-			hopsPerPixel _ 10.0 / strokeWidth + 1 ].		"See #experimentHopsPerPixel2"
-
-	"Done with stroke width. Now prepare colors."
-	fillAlpha _ (aFillColor alpha * 255.0) rounded.
-	fillRed _ (aFillColor red * 255.0) rounded.
-	fillGreen _ (aFillColor green * 255.0) rounded.
-	fillBlue _ (aFillColor blue * 255.0) rounded.
-	strokeAlpha _ (aStrokeColor alpha * 255.0) rounded.
-	strokeRed _ (aStrokeColor red * 255.0) rounded.
-	strokeGreen _ (aStrokeColor green * 255.0) rounded.
-	strokeBlue _ (aStrokeColor blue * 255.0) rounded.
+			hopsPerPixel _ 10.0 / strokeWidth + 1 max: 2 ].		"See #experimentHopsPerPixel2. Additionally, fills require at least 2."
 
 	self initializePath.
 	pathCommandsBlock valueWithPossibleArgument: self.
 	self finishPath! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 12/31/2017 16:46:16'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:18:57'!
 abs_ArcToX: cx y: cy radiusX: mrx radiusY: mry angleOfXAxis: theta largeFlag: doLargerArc sweepFlag: useIncreasingAngles
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
 			abs_ArcToX: 200 y: 200 radiusX: 200 radiusY: 100 angleOfXAxis: 0 largeFlag: true sweepFlag: true;
 			abs_MoveToX: 100 y: 100;
 			abs_ArcToX: 200 y: 200 radiusX: 200 radiusY: 100 angleOfXAxis: 0 largeFlag: true sweepFlag: false ].
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0.5 scale: 1.2 position: 200@100);
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
@@ -1850,10 +1899,10 @@ Display forceToScreen
 	phi _ geometryTransformation radians + theta.
 	self basicArcToX: center x y: center y radiusX: rx radiusY: ry angleOfXAxis: phi largeFlag: doLargerArc sweepFlag: useIncreasingAngles! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 14:19:15'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:19:15'!
 abs_CircleCenterX: cx y: cy radius: mr
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_CircleCenterX: 200 y: 150 radius: 80].
@@ -1867,14 +1916,14 @@ Display forceToScreen
 		basicArcCenterX: center x centerY: center y radiusX: r radiusY: r rotationAngle: 0.0 start: 0.0 sweep:  Float pi * 2;
 		basicClosePath! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/4/2018 16:30:44'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:19:52'!
 abs_CubicBezierSmoothToX: x3 y: y3 control2X: x2 y: y2
 	"Cubic Bezier
 	http://en.wikipedia.org/wiki/Bezier_curve
 	Smooth squence of curves: use as control1 point, last used control2 point."
 "Check that behavior is correct!!"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic  onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color green alpha: 0.7) do: [ :engine |
 		engine abs_CircleCenterX: 150 y: 300 radius: 10.
@@ -1883,7 +1932,7 @@ abs_CubicBezierSmoothToX: x3 y: y3 control2X: x2 y: y2
 		engine
 			abs_CubicBezierToX: 600 y: 100 control1X: 150 y: 300 control2X: 600 y: 400
 			].
-(VectorEngine onForm: Display)
+(VectorEngineBasic  onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color red alpha: 0.7) do: [ :engine |
 		engine abs_CircleCenterX: 600 y: -200 radius: 10.
@@ -1895,7 +1944,7 @@ abs_CubicBezierSmoothToX: x3 y: y3 control2X: x2 y: y2
 Display forceToScreen.
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
@@ -1906,16 +1955,16 @@ Display forceToScreen.
 Display forceToScreen
 	"
 	| mirroredContolX mirroredContolY |
-	mirroredContolX _ lastClientX + (lastClientX - lastControlX).
-	mirroredContolY _ lastClientY + (lastClientY - lastControlY).
+	mirroredContolX _ previousCallX + (previousCallX - previousCallControlX).
+	mirroredContolY _ previousCallY + (previousCallY - previousCallControlY).
 	self abs_CubicBezierToX: x3 y: y3 control1X: mirroredContolX y: mirroredContolY control2X: x2 y: y2! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 21:00:50'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:21:04'!
 abs_CubicBezierToX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2
 	"Cubic Bezier
 	http://en.wikipedia.org/wiki/Bezier_curve"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -1923,7 +1972,7 @@ abs_CubicBezierToX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
 		engine
@@ -1937,19 +1986,19 @@ Display forceToScreen
 	p2 _ geometryTransformation externalizePosition: x2@y2.
 	p3 _ geometryTransformation externalizePosition: x3@y3.
 	self basicCubicBezierToX: p3 x y: p3 y control1X: p1 x y: p1 y control2X: p2 x y: p2 y.
-	lastClientX _ x3.
-	lastClientY _ y3.
-	lastControlX _ x2.
-	lastControlY _ y2! !
+	previousCallX _ x3.
+	previousCallY _ y3.
+	previousCallControlX _ x2.
+	previousCallControlY _ y2! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 14:19:19'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:21:17'!
 abs_EllipseCenterX: cx y: cy radiusX: mrx radiusY: mry
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_EllipseCenterX: 200 y: 150 radiusX: 100 radiusY: 50].
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 1 scale: 1.2 position: 200@100);
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
@@ -1968,14 +2017,14 @@ Display forceToScreen
 		basicArcCenterX: center x centerY: center y radiusX: rx radiusY: ry rotationAngle: phi start: 0.0 sweep:  Float pi * 2;
 		basicClosePath! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 14:19:21'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:21:25'!
 abs_EllipseCenterX: cx y: cy radiusX: mrx radiusY: mry rotationAngle: theta
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_EllipseCenterX: 200 y: 150 radiusX: 100 radiusY: 50 rotationAngle: -0.5 ].
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 1 scale: 1.2 position: 200@100);
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
@@ -1994,19 +2043,22 @@ Display forceToScreen
 		basicArcCenterX: center x centerY: center y radiusX: rx radiusY: ry rotationAngle: phi start: 0.0 sweep:  Float pi * 2;
 		basicClosePath! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 12/31/2017 16:37:59'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:21:33'!
 abs_EllipseCenterX: cx y: cy radiusX: mrx radiusY: mry rotationAngle: theta start: startAngle sweep: sweepAngle
+	"Currently draws a line from pathCurrentX@pathCurrentY to start (if startAngle ~= 0.0 or sweepAngle ~= Float twoPi).
+	This could be useful for proper fills. But might not be what is desired in some cases.
+	Implement desired behavior when clear."
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_EllipseCenterX: 200 y: 150 radiusX: 100 radiusY: 50 rotationAngle: 0.0 start: 0.1 sweep: 6 ].
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0.5 scale: 1.0 position: 200@100);
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_EllipseCenterX: 200 y: 150 radiusX: 100 radiusY: 50 rotationAngle: 0.0 start: 0.1 sweep: 6].
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_EllipseCenterX: 200 y: 350 radiusX: 100 radiusY: 50 rotationAngle: 0.5 start: 0.1 sweep: 6 ].
@@ -2022,10 +2074,10 @@ Display forceToScreen.
 	phi _ geometryTransformation radians + theta.
 	self basicArcCenterX: center x centerY: center y radiusX: rx radiusY: ry rotationAngle: phi start: startAngle sweep:  sweepAngle! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 20:54:08'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:22:05'!
 abs_LineToX: x2
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2033,7 +2085,7 @@ abs_LineToX: x2
 Display forceToScreen
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withScale: 10);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2041,12 +2093,12 @@ Display forceToScreen
 		engine abs_LineToX: 60 y: 10 ].
 Display forceToScreen
 "
-	self abs_LineToX: x2 y: lastClientY! !
+	self abs_LineToX: x2 y: previousCallY! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 21:02:04'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:22:22'!
 abs_LineToX: x2 y: y2
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2054,7 +2106,7 @@ abs_LineToX: x2 y: y2
 Display forceToScreen
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withScale: 10);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2065,15 +2117,15 @@ Display forceToScreen
 	| p2 |
 	p2 _ geometryTransformation externalizePosition: x2@y2.
 	self basicLineToX: p2 x y: p2 y.
-	lastClientX _ x2.
-	lastClientY _ y2.
-	lastControlX _ lastClientX.
-	lastControlY _ lastClientY! !
+	previousCallX _ x2.
+	previousCallY _ y2.
+	previousCallControlX _ previousCallX.
+	previousCallControlY _ previousCallY! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 20:52:47'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:22:31'!
 abs_LineToY: y2
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2081,7 +2133,7 @@ abs_LineToY: y2
 Display forceToScreen
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withScale: 10);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2089,12 +2141,12 @@ Display forceToScreen
 		engine abs_LineToX: 60 y: 10 ].
 Display forceToScreen
 "
-	self abs_LineToX: lastClientX y: y2! !
+	self abs_LineToX: previousCallX y: y2! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 21:02:08'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:22:50'!
 abs_MoveToX: x y: y
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2102,7 +2154,7 @@ abs_MoveToX: x y: y
 Display forceToScreen
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withScale: 10);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2113,15 +2165,15 @@ Display forceToScreen
 	| p |
 	p _ geometryTransformation externalizePosition: x@y.
 	self basicMoveToX: p x y: p y.
-	lastClientX _ x.
-	lastClientY _ y.
-	lastControlX _ lastClientX.
-	lastControlY _ lastClientY! !
+	previousCallX _ x.
+	previousCallY _ y.
+	previousCallControlX _ previousCallX.
+	previousCallControlY _ previousCallY! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/4/2018 16:40:01'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:23:01'!
 abs_QuadraticBezierSmoothToX: x2 y: y2
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color green alpha: 0.7) do: [ :engine |
 		engine abs_CircleCenterX: 450 y: 300 radius: 10.
@@ -2129,7 +2181,7 @@ abs_QuadraticBezierSmoothToX: x2 y: y2
 		engine
 			abs_QuadraticBezierToX: 600 y: 100 controlX: 450 y: 300
 			].
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color red alpha: 0.7) do: [ :engine |
 		engine abs_CircleCenterX: 750 y: -100 radius: 10.
@@ -2140,7 +2192,7 @@ abs_QuadraticBezierSmoothToX: x2 y: y2
 Display forceToScreen.
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
@@ -2151,14 +2203,14 @@ Display forceToScreen.
 Display forceToScreen
 "
 	| mirroredContolX mirroredContolY |
-	mirroredContolX _ lastClientX + (lastClientX - lastControlX).
-	mirroredContolY _ lastClientY + (lastClientY - lastControlY).
+	mirroredContolX _ previousCallX + (previousCallX - previousCallControlX).
+	mirroredContolY _ previousCallY + (previousCallY - previousCallControlY).
 	self abs_QuadraticBezierToX: x2 y: y2 controlX: mirroredContolX y: mirroredContolY! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 21:00:58'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:23:30'!
 abs_QuadraticBezierToX: x2 y: y2 controlX: x1 y: y1
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 3.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2166,7 +2218,7 @@ abs_QuadraticBezierToX: x2 y: y2 controlX: x1 y: y1
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 1 scale: 3 position: 200@100);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2177,16 +2229,16 @@ Display forceToScreen
 	p1 _ geometryTransformation externalizePosition: x1@y1.
 	p2 _ geometryTransformation externalizePosition: x2@y2.
 	self basicQuadraticBezierToX: p2 x y: p2 y controlX: p1 x y: p1 y.
-	lastClientX _ x2.
-	lastClientY _ y2.
-	lastControlX _ x1.
-	lastControlY _ y1! !
+	previousCallX _ x2.
+	previousCallY _ y2.
+	previousCallControlX _ x1.
+	previousCallControlY _ y1! !
 
-!VectorEngine methodsFor: 'paths - absolute coordinates' stamp: 'jmv 1/1/2018 21:02:11'!
+!VectorEngineAbstract methodsFor: 'paths - absolute coordinates' stamp: 'jmv 4/16/2020 15:24:47'!
 do_ClosePath
 	"abs/rel meaningless here"
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2199,16 +2251,18 @@ Display forceToScreen
 	| p2 |
 	self basicClosePath.
 
-	p2 _ geometryTransformation internalizePosition: currentX@currentY.
-	lastClientX _ p2 x.
-	lastClientY _ p2 y.
-	lastControlX _ lastClientX.
-	lastControlY _ lastClientY! !
+	"pathCurrentX and pathCurrentY are in (float) targetForm pixel coordinates (i.e. engine basic coordinates). 
+	previousCallX, previousCallY, previousCallControlX, previousCallControlY are in client coordinates."
+	p2 _ geometryTransformation internalizePosition: pathCurrentX@pathCurrentY.
+	previousCallX _ p2 x.
+	previousCallY _ p2 y.
+	previousCallControlX _ previousCallX.
+	previousCallControlY _ previousCallY! !
 
-!VectorEngine methodsFor: 'paths - relative coordinates' stamp: 'jmv 1/1/2018 20:54:10'!
+!VectorEngineAbstract methodsFor: 'paths - relative coordinates' stamp: 'jmv 4/16/2020 15:25:06'!
 rel_ArcToX: cx y: cy radiusX: mrx radiusY: mry angleOfXAxis: theta largeFlag: doLargerArc sweepFlag: useIncreasingAngles
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2216,16 +2270,16 @@ rel_ArcToX: cx y: cy radiusX: mrx radiusY: mry angleOfXAxis: theta largeFlag: do
 			rel_ArcToX: 200 y: 200 radiusX: 200 radiusY: 100 angleOfXAxis: 0 largeFlag: true sweepFlag: false;
 			do_ClosePath ].
 "
-	self abs_ArcToX: lastClientX + cx y: lastClientY + cy radiusX: mrx radiusY: mry angleOfXAxis: theta largeFlag: doLargerArc sweepFlag: useIncreasingAngles! !
+	self abs_ArcToX: previousCallX + cx y: previousCallY + cy radiusX: mrx radiusY: mry angleOfXAxis: theta largeFlag: doLargerArc sweepFlag: useIncreasingAngles! !
 
-!VectorEngine methodsFor: 'paths - relative coordinates' stamp: 'jmv 1/1/2018 20:53:39'!
+!VectorEngineAbstract methodsFor: 'paths - relative coordinates' stamp: 'jmv 4/16/2020 15:25:27'!
 rel_CubicBezierSmoothToX: x3 y: y3 control2X: x2 y: y2
 	"Cubic Bezier
 	http://en.wikipedia.org/wiki/Bezier_curve
 	Smooth squence of curves: use as control1 point, last used control2 point."
 "Check that behavior is correct!!"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 1 scale: 0.2 position: 200@100);
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
@@ -2236,7 +2290,7 @@ rel_CubicBezierSmoothToX: x3 y: y3 control2X: x2 y: y2
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 1 scale: 0.2 position: 200@100);
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
@@ -2247,7 +2301,7 @@ Display forceToScreen
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 1 scale: 0.2 position: 200@100);
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
@@ -2259,15 +2313,15 @@ Display forceToScreen
 	"
 
 	self
-		abs_CubicBezierSmoothToX: lastClientX + x3 y: lastClientY + y3
-		control2X: lastClientX + x2 y: lastClientY + y2! !
+		abs_CubicBezierSmoothToX: previousCallX + x3 y: previousCallY + y3
+		control2X: previousCallX + x2 y: previousCallY + y2! !
 
-!VectorEngine methodsFor: 'paths - relative coordinates' stamp: 'jmv 1/1/2018 20:54:02'!
+!VectorEngineAbstract methodsFor: 'paths - relative coordinates' stamp: 'jmv 4/16/2020 15:26:00'!
 rel_CubicBezierToX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2
 	"Cubic Bezier
 	http://en.wikipedia.org/wiki/Bezier_curve"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2279,7 +2333,7 @@ rel_CubicBezierToX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
 		engine
@@ -2296,14 +2350,14 @@ Display forceToScreen
 	"
 
 	self
-		abs_CubicBezierToX: lastClientX + x3 y: lastClientY + y3
-		control1X: lastClientX + x1 y: lastClientY + y1
-		control2X: lastClientX + x2 y: lastClientY + y2! !
+		abs_CubicBezierToX: previousCallX + x3 y: previousCallY + y3
+		control1X: previousCallX + x1 y: previousCallY + y1
+		control2X: previousCallX + x2 y: previousCallY + y2! !
 
-!VectorEngine methodsFor: 'paths - relative coordinates' stamp: 'jmv 1/1/2018 20:53:34'!
+!VectorEngineAbstract methodsFor: 'paths - relative coordinates' stamp: 'jmv 4/16/2020 15:26:12'!
 rel_LineToX: x2 y: y2
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2315,7 +2369,7 @@ rel_LineToX: x2 y: y2
 Display forceToScreen
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withScale: 10);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2328,12 +2382,12 @@ Display forceToScreen
 		engine rel_LineToX: 60 y: 10 ].
 Display forceToScreen
 "
-	self abs_LineToX: lastClientX + x2 y: lastClientY + y2! !
+	self abs_LineToX: previousCallX + x2 y: previousCallY + y2! !
 
-!VectorEngine methodsFor: 'paths - relative coordinates' stamp: 'jmv 1/1/2018 20:53:32'!
+!VectorEngineAbstract methodsFor: 'paths - relative coordinates' stamp: 'jmv 4/16/2020 15:26:23'!
 rel_MoveToX: x y: y
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2345,7 +2399,7 @@ rel_MoveToX: x y: y
 Display forceToScreen
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withScale: 10);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2358,12 +2412,12 @@ Display forceToScreen
 		engine rel_LineToX: 60 y: 10 ].
 Display forceToScreen
 "
-	self abs_MoveToX: lastClientX + x y: lastClientY + y! !
+	self abs_MoveToX: previousCallX + x y: previousCallY + y! !
 
-!VectorEngine methodsFor: 'paths - relative coordinates' stamp: 'jmv 1/4/2018 16:47:43'!
+!VectorEngineAbstract methodsFor: 'paths - relative coordinates' stamp: 'jmv 4/16/2020 15:26:38'!
 rel_QuadraticBezierSmoothToX: x2 y: y2
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color green alpha: 0.7) do: [ :engine |
 		engine abs_CircleCenterX: 550 y: 350 radius: 10.
@@ -2371,7 +2425,7 @@ rel_QuadraticBezierSmoothToX: x2 y: y2
 		engine
 			rel_QuadraticBezierToX: 600 y: 100 controlX: 450 y: 300
 			].
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color red alpha: 0.7) do: [ :engine |
 		engine abs_CircleCenterX: 850 y: -50 radius: 10.
@@ -2382,7 +2436,7 @@ rel_QuadraticBezierSmoothToX: x2 y: y2
 Display forceToScreen.
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 0 scale: 1.0 position: 100@300);
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
@@ -2393,12 +2447,12 @@ Display forceToScreen.
 Display forceToScreen
 "
 	self
-		abs_QuadraticBezierSmoothToX: lastClientX + x2 y: lastClientY + y2! !
+		abs_QuadraticBezierSmoothToX: previousCallX + x2 y: previousCallY + y2! !
 
-!VectorEngine methodsFor: 'paths - relative coordinates' stamp: 'jmv 1/1/2018 20:53:56'!
+!VectorEngineAbstract methodsFor: 'paths - relative coordinates' stamp: 'jmv 4/16/2020 15:27:09'!
 rel_QuadraticBezierToX: x2 y: y2 controlX: x1 y: y1
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 3.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2410,7 +2464,7 @@ rel_QuadraticBezierToX: x2 y: y2 controlX: x1 y: y1
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	geometryTransformation: (AffineTransformation withRadians: 1 scale: 3 position: 200@100);
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
@@ -2421,183 +2475,220 @@ Display forceToScreen
 Display forceToScreen
 	"
 	self
-		abs_QuadraticBezierToX: lastClientX + x2 y: lastClientY + y2
-		controlX: lastClientX + x1 y: lastClientY + y1! !
+		abs_QuadraticBezierToX: previousCallX + x2 y: previousCallY + y2
+		controlX: previousCallX + x1 y: previousCallY + y1! !
 
-!VectorEngine methodsFor: 'text' stamp: 'jmv 5/21/2019 10:46:54'!
-displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aFont color: aColor canvas: aCanvas
-	"geometryTransformation is already set to honor font pointSize
-	Use as little of aFont as possible!!"
-	| glyph destX destY loc |
+!VectorEngineAbstract methodsFor: 'text' stamp: 'jmv 4/12/2020 16:59:51'!
+displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTTFontDescription useST80Glyphs: aBoolean color: aColor scaleX: ssx scaleY: ssy
+	"ssx and ssy to honor font pointSize"
+	| destX destY sx sy contourData contourDataIndexes trueTypeScale cpX cpY epX epY moveToX moveToY advanceWidth boundsLeft boundsRight boundsTop boundsBottom numContours numBeziers |
 
-	self antiAliasingWidth: VectorEngine antiAliasingWidthForOutlineFonts.
-	loc _ geometryTransformation.
+	self antiAliasingWidth: self class antiAliasingWidthForOutlineFonts.
+	trueTypeScale _ 1.0 / aTTFontDescription letterMTopSideBearing.
+	sx _ ssx * trueTypeScale.
+	sy _ ssy * trueTypeScale.
+	contourData _ aTTFontDescription contourDataForIso8859s15.
+	contourDataIndexes _ aTTFontDescription contourDataIndexesByIso8859s15ST80Glyphs: aBoolean.
 	self fillColor: aColor do: [
 		destY _ aPoint y.
 		destX _ aPoint x.
-		startIndex to: stopIndex do: [ :charIndex |
-			glyph _ aFont ttGlyphAt: (aString at: charIndex).
-			glyph contours do: [ :contour |
-				contour isEmpty ifFalse: [
-					geometryTransformation _ loc composedWith: (AffineTransformation withTranslation: destX@destY) withYAxisNegated.
-					contour initialMoveToCommand runOn: aCanvas .
-					contour pathCommand runOn: aCanvas ].
-			].
-			destX _ destX + glyph advanceWidth.
+		startIndex to: stopIndex do: [ :charIndex | | iso8859s15 i |
+			iso8859s15 _ (aString at: charIndex) iso8859s15Code.
+			i _ contourDataIndexes at: iso8859s15 + 1.
+			advanceWidth _ contourData at: i. i _ i + 1.
+			boundsLeft _ contourData at: i. i _ i + 1.
+			boundsRight _ contourData at: i. i _ i + 1.
+			boundsTop _ contourData at: i. i _ i + 1.
+			boundsBottom _ contourData at: i. i _ i + 1.
+			numContours _ (contourData at: i) asInteger. i _ i + 1.
+			numContours timesRepeat: [
+				numBeziers _ (contourData at: i) asInteger. i _ i + 1.
+				moveToX _ contourData at: i. i _ i + 1.
+				moveToY _ contourData at: i. i _ i + 1.
+				self abs_MoveToX: moveToX * sx + destX y: moveToY * sy + destY.
+				numBeziers timesRepeat: [
+					epX _ contourData at: i. i _ i + 1.
+					epY _ contourData at: i. i _ i + 1.
+					cpX _ contourData at: i. i _ i + 1.
+					cpY _ contourData at: i. i _ i + 1.
+					self rel_QuadraticBezierToX: epX * sx y: epY * sy controlX: cpX * sx y: cpY * sy
+					]
+				].
+			destX _ destX + (advanceWidth * sx).
 		]
 	].
-	self antiAliasingWidth: VectorEngine defaultAntiAliasingWidth! !
+	self antiAliasingWidth: self class defaultAntiAliasingWidth! !
 
-!VectorEngine methodsFor: 'private' stamp: 'jmv 12/26/2017 09:27:29'!
-addPenPositionX: x y: y
-	"slight optimization possible when we know width = 0... perhaps implement:
-		-we know palpha is never 127
-		- we know distanceToEdge is always > erodedHalfWidth.
-	In smalltalk, performance icrease 1.5%. Perhaps in c/asm it is more than that...
-	Mas importante:
-		Cuando width es medio grande, entonces dibujar la bolita rellena de entrada es importante... en los casos en que no necesito calcular la distancia"
+!VectorEngineAbstract methodsFor: 'text' stamp: 'jmv 4/12/2020 17:02:47'!
+displayUtf8: aByteArray at: aPoint trueTypeFont: aTTFontDescription color: aColor scaleX: ssx scaleY: ssy
+	"ssx and ssy to honor font pointSize"
+	| destX destY sx sy contourData contourDataIndexes trueTypeScale cpX cpY epX epY moveToX moveToY advanceWidth boundsLeft boundsRight boundsTop boundsBottom numContours numBeziers baseIndex |
 
-	trajectoryPoints add: x@y! !
+	self antiAliasingWidth: self class antiAliasingWidthForOutlineFonts.
+	trueTypeScale _ 1.0 / aTTFontDescription letterMTopSideBearing.
+	sx _ ssx * trueTypeScale.
+	sy _ ssy * trueTypeScale.
+	contourData _ aTTFontDescription contourDataForUtf8.
+	contourDataIndexes _ aTTFontDescription contourDataIndexesByUtf8.
+	self fillColor: aColor do: [
+		destY _ aPoint y.
+		destX _ aPoint x.
+		baseIndex _ 0.
+		aByteArray do: [ :byte | | i |
+			i _ contourDataIndexes at: baseIndex + byte + 1.
+			i < 0
+				ifTrue: [ baseIndex _ i negated ]
+				ifFalse: [
+					advanceWidth _ contourData at: i. i _ i + 1.
+					boundsLeft _ contourData at: i. i _ i + 1.
+					boundsRight _ contourData at: i. i _ i + 1.
+					boundsTop _ contourData at: i. i _ i + 1.
+					boundsBottom _ contourData at: i. i _ i + 1.
+					numContours _ (contourData at: i) asInteger. i _ i + 1.
+					numContours timesRepeat: [
+						numBeziers _ (contourData at: i) asInteger. i _ i + 1.
+						moveToX _ contourData at: i. i _ i + 1.
+						moveToY _ contourData at: i. i _ i + 1.
+						self abs_MoveToX: moveToX * sx + destX y: moveToY * sy + destY.
+						numBeziers timesRepeat: [
+							epX _ contourData at: i. i _ i + 1.
+							epY _ contourData at: i. i _ i + 1.
+							cpX _ contourData at: i. i _ i + 1.
+							cpY _ contourData at: i. i _ i + 1.
+							self rel_QuadraticBezierToX: epX * sx y: epY * sy controlX: cpX * sx y: cpY * sy
+							]
+						].
+					destX _ destX + (advanceWidth * sx).
+					baseIndex _ 0.
+				]
+			]
+	].
+	self antiAliasingWidth: self class defaultAntiAliasingWidth! !
 
-!VectorEngine methodsFor: 'private' stamp: 'jmv 1/1/2018 21:06:51'!
+!VectorEngineAbstract methodsFor: 'private' stamp: 'jmv 4/29/2020 22:39:00'!
 finishPath
 	"Blend stroke and/or fill over background, according to the just computed pen alphas (distance from pixel to center of stroke)"
-	| prevTruncatedY dilatedHalfWidth fragmentEndIndex pp |
-
+	
 	"If we are doing a fill, and caller forgot to close the trajectory, then do it anyway."
-	doFill ifTrue: [
-		(firstX = currentX and: [ firstY = currentY ]) ifFalse: [
+	fillColor notNil ifTrue: [
+		(pathFirstX = pathCurrentX and: [ pathFirstY = pathCurrentY ]) ifFalse: [
 			"This is actually an error condition. If we are asked to fill, then the path should be closed.
 			This is a workaround. If width > 0.0, we'll be adding a visible edge to the path."
 			self basicClosePath ]].
 
-	"Current trajectory finished"
+	blendBoundsTop _ (blendBoundsTop - auxStrokeWidthDilatedHalf) truncated +1.
+	blendBoundsBottom _ (blendBoundsBottom + auxStrokeWidthDilatedHalf) truncated.
+	blendBoundsLeft _ (blendBoundsLeft - auxStrokeWidthDilatedHalf - subPixelDelta) truncated +1.
+	blendBoundsRight _ (blendBoundsRight + auxStrokeWidthDilatedHalf + subPixelDelta) truncated.
+	blendBoundsTop < clipTop ifTrue: [ blendBoundsTop _ clipTop ].
+	blendBoundsBottom > clipBottom ifTrue: [ blendBoundsBottom _ clipBottom ].
+	blendBoundsLeft< clipLeft ifTrue: [ blendBoundsLeft _ clipLeft ].
+	blendBoundsRight > clipRight ifTrue: [ blendBoundsRight _ clipRight ].
 
-	"Compute edges intersecting with this horizontal line, for fills."
-	doFill ifTrue: [
-		fragmentStartIndexes withNextDo: [ :fragmentStartIndex :nextFragmentStartOrNil |
-			fragmentEndIndex _ nextFragmentStartOrNil ifNotNil: [ :ns | ns-1 ] ifNil: [ trajectoryPoints size ].
-			prevTruncatedY _ nil.
-			fragmentStartIndex to: fragmentEndIndex do: [ :index |
-				pp _ trajectoryPoints at: index.
-				prevTruncatedY _ self updateEdgeCountAtX: pp x y: pp y prevTruncatedY: prevTruncatedY ]]].
+	fillColor notNil ifTrue: [
+		strokeColor notNil
+			ifTrue: [ self blendStrokeAndFill ]
+			ifFalse: [ self blendFillOnly ]]
+		ifFalse: [
+			self blendStrokeOnly ].
+	morphBoundsTop _ morphBoundsTop min: blendBoundsTop.
+	morphBoundsBottom _ morphBoundsBottom max: blendBoundsBottom.
+	morphBoundsLeft _ morphBoundsLeft min: blendBoundsLeft.
+	morphBoundsRight _ morphBoundsRight max: blendBoundsRight.
 
-	"calcular bounds"
-	boundsTop _ targetHeight.			"drawable bottom. Will later be refined."
-	boundsBottom _ 0.						"drawable top. Will later be refined."
-	boundsLeft _ targetWidth.				"drawable right. Will later be refined."
-	boundsRight _ 0.						"drawable left. Will later be refined."
-	trajectoryPoints do: [ :p |
-		boundsTop _ boundsTop min: p y.
-		boundsBottom _ boundsBottom max: p y.
-		boundsLeft _ boundsLeft min: p x.
-		boundsRight _ boundsRight max: p x.
-		].
-	"Compute affected rect. Honor clipRect"
-	dilatedHalfWidth _ strokeWidth + antiAliasingWidth * 0.5.
-	boundsTop _ (boundsTop -dilatedHalfWidth) truncated +1.
-	boundsTop < clipTop ifTrue: [ boundsTop _ clipTop ].
-	boundsBottom _ (boundsBottom +dilatedHalfWidth) truncated.
-	boundsBottom > clipBottom ifTrue: [ boundsBottom _ clipBottom ].
-	boundsLeft _ (boundsLeft -dilatedHalfWidth -subPixelDelta) truncated +1.
-	boundsLeft< clipLeft ifTrue: [ boundsLeft _ clipLeft ].
-	boundsRight _ (boundsRight +dilatedHalfWidth +subPixelDelta) truncated.
-	boundsRight > clipRight ifTrue: [ boundsRight _ clipRight ].
+	pathFirstX _ 0.0.
+	pathFirstY _ 0.0.
+	pathCurrentX _ 0.0.
+	pathCurrentY _ 0.0.
+	previousCallX _ 0.0.
+	previousCallY _ 0.0.
+	previousCallControlX _ previousCallX.
+	previousCallControlY _ previousCallY.
 
-	trajectoryPoints do: [ :p | self updateMaskForX: p x y: p y ].
-
-	firstX _ 0.0.
-	firstY _ 0.0.
-	currentX _ 0.0.
-	currentY _ 0.0.
-	lastClientX _ 0.0.
-	lastClientY _ 0.0.
-	lastControlX _ lastClientX.
-	lastControlY _ lastClientY.
-	trajectoryPoints _ OrderedCollection new.
-	fragmentStartIndexes _ OrderedCollection new.
-	
-	morphBoundsTop _ morphBoundsTop min: boundsTop.
-	morphBoundsBottom _ morphBoundsBottom max: boundsBottom.
-	morphBoundsLeft _ morphBoundsLeft min: boundsLeft.
-	morphBoundsRight _ morphBoundsRight max: boundsRight.
-
-	doFill ifTrue: [
-		^doStroke
-			ifTrue: [ self blendStrokeAndFill. Display forceToScreen ]
-			ifFalse: [ self blendFillOnly. Display forceToScreen ]].
-
-	self blendStrokeOnly.
 	Display forceToScreen! !
 
-!VectorEngine methodsFor: 'private' stamp: 'jmv 12/30/2017 15:48:32'!
-initialize
-	geometryTransformation _ MorphicTranslation new. "Identity"! !
+!VectorEngineAbstract methodsFor: 'private' stamp: 'jmv 4/17/2020 09:47:28'!
+initializeOnForm: aForm
+	geometryTransformation _ MorphicTranslation new. "Identity"
+	clippingMorphId _ 0.
+	currentMorphId _ 0.
+	self pvtSetForm: aForm! !
 
-!VectorEngine methodsFor: 'private' stamp: 'jmv 1/1/2018 21:06:43'!
+!VectorEngineAbstract methodsFor: 'private' stamp: 'jmv 4/15/2020 17:13:46'!
 initializePath
 
-	firstX _ 0.0.
-	firstY _ 0.0.
-	currentX _ 0.0.
-	currentY _ 0.0.
-	lastClientX _ 0.0.
-	lastClientY _ 0.0.
-	lastControlX _ lastClientX.
-	lastControlY _ lastClientY.
-	trajectoryPoints _ OrderedCollection new.
-	fragmentStartIndexes _ OrderedCollection new! !
+	pathFirstX _ 0.
+	pathFirstY _ 0.
+	pathCurrentX _ 0.0.
+	pathCurrentY _ 0.0.
+	previousCallX _ 0.0.
+	previousCallY _ 0.0.
+	previousCallControlX _ previousCallX.
+	previousCallControlY _ previousCallY.
+	prevYTruncated _ nil.
 
-!VectorEngine methodsFor: 'private' stamp: 'jmv 12/16/2017 18:17:50'!
+	blendBoundsTop _ targetForm height.		"drawable bottom. Will later be refined."
+	blendBoundsBottom _ 0.						"drawable top. Will later be refined."
+	blendBoundsLeft _ targetWidth.			"drawable right. Will later be refined."
+	blendBoundsRight _ 0.						"drawable left. Will later be refined."! !
+
+!VectorEngineAbstract methodsFor: 'private' stamp: 'jmv 4/30/2020 09:42:12'!
+pvtSetForm: aForm
+
+	| hack s |
+	targetForm _ aForm.
+	targetWidth _ targetForm width.
+	self resetMorphBounds.
+	self clipRect: targetForm boundingBox.
+	self antiAliasingWidth: self class defaultAntiAliasingWidth.
+	subPixelDelta _ 0.25. "Values closer to 0.333 might produce a bit of coloring on some displays. Used to be 0.28"
+	s _ targetForm bits size.
+	(alphaMask isNil or: [ alphaMask size ~= s ])
+		ifTrue: [
+			alphaMask _ WordArray new: s.
+			edgeCountPerPixel _ WordArray new: s.
+			morphIdAtPixel _ WordArray new: s.
+			hack _ Form extent: targetForm extent depth: 32 bits: alphaMask.
+			auxBitBlt _ BitBlt toForm: hack.
+			auxBitBlt fillBitmap: (Bitmap with: 16r00000000).
+			auxBitBlt combinationRule: Form over.
+			auxBitBlt destRect: targetForm boundingBox. ]
+		ifFalse: [
+			auxBitBlt destRect: targetForm boundingBox.
+			auxBitBlt destForm bits: alphaMask.
+			auxBitBlt copyBits.
+			auxBitBlt destForm bits: edgeCountPerPixel.
+			auxBitBlt copyBits.
+			auxBitBlt destForm bits: morphIdAtPixel.
+			auxBitBlt copyBits ].! !
+
+!VectorEngineAbstract methodsFor: 'private' stamp: 'jmv 4/15/2020 16:53:42'!
+pvtStrokeWidth: aNumber
+	| swErodedHalf |
+	strokeWidth _ aNumber.
+	auxStrokeWidthDilatedHalf _ strokeWidth + antiAliasingWidth * 0.5.
+	auxStrokeWidthDilatedHalfSquared _ auxStrokeWidthDilatedHalf * auxStrokeWidthDilatedHalf.
+	swErodedHalf _ strokeWidth - antiAliasingWidth * 0.5.
+	auxStrokeWidthErodedHalfSquared _ swErodedHalf * swErodedHalf * swErodedHalf sign.! !
+
+!VectorEngineAbstract methodsFor: 'private' stamp: 'jmv 4/11/2020 19:07:10'!
 resetMorphBounds
 
-	morphBoundsTop _ targetHeight - 1.
+	morphBoundsTop _ targetForm height - 1.
 	morphBoundsBottom _ 0.
 	morphBoundsLeft _ targetWidth - 1.
 	morphBoundsRight _ 0! !
 
-!VectorEngine methodsFor: 'private' stamp: 'jmv 4/4/2018 15:12:09'!
-setForm: aForm
-	"
-	World extent: World extent
-	"
-	| hack s |
-	targetForm _ aForm.
-	targetWidth _ aForm width.
-	targetHeight _ aForm height.
-	self resetMorphBounds.
-	self clipRect: (0@0 corner: targetWidth@targetHeight).
-	antiAliasingWidth _ VectorEngine defaultAntiAliasingWidth.
-	subPixelDelta _ 0.25. "Values closer to 0.333 might produce a bit of coloring on some displays. Used to be 0.28"
-	s _ aForm bits size.
-	(mask isNil or: [ mask size ~= s ])
-		ifTrue: [
-			mask _ WordArray new: s.
-			edgeCountPerPixel _ WordArray new: s.
-			morphAtPixel _ Array new: s.
-			hack _ Form extent: targetWidth@targetHeight depth: 32 bits: mask.
-			auxBitBlt _ BitBlt toForm: hack.
-			auxBitBlt fillBitmap: (Bitmap with: 16rFF000000).
-			auxBitBlt combinationRule: Form over ].
-
-	"Perhaps this should be done in an ifCurtailed: block in case of Morphic drawing failure..."
-	auxBitBlt destRect: targetForm boundingBox.
-	auxBitBlt destForm bits: mask.
-	auxBitBlt copyBits.
-	auxBitBlt destForm bits: edgeCountPerPixel.
-	auxBitBlt copyBits.
-	morphAtPixel atAllPut: 0! !
-
-!VectorEngine methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 1/4/2018 16:18:33'!
+!VectorEngineAbstract methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 4/16/2020 15:23:37'!
 basicArcCenterX: cx centerY: cy radiusX: rx radiusY: ry rotationAngle: theta start: startAngle sweep: sweepAngle
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2.0 color: Color black fillColor: Color red do: [ :engine |
 		engine basicArcCenterX: 100 centerY: 100 radiusX: 80 radiusY: 40 rotationAngle: -0.2 start: 0 sweep: Float pi * 2 ].
 Display forceToScreen.
 "
-	| d hops angle thetaCos thetaSin xp yp x0 y0 x y |
-	
+	| d hops angle thetaCos thetaSin xp yp x0 y0 |
+
 	"Por supuesto probar tambien rx no igual a ry, y uno (o ambos) menor que el ancho de trazo..."
 	thetaCos _ theta cos.
 	thetaSin _ theta sin.
@@ -2607,30 +2698,29 @@ Display forceToScreen.
 	x0 _ thetaCos * xp - (thetaSin * yp) + cx.
 	y0 _ thetaSin * xp + (thetaCos * yp) + cy.
 	(startAngle ~= 0.0 or: [ sweepAngle ~= Float twoPi ])
-		ifTrue: [ self basicLineToX: x0 y: y0 ]	"Draw a line. There are cases where we want to join an arc. For example, window frames"
+		ifTrue: [ self basicLineToX: x0 y: y0 ] "If an arc (not whole circle/ellipse, join with a line, to ensure closed path. For example, window frames"
 		ifFalse: [
 			"trajectory starts here. Eventually, #closePath should draw a line to here"
-			fragmentStartIndexes add: trajectoryPoints size + 1.	"Next point will be first in a new trajectory fragment"
-			firstX _ x0.
-			firstY _ y0.
-			self addPenPositionX: x0 y: y0 ].
+			"Next point will be first in a new trajectory fragment"
+			prevYTruncated _ nil.
+			pathFirstX _ x0.
+			pathFirstY _ y0 ].
+
 	hops _ ((rx+ry * 4 * sweepAngle abs / (2*Float pi)) * hopsPerPixel) truncated + 1.
 	d _ sweepAngle / hops.
-	hops timesRepeat: [
-		angle _ angle + d.
-		xp _ angle cos * rx.
-		yp _ angle sin * ry.
-		x _ thetaCos * xp - (thetaSin * yp) + cx.
-		y _ thetaSin * xp + (thetaCos * yp) + cy.
-		self addPenPositionX: x y: y ].
 
-	currentX _ x.
-	currentY _ y! !
+	self primArcCenterX: cx centerY: cy radiusX: rx radiusY: ry start: startAngle rotationCos: thetaCos rotationSin: thetaSin hops: hops angleDelta: d.
 
-!VectorEngine methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 12/31/2017 16:42:44'!
+	angle _ startAngle + sweepAngle.
+	xp _ angle cos * rx.
+	yp _ angle sin * ry.
+	pathCurrentX _ thetaCos * xp - (thetaSin * yp) + cx.
+	pathCurrentY _ thetaSin * xp + (thetaCos * yp) + cy.! !
+
+!VectorEngineAbstract methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 4/16/2020 15:23:42'!
 basicArcToX: x2 y: y2 radiusX: rx radiusY: ry angleOfXAxis: phi largeFlag: doLargerArc sweepFlag: useIncreasingAngles
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			basicMoveToX: 100 y: 100;
@@ -2641,8 +2731,8 @@ Display forceToScreen
 "
 	"Calcular: cx, cy, rx, ry, phi, theta1, deltaTheta"
 	| x1 y1 cosPhi sinPhi x12hd y12hd x1p y1p rxSq rySq x1pSq y1pSq bigSqR bigSqRNumerator bigSqRDenominator sign cxp cyp cx cy theta1 theta2 deltaTheta scaleSq scale newRx newRy |
-	x1 _ currentX.
-	y1 _ currentY.
+	x1 _ pathCurrentX.
+	y1 _ pathCurrentY.
 	"Handle out of range parameters as requested by the w3 implementation notes"
 	(x2 = x1 and: [ y2 = y1 ]) ifTrue: [ ^self ].
 	(rx = 0.0 or: [ ry = 0.0 ]) ifTrue: [ ^self basicLineToX: x2 y: y2 ].
@@ -2715,10 +2805,10 @@ Ojo al primitivizar. Para ellos, el theta va entre -pi y pi. Para Squeak va entr
 
 	self basicArcCenterX: cx centerY: cy radiusX: rx radiusY: ry rotationAngle: phi start: theta1 sweep: deltaTheta! !
 
-!VectorEngine methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 1/1/2018 16:11:54'!
+!VectorEngineAbstract methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 4/16/2020 15:23:48'!
 basicClosePath
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black fillColor: Color red do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2726,14 +2816,14 @@ basicClosePath
 			do_ClosePath ].
 Display forceToScreen
 "
-	self basicLineToX: firstX y: firstY! !
+	self basicLineToX: pathFirstX y: pathFirstY! !
 
-!VectorEngine methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 1/1/2018 17:21:18'!
+!VectorEngineAbstract methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 4/16/2020 15:23:55'!
 basicCubicBezierToX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2
 	"Cubic Bezier
 	http://en.wikipedia.org/wiki/Bezier_curve"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2741,7 +2831,7 @@ basicCubicBezierToX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 10 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.8) do: [ :engine |
 		engine abs_MoveToX: 100 y: 50.
 		engine
@@ -2751,72 +2841,59 @@ Display forceToScreen
 Display forceToScreen
 	"
 
-	| dx dy hops increment t x0 y0 oneLessT f2 f3 f1 f23 f4 x y |
+	| dx dy hops |
+	dx _ (x1-pathCurrentX) abs + (x2-x1) abs + (x3-x2) abs.
+	dy _ (y1-pathCurrentY) abs + (y2-y1) abs + (y3-y2) abs.
+	hops _ ((dx max: dy) * hopsPerPixel) truncated + 1.
 
-	dx _ (x1-currentX) abs + (x2-x1) abs + (x3-x2) abs.
-	dy _ (y1-currentY) abs + (y2-y1) abs + (y3-y2) abs.
-	hops _ ((dx max: dy) * hopsPerPixel)truncated + 1.
-	increment _ 1.0 / hops.
-	t _ 0.0.
-	"en muchos casos, secuencias de estos,  repetimos puntos, el ultimo de la curva anterior... pensar, etc"
-	x0 _ currentX.
-	y0 _ currentY.
-	self addPenPositionX: x0 y: y0.
-	hops-1 timesRepeat: [
-		t _ t + increment.
-		oneLessT _ 1.0 - t.
-		f1 _ oneLessT * oneLessT * oneLessT.
-		f23 _ 3 * oneLessT * t.
-		f2 _ f23 * oneLessT.
-		f3 _ f23 * t.
-		f4 _ t * t * t.
-		x _ (f1 * x0) + (f2 * x1) + (f3 * x2) + (f4 * x3).
-		y _ (f1 * y0) + (f2 * y1) + (f3 * y2) + (f4 * y3).
-		self addPenPositionX: x y: y ].
-	self addPenPositionX: x3 y: y3.
+	self primCubicBezierFromX: pathCurrentX y: pathCurrentY toX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2 hops: hops.
 
-	currentX _ x3.
-	currentY _ y3.! !
+	pathCurrentX _ x3.
+	pathCurrentY _ y3.! !
 
-!VectorEngine methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 1/1/2018 17:21:04'!
+!VectorEngineAbstract methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 4/16/2020 15:24:09'!
 basicLineToX: x2 y: y2
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
-			abs_LineToX: 200 y: 150 ].
+			abs_LineToX: 300 y: 150 ].
 Display forceToScreen
 "
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
+	strokeWidth: 25.0 color: Color black do: [ :engine |
+		engine
+			abs_MoveToX: 100 y: 100;
+			abs_LineToX: 500 y: 200 ].
+Display forceToScreen
+"
+"
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
-		engine abs_MoveToX: 10 y: 5.
-		engine abs_LineToX: 15 y: 30.
-		engine abs_LineToX: 60 y: 10 ].
+		engine abs_MoveToX: 30 y: 15.
+		engine abs_LineToX: 45 y: 90.
+		engine abs_LineToX: 180 y: 30 ].
 Display forceToScreen
 "
-	| dx dy hops incrementX incrementY x y |
-	x _ currentX.
-	y _ currentY.
-	dx _ x2 - x.
-	dy _ y2 - y.
-	hops _ ((dx abs max: dy abs) * hopsPerPixel)truncated + 1.
+	| dx dy hops incrementX incrementY |
+	dy _ y2 - pathCurrentY.
+	dx _ x2 - pathCurrentX.
+	"Optimizar. En todas las lineas, bounds. En verticales, mucho mas. En horiz, no EdgeCounts!! Ver 02"
+	hops _ ((dx abs max: dy abs) * hopsPerPixel) truncated + 1.
 	incrementX _ dx *1.0 / hops.
 	incrementY _ dy *1.0 / hops.
-	hops timesRepeat: [
-		self addPenPositionX: x y: y.
-		x _ x + incrementX.
-		y _ y + incrementY ].
-	self addPenPositionX: x2 y: y2.
 
-	currentX _ x2.
-	currentY _ y2.! !
+	self primLineFromX: pathCurrentX y: pathCurrentY toX: x2 y: y2 hops: hops incrementX: incrementX incrementY: incrementY.
 
-!VectorEngine methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 1/1/2018 17:21:09'!
+	pathCurrentX _ x2.
+	pathCurrentY _ y2.! !
+
+!VectorEngineAbstract methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 4/16/2020 15:24:25'!
 basicMoveToX: x y: y
 "
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2828,17 +2905,20 @@ Display forceToScreen
 
 	"A discontinuity in the trajectory"
 
-	"We are starting a new trajectory, or at a discontinuity in trajectory. Eventually #closeTrajectory should draw a line to here"
-	fragmentStartIndexes add: trajectoryPoints size + 1.	"Next point will be first in a new trajectory fragment"
-	firstX _ x.
-	firstY _ y.
-	currentX _ x.
-	currentY _ y.! !
+	"We are starting a new trajectory, or at a discontinuity in trajectory.
+	Eventually #closeTrajectory should draw a line to here"
 
-!VectorEngine methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 1/1/2018 17:21:01'!
+	"Next point will be first in a new trajectory fragment"
+	prevYTruncated _ nil.
+	pathFirstX _ x.
+	pathFirstY _ y.
+	pathCurrentX _ x.
+	pathCurrentY _ y.! !
+
+!VectorEngineAbstract methodsFor: 'private - paths - pixel coordinates' stamp: 'jmv 4/16/2020 15:24:34'!
 basicQuadraticBezierToX: x2 y: y2 controlX: x1 y: y1
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 1.0 color: Color black do: [ :engine |
 		engine
 			abs_MoveToX: 100 y: 100;
@@ -2846,257 +2926,84 @@ basicQuadraticBezierToX: x2 y: y2 controlX: x1 y: y1
 Display forceToScreen
 	"
 	"
-(VectorEngine onForm: Display)
+(VectorEngineBasic onForm: Display)
 	strokeWidth: 2 color: (Color black alpha: 0.7) fillColor: (Color orange alpha: 0.4) do: [ :engine |
 		engine abs_MoveToX: 10 y: 5.
 		engine abs_QuadraticBezierToX: 60 y: 10 controlX: 15 y: 30 ].
 Display forceToScreen
 	"
-	| dx dy hops increment t x0 y0 oneLessT f1 f3 f2 x y |
-	dx _ (x1-currentX) abs + (x2-x1) abs.
-	dy _ (y1-currentY) abs + (y2-y1) abs.
-	hops _ ((dx max: dy) * hopsPerPixel)truncated + 1.
-	increment _ 1.0 / hops.
-	t _ 0.0.
-	x0 _ currentX.
-	y0 _ currentY.
-	self addPenPositionX: x0 y: y0.
-	hops-1 timesRepeat: [
-		t _ t + increment.
-		oneLessT _ 1.0 - t.
-		f1 _ oneLessT * oneLessT.
-		f2 _ 2* oneLessT * t.
-		f3 _ t * t.
-		x _ (f1 * x0) + (f2 * x1) + (f3 * x2).
-		y _ (f1 * y0) + (f2 * y1) + (f3 * y2).
-		self addPenPositionX: x y: y ].
-	self addPenPositionX: x2 y: y2.
+	| dx dy hops |
+	dx _ (x1-pathCurrentX) abs + (x2-x1) abs.
+	dy _ (y1-pathCurrentY) abs + (y2-y1) abs.
+	hops _ ((dx max: dy) * hopsPerPixel) truncated + 1.
 
-	currentX _ x2.
-	currentY _ y2.! !
+	self primQuadraticBezierFromX: pathCurrentX y: pathCurrentY toX: x2 y: y2 controlX: x1 y: y1 hops: hops.
 
-!VectorEngine methodsFor: 'private - rasterization' stamp: 'jmv 12/22/2017 11:55:25'!
-updateEdgeCountAtX: x y: y prevTruncatedY: prevTruncatedY
-	| thisYTruncated pixelY pixelIndexBase redPixelIndex greenPixelIndex bluePixelIndex increment countWord redCount greenCount blueCount redOffset greenOffest blueOffset |
+	pathCurrentX _ x2.
+	pathCurrentY _ y2.! !
 
-	thisYTruncated _ (y truncated max: clipTop-1) min: clipBottom-1.
-	prevTruncatedY ifNil: [ 
-		^ thisYTruncated ].
-	thisYTruncated = prevTruncatedY ifTrue: [
-		^ thisYTruncated ].
-
-	thisYTruncated > prevTruncatedY
-		ifTrue: [
-			pixelY _ thisYTruncated.
-			increment _ 1 ]
-		ifFalse: [
-			pixelY _ prevTruncatedY.
-			increment _ -1 ].
-
-	"All edge count at the left of the clipRect are added there (at the left of the clipRect).
-	The effect is the same, and we need to clean up less stuff afterwards.
-	More important, it avoids trying to acess pixels outside our form, i.e. invalid array acesses."
-	pixelIndexBase _ pixelY * targetWidth + 1.
-	redOffset _ (x+subPixelDelta) truncated + 1 max: clipLeft.
-	greenOffest _ x truncated + 1 max: clipLeft.
-	blueOffset _ (x-subPixelDelta) truncated + 1 max: clipLeft.
-	redPixelIndex _ pixelIndexBase + redOffset.
-	greenPixelIndex _ pixelIndexBase + greenOffest.
-	bluePixelIndex _ pixelIndexBase + blueOffset.
-
-	"Three possible cases here: RGB in one word (pixel); RG in one, and G in another; R in one, GB in another"
-	redPixelIndex = bluePixelIndex
-		ifTrue: [						"First case: RGB in the same word"
-			redOffset <= clipRight ifTrue: [
-				countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
-				redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
-				countWord at: 3 put: redCount.
-				greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
-				countWord at: 2 put: greenCount.
-				blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
-				countWord at: 1 put: blueCount.
-				edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
-		]
-		ifFalse: [
-			redPixelIndex = greenPixelIndex
-				ifTrue: [				"Second case: RG in one word, B in following"
-					redOffset <= clipRight ifTrue: [
-						countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
-						redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
-						countWord at: 3 put: redCount.
-						greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
-						countWord at: 2 put: greenCount.
-						edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
-
-					blueOffset <= clipRight ifTrue: [
-						countWord _ edgeCountPerPixel bytesAt: bluePixelIndex.
-						blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
-						countWord at: 1 put: blueCount.
-						edgeCountPerPixel bytesAt: bluePixelIndex put: countWord ].
-				]
-				ifFalse: [			"Third case: R in one word, GB in the following"
-					redOffset <= clipRight ifTrue: [
-						countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
-						redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
-						countWord at: 3 put: redCount.
-						edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
-
-					blueOffset <= clipRight ifTrue: [
-						countWord _ edgeCountPerPixel bytesAt: bluePixelIndex.
-						greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
-						countWord at: 2 put: greenCount.
-						blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
-						countWord at: 1 put: blueCount.
-						edgeCountPerPixel bytesAt: bluePixelIndex put: countWord ].
-				]
-		].
-	^thisYTruncated! !
-
-!VectorEngine methodsFor: 'private - rasterization' stamp: 'jmv 12/22/2017 12:01:07'!
-updateMaskForX: x y: y
-
-	"slight optimization possible when we know width = 0... perhaps implement:
-		-we know palpha is never 127
-		- we know distanceToEdge is always > erodedHalfWidth.
-	In smalltalk, performance icrease 1.5%. Perhaps in c/asm it is more than that...
-	Mas importante:
-		Cuando width es medio grande, entonces dibujar la bolita rellena de entrada es importante... en los casos en que no necesito calcular la distancia"
-	| dilatedHalfWidth erodedHalfWidth distanceToAxis alpha t b l r constant1 alphaWord doUpdate dySquared dx dxSquared dy pixelIndex dxp |
-
-	dilatedHalfWidth _ strokeWidth + antiAliasingWidth * 0.5.			"Podria ir como ivar... o al menos como arg"
-	erodedHalfWidth _ strokeWidth - antiAliasingWidth * 0.5.			"Podria ir como ivar... o al menos como arg"
-	constant1 _ 127.0 / antiAliasingWidth.
-
-	"Compute affected rect. Honor clipRect"
-	t _ (y -dilatedHalfWidth) truncated +1.
-	t < clipTop ifTrue: [ t _ clipTop ].
-	b _ (y +dilatedHalfWidth) truncated.
-	b > clipBottom ifTrue: [ b _ clipBottom ].
-	l _ (x -dilatedHalfWidth -subPixelDelta) truncated +1.
-	l < clipLeft ifTrue: [ l _ clipLeft ].
-	r _ (x +dilatedHalfWidth +subPixelDelta) truncated.
-	r > clipRight ifTrue: [ r _ clipRight ].
-
-	t to: b do: [ :displayY |
-		pixelIndex _ displayY * targetWidth +  l.
-		l to: r do: [ :displayX |
-			pixelIndex _ pixelIndex + 1.
-			alphaWord _ mask bytesAt: pixelIndex.
-			alphaWord = "16rFF7F7F7F" #[16r7F 16r7F 16r7F 16rFF] ifFalse: [
-				doUpdate _ false.
-				dy _ displayY - y.
-				dySquared _ dy * dy.
-				dx _ displayX - x.
-				"Red"
-				dxp _ dx - subPixelDelta.
-				dxSquared _ dxp * dxp.
-				distanceToAxis _ (dxSquared + dySquared) sqrt.
-				distanceToAxis < dilatedHalfWidth
-					ifTrue: [
-						alpha _ distanceToAxis <= erodedHalfWidth
-							ifTrue: [ 16r7F ]
-							ifFalse: [ (dilatedHalfWidth - distanceToAxis * constant1) rounded ].
-						alpha > (alphaWord at: 3) ifTrue: [
-							alphaWord at: 3 put: alpha.
-							doUpdate _ true ]].
-				"Green"
-				dxSquared _ dx * dx.
-				distanceToAxis _ (dxSquared + dySquared) sqrt.
-				distanceToAxis < dilatedHalfWidth
-					ifTrue: [
-						alpha _ distanceToAxis <= erodedHalfWidth
-							ifTrue: [ 16r7F ]
-							ifFalse: [ (dilatedHalfWidth - distanceToAxis * constant1) rounded ].
-						alpha > (alphaWord at: 2) ifTrue: [
-							alphaWord at: 2 put: alpha.
-							doUpdate _ true ]].
-				"Blue"
-				dxp _ dx + subPixelDelta.
-				dxSquared _ dxp * dxp.
-				distanceToAxis _ (dxSquared + dySquared) sqrt.
-				distanceToAxis < dilatedHalfWidth
-					ifTrue: [
-						alpha _ distanceToAxis <= erodedHalfWidth
-							ifTrue: [ 16r7F ]
-							ifFalse: [ (dilatedHalfWidth - distanceToAxis * constant1) rounded ].
-						alpha > (alphaWord at: 1) ifTrue: [
-							alphaWord at: 1 put: alpha.
-							doUpdate _ true ]].
-				doUpdate ifTrue: [
-					mask bytesAt: pixelIndex put: alphaWord ]]]]! !
-
-!VectorEngine methodsFor: 'private - blend with mask' stamp: 'jmv 12/22/2017 11:59:28'!
+!VectorEngineAbstract methodsFor: 'private - blend with mask' stamp: 'jmv 4/29/2020 10:20:12'!
 blendFillOnly
 
-	| redEdgesTotal greenEdgesTotal blueEdgesTotal redEdges greenEdges blueEdges isRedInside isGreenInside isBlueInside edgesPerPixelWord pixelIndex m |
+	| edgesUpToThisPixelR edgesUpToThisPixelG edgesUpToThisPixelB edgesThisPixel edgesThisPixelR edgesThisPixelG edgesThisPixelB isRedInside isGreenInside isBlueInside pixelIndex morphAtThisPixelId |
 
-	boundsTop to: boundsBottom do: [ :displayY |
-		redEdgesTotal _ 0.
-		greenEdgesTotal _ 0.
-		blueEdgesTotal _ 0.
-		pixelIndex _ displayY * targetWidth +  boundsLeft.
-		boundsLeft to: boundsRight do: [ :displayX |
+	blendBoundsTop to: blendBoundsBottom do: [ :displayY |
+		edgesUpToThisPixelR _ 0.
+		edgesUpToThisPixelG _ 0.
+		edgesUpToThisPixelB _ 0.
+		pixelIndex _ displayY * targetWidth +  blendBoundsLeft.
+		blendBoundsLeft to: blendBoundsRight do: [ :displayX |
 			pixelIndex _ pixelIndex + 1.
 
-			edgesPerPixelWord _ edgeCountPerPixel bytesAt: pixelIndex.
-			redEdges _ edgesPerPixelWord at: 3.
-			greenEdges _ edgesPerPixelWord at: 2.
-			blueEdges _ edgesPerPixelWord at: 1.
+			edgesThisPixel _ edgeCountPerPixel bytesAt: pixelIndex.
+			edgesThisPixelR _ edgesThisPixel at: 3.
+			edgesThisPixelG _ edgesThisPixel at: 2.
+			edgesThisPixelB _ edgesThisPixel at: 1.
 
-			"Not needed in C or asm, use signed char, i.e. a type where 16rFF means -1 and not 255"
-			redEdges > 127 ifTrue: [ redEdges _ redEdges - 256 ].
-			greenEdges > 127 ifTrue: [ greenEdges _ greenEdges - 256 ].
-			blueEdges > 127 ifTrue: [ blueEdges _ blueEdges - 256 ].
+			"Not needed in C or OpenCL, use signed char, i.e. a type where 16rFF means -1 and not 255"
+			edgesThisPixelR > 127 ifTrue: [ edgesThisPixelR _ edgesThisPixelR - 256 ].
+			edgesThisPixelG > 127 ifTrue: [ edgesThisPixelG _ edgesThisPixelG - 256 ].
+			edgesThisPixelB > 127 ifTrue: [ edgesThisPixelB _ edgesThisPixelB - 256 ].
 
-			redEdgesTotal _ redEdgesTotal + redEdges.
-			greenEdgesTotal _ greenEdgesTotal + greenEdges.
-			blueEdgesTotal _ blueEdgesTotal + blueEdges.
-			isRedInside _ redEdgesTotal ~= 0.
-			isGreenInside _ greenEdgesTotal ~= 0.
-			isBlueInside _ blueEdgesTotal ~= 0.
+			edgesUpToThisPixelR _ edgesUpToThisPixelR + edgesThisPixelR.
+			edgesUpToThisPixelG _ edgesUpToThisPixelG + edgesThisPixelG.
+			edgesUpToThisPixelB _ edgesUpToThisPixelB + edgesThisPixelB.
+			isRedInside _ edgesUpToThisPixelR ~= 0.
+			isGreenInside _ edgesUpToThisPixelG ~= 0.
+			isBlueInside _ edgesUpToThisPixelB ~= 0.
 
-			(currentOwnerIfClips isNil or: [
-				m _ morphAtPixel at: pixelIndex.
-				m = currentOwnerIfClips or: [m = currentMorph]]) ifTrue: [
+			(clippingMorphId = 0 or: [
+			morphAtThisPixelId _ morphIdAtPixel at: pixelIndex.
+			morphAtThisPixelId = clippingMorphId or: [morphAtThisPixelId = currentMorphId]]) ifTrue: [
 				self
 					blendFillOnlyAtX: displayX y: displayY pixelIndex: pixelIndex 
-					redIsInside: isRedInside greenIsInside: isGreenInside blueIsInside: isBlueInside.
-				"-----------------------"
-				"y registrar el morph actual a este pixel!!, si es que lo pintamos... Mejorar. ver alpha."
-				"en realidad, si el alpha usado para el verde es relevante, mayor a 0.2, p.ej...
-				Ojo. Esto exige!! que los que contesten clipsSubmorphs, sean opacotes, sino...
-				Uh, usar isGreenInside hace que se clippe a la mitad interna del borde... Además, no se podrá agarrar un morph de la mitad externa del borde...
-				Se podria hacer que el blend conteste si estabamos adentro o no... Y simplemente usar eso...
-				"
-				"-----------------------"
-				isGreenInside ifTrue: [
-				"(auxAlphas at: pixelIndex) = 0 ifFalse: ["
-					morphAtPixel at: pixelIndex put: currentMorph ]].
+					redIsInside: isRedInside greenIsInside: isGreenInside blueIsInside: isBlueInside ].
 			]].
 	auxBitBlt
-		destX: boundsLeft destY: boundsTop
-		width: boundsRight-boundsLeft+1 height: boundsBottom-boundsTop+1.
-	auxBitBlt destForm bits: mask.
+		destX: blendBoundsLeft destY: blendBoundsTop
+		width: blendBoundsRight-blendBoundsLeft+1 height: blendBoundsBottom-blendBoundsTop+1.
+	auxBitBlt destForm bits: alphaMask.
 	auxBitBlt copyBits.
 	auxBitBlt
-		destX: boundsLeft destY: boundsTop
-		width: boundsRight-boundsLeft+1+1 height: boundsBottom-boundsTop+1.
+		destX: blendBoundsLeft destY: blendBoundsTop
+		width: blendBoundsRight-blendBoundsLeft+1+1 height: blendBoundsBottom-blendBoundsTop+1.
 	auxBitBlt destForm bits: edgeCountPerPixel.
 	auxBitBlt copyBits.
 	Display forceToScreen! !
 
-!VectorEngine methodsFor: 'private - blend with mask' stamp: 'jmv 12/22/2017 11:59:41'!
+!VectorEngineAbstract methodsFor: 'private - blend with mask' stamp: 'jmv 4/29/2020 23:01:23'!
 blendFillOnlyAtX: x y: y pixelIndex: pixelIndex redIsInside: isRedInside greenIsInside: isGreenInside blueIsInside: isBlueInside
 
 	"targetForm only contains opaque colors. Assume its alpha is always one. Don't ask for it. Set it to one when writing.
 	Blends fill over background. Despite method selector, there might be a very thin stroke of the same color as the fill. Handle this by adjusting antiAliasAlphas.
 	For blending, alphas are in [0 .. 1.0] and R, G, B color components are in [0 .. 255]"
 
-	| targetWord bits resultR resultG resultB antiAliasAlphasWord antiAliasRedAlpha antiAliasGreenAlpha antiAliasBlueAlpha alpha fillAlphaToUse |
+	| targetWord resultR resultG resultB antiAliasAlphasWord antiAliasRedAlpha antiAliasGreenAlpha antiAliasBlueAlpha alpha |
 
-	antiAliasAlphasWord _ mask bytesAt: pixelIndex.
-	antiAliasAlphasWord = "16rFF000000" #[16r00 16r00 16r00 16rFF] ifTrue: [
-		(isRedInside or: [  isGreenInside or: [ isBlueInside ]]) ifFalse: [
+	antiAliasAlphasWord _ alphaMask bytesAt: pixelIndex.
+
+	antiAliasAlphasWord = "16r00000000" #[16r00 16r00 16r00 16r00] ifTrue: [	"Not in the stroke"
+		(isRedInside or: [  isGreenInside or: [ isBlueInside ]]) ifFalse: [ 		"Not inside"
 			^self]].	"Optimization: We are completely transparent at this point. Do nothing."
 
 	"In this method, antiAliasAlphas are not used to blend stroke, but fill. This means that in the inside of the shape, and away from the stroke, they must be 1.0 (not 0.0)."
@@ -3106,237 +3013,190 @@ blendFillOnlyAtX: x y: y pixelIndex: pixelIndex redIsInside: isRedInside greenIs
 	isGreenInside ifTrue: [ antiAliasGreenAlpha _ 1.0 - antiAliasGreenAlpha ].
 	antiAliasBlueAlpha _ (antiAliasAlphasWord at: 1) / 127.0.
 	isBlueInside ifTrue: [ antiAliasBlueAlpha _ 1.0 - antiAliasBlueAlpha ].
-	
-	targetForm depth = 1  "We only support depths 32 and 1, right now"
-		ifTrue: [
-			antiAliasGreenAlpha > 0.5 ifTrue: [	"Take somewhat opaque pixels. Consider only green alpha"	"Ojo, habria que tomar el alpha del fill o border!!!!"	 "Color black pixelValueForDepth: 1"
-				"Atencion: Falla si el form no es potencia de 2 (anda bien 512x512). Ademas hardcodea que somos little endian. MEJORAR (y poner en el otro blend)"
-				"bits _ targetForm bits.
-				backgroundWord _ bits at: pixelIndex >> 5.
-				backgroundWord _ backgroundWord bitOr: 1 << (31-(pixelIndex bitAnd: 31)).
-				bits at: pixelIndex >> 5 put: backgroundWord."
-				"Esto es super ineficiente pero parece andar bien. Mejorar..."
-				targetForm pixelValueAt: (pixelIndex \\ targetWidth) @(pixelIndex // targetWidth) put: 1
-			].
-			^ self].
 
-	fillAlphaToUse _ fillAlpha / 255.0.
-	bits _ targetForm bits.
-	targetWord _ bits bytesAt: pixelIndex.
+	targetWord _ targetForm bits bytesAt: pixelIndex.
 
-	alpha _ antiAliasRedAlpha * fillAlphaToUse.
-	resultR _ alpha * fillRed + ((1.0 - alpha) * (targetWord at: 3)).
+	alpha _ antiAliasRedAlpha * fillColor alpha.
+	resultR _ alpha * fillColor red * 255 + ((1.0 - alpha) * (targetWord at: 3)).
 	targetWord at: 3 put: resultR rounded.
 
-	alpha _ antiAliasGreenAlpha * fillAlphaToUse.
-	resultG _ alpha * fillGreen + ((1.0 - alpha) * (targetWord at: 2)).
+	alpha _ antiAliasGreenAlpha * fillColor alpha.
+	resultG _ alpha * fillColor green * 255 + ((1.0 - alpha) * (targetWord at: 2)).
 	targetWord at: 2 put: resultG rounded.
 
-	alpha _ antiAliasBlueAlpha * fillAlphaToUse.
-	resultB _ alpha * fillBlue + ((1.0 - alpha) * (targetWord at: 1)).
+	alpha _ antiAliasBlueAlpha * fillColor alpha.
+	resultB _ alpha * fillColor blue * 255 + ((1.0 - alpha) * (targetWord at: 1)).
 	targetWord at: 1 put: resultB rounded.
 
-	bits bytesAt: pixelIndex put: targetWord.! !
+	targetForm bits bytesAt: pixelIndex put: targetWord.
 
-!VectorEngine methodsFor: 'private - blend with mask' stamp: 'jmv 12/22/2017 11:59:20'!
+	antiAliasGreenAlpha > 0.5 ifTrue: [
+		morphIdAtPixel at: pixelIndex put: currentMorphId ].! !
+
+!VectorEngineAbstract methodsFor: 'private - blend with mask' stamp: 'jmv 4/29/2020 10:20:21'!
 blendStrokeAndFill
 
-	| redEdgesTotal greenEdgesTotal blueEdgesTotal redEdges greenEdges blueEdges isRedInside isGreenInside isBlueInside edgesPerPixelWord pixelIndex m |
+	| edgesUpToThisPixelR edgesUpToThisPixelG edgesUpToThisPixelB edgesThisPixel edgesThisPixelR edgesThisPixelG edgesThisPixelB isRedInside isGreenInside isBlueInside pixelIndex morphAtThisPixelId |
 
-	boundsTop to: boundsBottom do: [ :displayY |
-		redEdgesTotal _ 0.
-		greenEdgesTotal _ 0.
-		blueEdgesTotal _ 0.
-		pixelIndex _ displayY * targetWidth +  boundsLeft.
-		boundsLeft to: boundsRight do: [ :displayX |
+	blendBoundsTop to: blendBoundsBottom do: [ :displayY |
+		edgesUpToThisPixelR _ 0.
+		edgesUpToThisPixelG _ 0.
+		edgesUpToThisPixelB _ 0.
+		pixelIndex _ displayY * targetWidth +  blendBoundsLeft.
+		blendBoundsLeft to: blendBoundsRight do: [ :displayX |
 			pixelIndex _ pixelIndex + 1.
 
-			edgesPerPixelWord _ edgeCountPerPixel bytesAt: pixelIndex.
-			redEdges _ edgesPerPixelWord at: 3.
-			greenEdges _ edgesPerPixelWord at: 2.
-			blueEdges _ edgesPerPixelWord at: 1.
+			edgesThisPixel _ edgeCountPerPixel bytesAt: pixelIndex.
+			edgesThisPixelR _ edgesThisPixel at: 3.
+			edgesThisPixelG _ edgesThisPixel at: 2.
+			edgesThisPixelB _ edgesThisPixel at: 1.
 
-			"Not needed in C or asm, use signed char, i.e. a type where 16rFF means -1 and not 255"
-			redEdges > 127 ifTrue: [ redEdges _ redEdges - 256 ].
-			greenEdges > 127 ifTrue: [ greenEdges _ greenEdges - 256 ].
-			blueEdges > 127 ifTrue: [ blueEdges _ blueEdges - 256 ].
+			"Not needed in C or OpenCL, use signed char, i.e. a type where 16rFF means -1 and not 255"
+			edgesThisPixelR > 127 ifTrue: [ edgesThisPixelR _ edgesThisPixelR - 256 ].
+			edgesThisPixelG > 127 ifTrue: [ edgesThisPixelG _ edgesThisPixelG - 256 ].
+			edgesThisPixelB > 127 ifTrue: [ edgesThisPixelB _ edgesThisPixelB - 256 ].
 
-			redEdgesTotal _ redEdgesTotal + redEdges.
-			greenEdgesTotal _ greenEdgesTotal + greenEdges.
-			blueEdgesTotal _ blueEdgesTotal + blueEdges.
-			isRedInside _ redEdgesTotal ~= 0.
-			isGreenInside _ greenEdgesTotal ~= 0.
-			isBlueInside _ blueEdgesTotal ~= 0.
-			(currentOwnerIfClips isNil or: [
-				m _ morphAtPixel at: pixelIndex.
-				m = currentOwnerIfClips or: [m = currentMorph]]) ifTrue: [
+			edgesUpToThisPixelR _ edgesUpToThisPixelR + edgesThisPixelR.
+			edgesUpToThisPixelG _ edgesUpToThisPixelG + edgesThisPixelG.
+			edgesUpToThisPixelB _ edgesUpToThisPixelB + edgesThisPixelB.
+			isRedInside _ edgesUpToThisPixelR ~= 0.
+			isGreenInside _ edgesUpToThisPixelG ~= 0.
+			isBlueInside _ edgesUpToThisPixelB ~= 0.
+
+			(clippingMorphId = 0 or: [
+			morphAtThisPixelId _ morphIdAtPixel at: pixelIndex.
+			morphAtThisPixelId = clippingMorphId or: [morphAtThisPixelId = currentMorphId]]) ifTrue: [
 				self
 					blendStrokeAndFillAtX: displayX y: displayY pixelIndex: pixelIndex 
-					redIsInside: isRedInside greenIsInside: isGreenInside blueIsInside: isBlueInside.
-				"-----------------------"
-				"y registrar el morph actual a este pixel!!, si es que lo pintamos... Mejorar. ver alpha."
-				"en realidad, si el alpha usado para el verde es relevante, mayor a 0.2, p.ej...
-				Ojo. Esto exige!! que los que contesten clipsSubmorphs, sean opacotes, sino...
-				Uh, usar isGreenInside hace que se clippe a la mitad interna del borde... Además, no se podrá agarrar un morph de la mitad externa del borde...
-				Se podria hacer que el blend conteste si estabamos adentro o no... Y simplemente usar eso...
-				"
-				"-----------------------"
-				isGreenInside ifTrue: [
-				"(auxAlphas at: pixelIndex) = 0 ifFalse: ["
-					morphAtPixel at: pixelIndex put: currentMorph ]].
+					redIsInside: isRedInside greenIsInside: isGreenInside blueIsInside: isBlueInside ].
 			]].
 	auxBitBlt
-		destX: boundsLeft destY: boundsTop
-		width: boundsRight-boundsLeft+1 height: boundsBottom-boundsTop+1.
-	auxBitBlt destForm bits: mask.
+		destX: blendBoundsLeft destY: blendBoundsTop
+		width: blendBoundsRight-blendBoundsLeft+1 height: blendBoundsBottom-blendBoundsTop+1.
+	auxBitBlt destForm bits: alphaMask.
 	auxBitBlt copyBits.
 	auxBitBlt
-		destX: boundsLeft destY: boundsTop
-		width: boundsRight-boundsLeft+1+1 height: boundsBottom-boundsTop+1.
+		destX: blendBoundsLeft destY: blendBoundsTop
+		width: blendBoundsRight-blendBoundsLeft+1+1 height: blendBoundsBottom-blendBoundsTop+1.
 	auxBitBlt destForm bits: edgeCountPerPixel.
 	auxBitBlt copyBits.
 	Display forceToScreen! !
 
-!VectorEngine methodsFor: 'private - blend with mask' stamp: 'jmv 12/22/2017 11:59:31'!
+!VectorEngineAbstract methodsFor: 'private - blend with mask' stamp: 'jmv 4/29/2020 23:02:21'!
 blendStrokeAndFillAtX: x y: y pixelIndex: pixelIndex redIsInside: isRedInside greenIsInside: isGreenInside blueIsInside: isBlueInside
 
 	"targetForm only contains opaque colors. Assume its alpha is always one. Don't ask for it. Set it to one when writing.
 	Do an appropriate (anti aliased) mix between stoke and fill (or pick just stroke or just fill). Blend this over background.
 	For blending, alphas are in [0 .. 1.0] and R, G, B color components are in [0 .. 255]"
 
-	| targetWord bits resultR resultG resultB antiAliasAlphasWord antiAliasRedAlpha antiAliasGreenAlpha antiAliasBlueAlpha alpha foreComponent strokeAlphaToUse fillAlphaToUse |
+	| targetWord resultR resultG resultB antiAliasAlphasWord antiAliasRedAlpha antiAliasGreenAlpha antiAliasBlueAlpha alpha foreComponent |
 
-	antiAliasAlphasWord _ mask bytesAt: pixelIndex.
-	antiAliasAlphasWord = "16rFF000000" #[16r00 16r00 16r00 16rFF] ifTrue: [
+	antiAliasAlphasWord _ alphaMask bytesAt: pixelIndex.
+	antiAliasAlphasWord = "16r00000000" #[16r00 16r00 16r00 16r00] ifTrue: [
 		(isRedInside or: [  isGreenInside or: [ isBlueInside ]]) ifFalse: [
 			^self]].	"Optimization: We are completely transparent at this point. Do nothing."
 
 	antiAliasRedAlpha _ (antiAliasAlphasWord at: 3) / 127.0.
 	antiAliasGreenAlpha _ (antiAliasAlphasWord at: 2) / 127.0.
 	antiAliasBlueAlpha _ (antiAliasAlphasWord at: 1) / 127.0.
-	
-	targetForm depth = 1  "We only support depths 32 and 1, right now"
-		ifTrue: [
-			antiAliasGreenAlpha > 0.5 ifTrue: [	"Take somewhat opaque pixels. Consider only green alpha"	"Ojo, habria que tomar el alpha del fill o border!!!!"	 "Color black pixelValueForDepth: 1"
-				"Atencion: Falla si el form no es potencia de 2 (anda bien 512x512). Ademas hardcodea que somos little endian. MEJORAR (y poner en el otro blend)"
-				"bits _ targetForm bits.
-				backgroundWord _ bits at: pixelIndex >> 5.
-				backgroundWord _ backgroundWord bitOr: 1 << (31-(pixelIndex bitAnd: 31)).
-				bits at: pixelIndex >> 5 put: backgroundWord."
-				"Esto es super ineficiente pero parece andar bien. Mejorar..."
-				targetForm pixelValueAt: (pixelIndex \\ targetWidth) @(pixelIndex // targetWidth) put: 1
-			].
-			^ self].
 
-	strokeAlphaToUse _ strokeAlpha / 255.0.
-	fillAlphaToUse _ fillAlpha / 255.0.
-	bits _ targetForm bits.
-	targetWord _ bits bytesAt: pixelIndex.
+	targetWord _ targetForm bits bytesAt: pixelIndex.
 
 	isRedInside
-		ifFalse: [							"Blend stroke over background"
-			alpha _ antiAliasRedAlpha * strokeAlphaToUse.
-			foreComponent _ strokeRed ]
 		ifTrue: [ 							"Do gradient between stroke and fill. Blend the result over background"
-			alpha _ antiAliasRedAlpha * strokeAlphaToUse + ((1-antiAliasRedAlpha) * fillAlphaToUse).
-			foreComponent _ antiAliasRedAlpha * strokeRed + ((1-antiAliasRedAlpha) * fillRed) ].
+			alpha _ antiAliasRedAlpha * strokeColor alpha + ((1-antiAliasRedAlpha) * fillColor alpha).
+			foreComponent _ antiAliasRedAlpha * strokeColor red * 255 + ((1-antiAliasRedAlpha) * fillColor red * 255).
+			morphIdAtPixel at: pixelIndex put: currentMorphId ]
+		ifFalse: [							"Blend stroke over background"
+			alpha _ antiAliasRedAlpha * strokeColor alpha.
+			foreComponent _ strokeColor red * 255.
+			antiAliasGreenAlpha > 0.5 ifTrue: [
+				morphIdAtPixel at: pixelIndex put: currentMorphId ] ].
 	resultR _ alpha * foreComponent + ((1.0 - alpha) * (targetWord at: 3)).
 	targetWord at: 3 put: resultR rounded.
 
 	isGreenInside
-		ifFalse: [							"Blend stroke over background"
-			alpha _ antiAliasGreenAlpha * strokeAlphaToUse.
-			foreComponent _ strokeGreen ]
 		ifTrue: [ 							"Do gradient between stroke and fill. Blend the result over background"
-			alpha _ antiAliasGreenAlpha * strokeAlphaToUse + ((1-antiAliasGreenAlpha) * fillAlphaToUse).
-			foreComponent _ antiAliasGreenAlpha * strokeGreen + ((1-antiAliasGreenAlpha) * fillGreen) ].
+			alpha _ antiAliasGreenAlpha * strokeColor alpha + ((1-antiAliasGreenAlpha) * fillColor alpha).
+			foreComponent _ antiAliasGreenAlpha * strokeColor green * 255 + ((1-antiAliasGreenAlpha) * fillColor green * 255) ]
+		ifFalse: [							"Blend stroke over background"
+			alpha _ antiAliasGreenAlpha * strokeColor alpha.
+			foreComponent _ strokeColor green * 255 ].
 	resultG _ alpha * foreComponent + ((1.0 - alpha) * (targetWord at: 2)).
 	targetWord at: 2 put: resultG rounded.
 
 	isBlueInside
-		ifFalse: [							"Blend stroke over background"
-			alpha _ antiAliasBlueAlpha * strokeAlphaToUse.
-			foreComponent _ strokeBlue ]
 		ifTrue: [ 							"Do gradient between stroke and fill. Blend the result over background"
-			alpha _ antiAliasBlueAlpha * strokeAlphaToUse + ((1-antiAliasBlueAlpha) * fillAlphaToUse).
-			foreComponent _ antiAliasBlueAlpha * strokeBlue + ((1-antiAliasBlueAlpha) * fillBlue) ].
+			alpha _ antiAliasBlueAlpha * strokeColor alpha + ((1-antiAliasBlueAlpha) * fillColor alpha).
+			foreComponent _ antiAliasBlueAlpha * strokeColor blue * 255 + ((1-antiAliasBlueAlpha) * fillColor blue * 255) ]
+		ifFalse: [							"Blend stroke over background"
+			alpha _ antiAliasBlueAlpha * strokeColor alpha.
+			foreComponent _ strokeColor blue * 255 ].
 	resultB _ alpha * foreComponent + ((1.0 - alpha) * (targetWord at: 1)).
 	targetWord at: 1 put: resultB rounded.
 
-	bits bytesAt: pixelIndex put: targetWord.! !
+	targetForm bits bytesAt: pixelIndex put: targetWord.! !
 
-!VectorEngine methodsFor: 'private - blend with mask' stamp: 'jmv 12/22/2017 11:59:33'!
+!VectorEngineAbstract methodsFor: 'private - blend with mask' stamp: 'jmv 4/29/2020 22:23:43'!
 blendStrokeOnly
 
-	| pixelIndex m |
-	boundsTop to: boundsBottom do: [ :displayY |
-		pixelIndex _ displayY * targetWidth +  boundsLeft.
-		boundsLeft to: boundsRight do: [ :displayX |
+	| pixelIndex morphAtThisPixelId |
+	blendBoundsTop to: blendBoundsBottom do: [ :displayY |
+		pixelIndex _ displayY * targetWidth +  blendBoundsLeft.
+		blendBoundsLeft to: blendBoundsRight do: [ :displayX |
 			pixelIndex _ pixelIndex + 1.
-				(currentOwnerIfClips isNil or: [
-				m _ morphAtPixel at: pixelIndex.
-				m = currentOwnerIfClips or: [m = currentMorph]]) ifTrue: [
+				(clippingMorphId = 0 or: [
+				morphAtThisPixelId _ morphIdAtPixel at: pixelIndex.
+				morphAtThisPixelId = clippingMorphId or: [morphAtThisPixelId = currentMorphId]]) ifTrue: [
 					self blendStrokeOnlyAtX: displayX y: displayY pixelIndex: pixelIndex ]]].
 
 	auxBitBlt
-		destX: boundsLeft destY: boundsTop
-		width: boundsRight-boundsLeft+1 height: boundsBottom-boundsTop+1.
-	auxBitBlt destForm bits: mask.
+		destX: blendBoundsLeft destY: blendBoundsTop
+		width: blendBoundsRight-blendBoundsLeft+1 height: blendBoundsBottom-blendBoundsTop+1.
+	auxBitBlt destForm bits: alphaMask.
 	auxBitBlt copyBits.
 	Display forceToScreen! !
 
-!VectorEngine methodsFor: 'private - blend with mask' stamp: 'jmv 12/22/2017 11:59:36'!
+!VectorEngineAbstract methodsFor: 'private - blend with mask' stamp: 'jmv 4/29/2020 23:02:39'!
 blendStrokeOnlyAtX: x y: y pixelIndex: pixelIndex
 
 	"targetForm only contains opaque colors. Assume its alpha is always one. Don't ask for it. Set it to one when writing.
 	Blends stroke over background.
 	For blending, alphas are in [0 .. 1.0] and R, G, B color components are in [0 .. 255]"
 
-	| targetWord bits resultR resultG resultB antiAliasAlphasWord antiAliasRedAlpha antiAliasGreenAlpha antiAliasBlueAlpha alpha strokeAlphaToUse |
+	| targetWord resultR resultG resultB antiAliasAlphasWord antiAliasRedAlpha antiAliasGreenAlpha antiAliasBlueAlpha alpha |
 
-	antiAliasAlphasWord _ mask bytesAt: pixelIndex.
-	antiAliasAlphasWord = "16rFF000000" #[16r00 16r00 16r00 16rFF] ifTrue: [
+	antiAliasAlphasWord _ alphaMask bytesAt: pixelIndex.
+	antiAliasAlphasWord = "16r00000000" #[16r00 16r00 16r00 16r00] ifTrue: [
 		^self].	"Optimization: We are completely transparent at this point. Do nothing."
 
 	antiAliasRedAlpha _ (antiAliasAlphasWord at: 3) / 127.0.
 	antiAliasGreenAlpha _ (antiAliasAlphasWord at: 2) / 127.0.
 	antiAliasBlueAlpha _ (antiAliasAlphasWord at: 1) / 127.0.
 
-	targetForm depth = 1  "We only support depths 32 and 1, right now"
-		ifTrue: [
-			antiAliasGreenAlpha > 0.5 ifTrue: [	"Take somewhat opaque pixels. Consider only green alpha"	"Ojo, habria que tomar el alpha del fill o border!!!!"	 "Color black pixelValueForDepth: 1"
-				"Atencion: Falla si el form no es potencia de 2 (anda bien 512x512). Ademas hardcodea que somos little endian. MEJORAR (y poner en el otro blend)"
-				"bits _ targetForm bits.
-				backgroundWord _ bits at: pixelIndex >> 5.
-				backgroundWord _ backgroundWord bitOr: 1 << (31-(pixelIndex bitAnd: 31)).
-				bits at: pixelIndex >> 5 put: backgroundWord."
-				"Esto es super ineficiente pero parece andar bien. Mejorar..."
-				targetForm pixelValueAt: (pixelIndex \\ targetWidth) @(pixelIndex // targetWidth) put: 1
-			].
-			^ self].
+	targetWord _ targetForm bits bytesAt: pixelIndex.
 
-	strokeAlphaToUse _ strokeAlpha / 255.0.
-	bits _ targetForm bits.
-	targetWord _ bits bytesAt: pixelIndex.
-
-	alpha _ antiAliasRedAlpha * strokeAlphaToUse.
-	resultR _ alpha * strokeRed + ((1.0 - alpha) * (targetWord at: 3)).
+	alpha _ antiAliasRedAlpha * strokeColor alpha.
+	resultR _ alpha * strokeColor red * 255 + ((1.0 - alpha) * (targetWord at: 3)).
 	targetWord at: 3 put: resultR rounded.
 
-	alpha _ antiAliasGreenAlpha * strokeAlphaToUse.
-	resultG _ alpha * strokeGreen + ((1.0 - alpha) * (targetWord at: 2)).
+	alpha _ antiAliasGreenAlpha * strokeColor alpha.
+	resultG _ alpha * strokeColor green * 255 + ((1.0 - alpha) * (targetWord at: 2)).
 	targetWord at: 2 put: resultG rounded.
 
-	alpha _ antiAliasBlueAlpha * strokeAlphaToUse.
-	resultB _ alpha * strokeBlue + ((1.0 - alpha) * (targetWord at: 1)).
+	alpha _ antiAliasBlueAlpha * strokeColor alpha.
+	resultB _ alpha * strokeColor blue * 255 + ((1.0 - alpha) * (targetWord at: 1)).
 	targetWord at: 1 put: resultB rounded.
 
-	bits bytesAt: pixelIndex put: targetWord.! !
+	targetForm bits bytesAt: pixelIndex put: targetWord.
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 4/4/2018 15:12:52'!
+	antiAliasGreenAlpha > 0.5 ifTrue: [
+		morphIdAtPixel at: pixelIndex put: currentMorphId ].! !
+
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:01:35'!
 experLinesAndShapes
 	"
-	self experLinesAndShapes
+	VectorEngineBasic experLinesAndShapes
 	"
 	| engine y1 yy2 dy y2 |
 	engine _ self onForm: Display.
@@ -3347,7 +3207,7 @@ experLinesAndShapes
 			abs_LineToX: 15 y: 410; abs_LineToX: 10 y: 20;
 			do_ClosePath ].
 	Display forceToScreen.
-	engine strokeWidth: VectorEngine defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
+	engine strokeWidth: self defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
 		engine
 			abs_MoveToX: 220 y: 10;
 			abs_LineToX: 410 y: 15; abs_LineToX: 220 y: 20;
@@ -3357,11 +3217,11 @@ experLinesAndShapes
 
 	y1 _ 10.
 	dy _ 3.
-	y2 _ VectorEngine defaultAntiAliasingWidth * 2.
+	y2 _ self defaultAntiAliasingWidth * 2.
 	15 timesRepeat: [
 		"stroke con w > aaw"
-		yy2 _ y2 >= 1 ifTrue: [ VectorEngine defaultAntiAliasingWidth * 0.5 ] ifFalse: [0].
-		engine strokeWidth: VectorEngine defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
+		yy2 _ y2 >= 1 ifTrue: [ self defaultAntiAliasingWidth * 0.5 ] ifFalse: [0].
+		engine strokeWidth: self defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
 			engine
 				abs_MoveToX: 431 y: y1+yy2; abs_LineToX: 530 y: y1+yy2+dy;
 				abs_LineToX: 530 y: y1+y2-yy2+dy; abs_LineToX: 431 y: y1+y2-yy2;
@@ -3396,24 +3256,24 @@ experLinesAndShapes
 				abs_MoveToX: y2*0.5+731 y: y2*0.5 + y1+dy+dy+dy; abs_LineToX: 830 y: y2 * 0.5 + y1  + dy + dy+dy+dy.
 			engine
 				abs_MoveToX: y2*0.5 + y1+dy+dy+dy y: y2*0.5+731; abs_LineToX: y2 * 0.5 + y1  + dy + dy+dy+dy y: 830 ].
-		y1 _ y1 + y2 + VectorEngine defaultAntiAliasingWidth + 3.
+		y1 _ y1 + y2 + self defaultAntiAliasingWidth + 3.
 		Display forceToScreen.
 		y2 _ y2 * 0.8.
 	].
 	
 	Display forceToScreen! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 4/4/2018 15:12:56'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:02:04'!
 experLinesAndShapes2
 	"
-	self experLinesAndShapes2
+	VectorEngineBasic experLinesAndShapes2
 	"
 	| engine y1 dy y2 |
 	engine _ self onForm: Display.
 
 	y1 _ 10.
 	dy _ 3.
-	y2 _ VectorEngine defaultAntiAliasingWidth*4*2.
+	y2 _ self defaultAntiAliasingWidth*4*2.
 	15 timesRepeat: [
 		"Solo fill. w chico pero aun visible"
 		engine strokeWidth: 1.0 color: Color green fillColor: Color red do: [
@@ -3475,7 +3335,7 @@ experLinesAndShapes2
 				abs_MoveToX: y1+dy+dy+dy+dy+dy y: 631; abs_LineToX: y1+dy+dy+dy+dy+dy+dy y: 730;
 				abs_LineToX: y1+y2+dy+dy+dy+dy+dy+dy y: 730; abs_LineToX: y1+y2+dy+dy+dy+dy+dy y: 631;
 				do_ClosePath ].
-		y1 _ y1 + y2 + VectorEngine defaultAntiAliasingWidth + 3.
+		y1 _ y1 + y2 + self defaultAntiAliasingWidth + 3.
 		Display forceToScreen.
 		y2 print.
 		y2 _ y2 * 0.8.
@@ -3483,10 +3343,10 @@ experLinesAndShapes2
 	
 	Display forceToScreen! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 4/4/2018 15:13:02'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:02:56'!
 experLinesAndShapes3
 	"
-	self experLinesAndShapes3
+	VectorEngineBasic experLinesAndShapes3
 	"
 	| engine y1 dy y2 |
 	engine _ self onForm: Display.
@@ -3497,7 +3357,7 @@ experLinesAndShapes3
 			abs_LineToX: 15 y: 410; abs_LineToX: 10 y: 20;
 			do_ClosePath ].
 	Display forceToScreen.
-	engine strokeWidth: VectorEngine defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
+	engine strokeWidth: self defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
 		engine
 			abs_MoveToX: 220 y: 10;
 			abs_LineToX: 410 y: 15; abs_LineToX: 220 y: 20;
@@ -3507,10 +3367,10 @@ experLinesAndShapes3
 
 	y1 _ 10.
 	dy _ 3.
-	y2 _ VectorEngine defaultAntiAliasingWidth * 2.
+	y2 _ self defaultAntiAliasingWidth * 2.
 	15 timesRepeat: [
 		"stroke con w > aaw"
-		engine strokeWidth: VectorEngine defaultAntiAliasingWidth*0.4 color: Color black fillColor: Color black do: [
+		engine strokeWidth: self defaultAntiAliasingWidth*0.4 color: Color black fillColor: Color black do: [
 			engine
 				abs_MoveToX: 431 y: y1; abs_LineToX: 530 y: y1+dy;
 				abs_LineToX: 530 y: y1+y2+dy; abs_LineToX: 431 y: y1+y2;
@@ -3520,7 +3380,7 @@ experLinesAndShapes3
 				abs_LineToX: y1+y2+dy y: 530; abs_LineToX: y1+y2 y: 431;
 				do_ClosePath ].
 		"Solo fill. w casi=0"
-		engine strokeWidth: VectorEngine defaultAntiAliasingWidth*0.2 color: Color black fillColor: Color black do: [
+		engine strokeWidth: self defaultAntiAliasingWidth*0.2 color: Color black fillColor: Color black do: [
 			engine
 				abs_MoveToX: 531 y: y1+dy; abs_LineToX: 630 y: y1+dy+dy;
 				abs_LineToX: 630 y: y1+y2+dy+dy; abs_LineToX: 531 y: y1+y2+dy;
@@ -3530,7 +3390,7 @@ experLinesAndShapes3
 				abs_LineToX: y1+y2+dy+dy y: 630; abs_LineToX: y1+y2+dy y: 531;
 				do_ClosePath ].
 		"Solo fill. w =0"
-		engine strokeWidth: VectorEngine defaultAntiAliasingWidth*0.0 color: Color black fillColor: Color black do: [
+		engine strokeWidth: self defaultAntiAliasingWidth*0.0 color: Color black fillColor: Color black do: [
 			engine
 				abs_MoveToX: 631 y: y1+dy+dy; abs_LineToX: 730 y: y1+dy+dy+dy;
 				abs_LineToX: 730 y: y1+y2+dy+dy+dy; abs_LineToX: 631 y: y1+y2+dy+dy;
@@ -3539,7 +3399,7 @@ experLinesAndShapes3
 				abs_MoveToX: y1+dy+dy y: 631; abs_LineToX: y1+dy+dy+dy y: 730;
 				abs_LineToX: y1+y2+dy+dy+dy y: 730; abs_LineToX: y1+y2+dy+dy y: 631;
 				do_ClosePath ].
-		y1 _ y1 + y2 + VectorEngine defaultAntiAliasingWidth + 3.
+		y1 _ y1 + y2 + self defaultAntiAliasingWidth + 3.
 		Display forceToScreen.
 		y2 _ y2 * 0.8.
 	].
@@ -3547,10 +3407,10 @@ experLinesAndShapes3
 	Display forceToScreen.
 ! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 4/4/2018 15:13:08'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:01:50'!
 experLinesAndShapes4
 	"
-	self experLinesAndShapes4
+	VectorEngineBasic experLinesAndShapes4
 	"
 	| engine y1 dy y2 |
 	engine _ self onForm: Display.
@@ -3561,7 +3421,7 @@ experLinesAndShapes4
 			abs_LineToX: 15 y: 410; abs_LineToX: 10 y: 20;
 			do_ClosePath ].
 	Display forceToScreen.
-	engine strokeWidth: VectorEngine defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
+	engine strokeWidth: self defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
 		engine
 			abs_MoveToX: 220 y: 10;
 			abs_LineToX: 410 y: 15; abs_LineToX: 220 y: 20;
@@ -3571,10 +3431,10 @@ experLinesAndShapes4
 
 	y1 _ 10.
 	dy _ 3.
-	y2 _ VectorEngine defaultAntiAliasingWidth * 2.
+	y2 _ self defaultAntiAliasingWidth * 2.
 	15 timesRepeat: [
 		"stroke con w > aaw"
-		engine strokeWidth: VectorEngine defaultAntiAliasingWidth*2 color: Color black fillColor: Color black do: [
+		engine strokeWidth: self defaultAntiAliasingWidth*2 color: Color black fillColor: Color black do: [
 			engine
 				abs_MoveToX: 431 y: y1; abs_LineToX: 530 y: y1+dy;
 				abs_LineToX: 530 y: y1+y2+dy; abs_LineToX: 431 y: y1+y2;
@@ -3584,7 +3444,7 @@ experLinesAndShapes4
 				abs_LineToX: y1+y2+dy y: 530; abs_LineToX: y1+y2 y: 431;
 				do_ClosePath ].
 		"Solo fill. w casi=0"
-		engine strokeWidth: VectorEngine defaultAntiAliasingWidth*1.5 color: Color black fillColor: Color black do: [
+		engine strokeWidth: self defaultAntiAliasingWidth*1.5 color: Color black fillColor: Color black do: [
 			engine
 				abs_MoveToX: 531 y: y1+dy; abs_LineToX: 630 y: y1+dy+dy;
 				abs_LineToX: 630 y: y1+y2+dy+dy; abs_LineToX: 531 y: y1+y2+dy;
@@ -3594,7 +3454,7 @@ experLinesAndShapes4
 				abs_LineToX: y1+y2+dy+dy y: 630; abs_LineToX: y1+y2+dy y: 531;
 				do_ClosePath ].
 		"Solo fill. w =0"
-		engine strokeWidth: VectorEngine defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
+		engine strokeWidth: self defaultAntiAliasingWidth color: Color black fillColor: Color black do: [
 			engine
 				abs_MoveToX: 631 y: y1+dy+dy; abs_LineToX: 730 y: y1+dy+dy+dy;
 				abs_LineToX: 730 y: y1+y2+dy+dy+dy; abs_LineToX: 631 y: y1+y2+dy+dy;
@@ -3603,7 +3463,7 @@ experLinesAndShapes4
 				abs_MoveToX: y1+dy+dy y: 631; abs_LineToX: y1+dy+dy+dy y: 730;
 				abs_LineToX: y1+y2+dy+dy+dy y: 730; abs_LineToX: y1+y2+dy+dy y: 631;
 				do_ClosePath ].
-		y1 _ y1 + y2 + VectorEngine defaultAntiAliasingWidth + 3.
+		y1 _ y1 + y2 + self defaultAntiAliasingWidth + 3.
 		Display forceToScreen.
 		y2 _ y2 * 0.8.
 	].
@@ -3611,10 +3471,10 @@ experLinesAndShapes4
 	Display forceToScreen.
 ! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 4/4/2018 15:12:44'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:02:20'!
 experLinesAndShapesx
 	"
-	self experLinesAndShapesx
+	VectorEngineBasic experLinesAndShapesx
 	"
 	| engine y1 dy y2 |
 	engine _ self onForm: Display.
@@ -3628,7 +3488,7 @@ experLinesAndShapesx
 
 	y1 _ 10.
 	dy _ 3.
-	y2 _ VectorEngine defaultAntiAliasingWidth * 2.
+	y2 _ self defaultAntiAliasingWidth * 2.
 	15 timesRepeat: [
 		y2 print.
 		"Solo fill. w =0"
@@ -3641,14 +3501,14 @@ experLinesAndShapesx
 				abs_MoveToX: y1+dy+dy y: 431; abs_LineToX: y1+dy+dy+dy y: 530;
 				abs_LineToX: y1+y2+dy+dy+dy y: 530; abs_LineToX: y1+y2+dy+dy y: 431;
 				do_ClosePath ].
-		y1 _ y1 + y2 + VectorEngine defaultAntiAliasingWidth + 3.
+		y1 _ y1 + y2 + self defaultAntiAliasingWidth + 3.
 		Display forceToScreen.
 		y2 _ y2 * 0.8.
 	].
 	
 	Display forceToScreen.! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 1/1/2018 16:23:28'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 1/1/2018 16:23:28'!
 experLinesAndShapesx2
 	"
 	self experLinesAndShapesx2
@@ -3672,18 +3532,18 @@ experLinesAndShapesx2
 	Display forceToScreen.
 ! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 7/14/2019 15:24:57'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:02:30'!
 experimentHopsPerPixel1
 	"Play with this to learn about the effect of hopsPerPixel
 	Experiment 1: Very thin stroke, the same color as fill
-	VectorEngine experimentHopsPerPixel1
+	VectorEngineBasic experimentHopsPerPixel1
 	"
 	| d engine f1 f2 hops1 hops2 |
 	hops1 _ 200.
 	hops2 _ 8.
 	f1 _ Form extent: 220@420 depth: 32.
 	f1 fillColor: Color white.
-	engine _ VectorEngine onForm: f1.
+	engine _ self onForm: f1.
 	engine strokeWidth: 0.001 color: Color black fillColor: Color black do: [
 		engine instVarNamed: 'hopsPerPixel' put: hops1.
 		engine
@@ -3695,7 +3555,7 @@ experimentHopsPerPixel1
 
 	f2 _ Form extent: 220@420 depth: 32.
 	f2 fillColor: Color white.
-	engine _ VectorEngine onForm: f2.
+	engine _ self onForm: f2.
 	engine strokeWidth: 0.001 color: Color black fillColor: Color black do: [
 		engine instVarNamed: 'hopsPerPixel' put: hops2.
 		engine
@@ -3713,11 +3573,11 @@ experimentHopsPerPixel1
 		(d asFormMin: 0 max: 1) displayAt: 660@0.
 		{d elements min * 255. d elements max * 255. 'diff entre'. hops1. hops2} print ]! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 7/14/2019 15:25:18'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:03:19'!
 experimentHopsPerPixel2
 	"Play with this to learn about the effect of hopsPerPixel
 	Experiment 2: Stroke of various widths, no fill
-	VectorEngine experimentHopsPerPixel2
+	VectorEngineBasic experimentHopsPerPixel2
 	"
 	| d engine f1 f2 hops1 hops2 strokeWidth |
 	hops1 _ 200.
@@ -3737,7 +3597,7 @@ experimentHopsPerPixel2
 	hops2 _ 10.0 / strokeWidth + 1.
 	f1 _ Form extent: 220@420 depth: 32.
 	f1 fillColor: Color white.
-	engine _ VectorEngine onForm: f1.
+	engine _ self onForm: f1.
 	engine strokeWidth: strokeWidth color: Color black do: [
 		engine instVarNamed: 'hopsPerPixel' put: hops1.
 		engine
@@ -3749,7 +3609,7 @@ experimentHopsPerPixel2
 
 	f2 _ Form extent: 220@420 depth: 32.
 	f2 fillColor: Color white.
-	engine _ VectorEngine onForm: f2.
+	engine _ self onForm: f2.
 	engine strokeWidth: strokeWidth color: Color black do: [
 		engine instVarNamed: 'hopsPerPixel' put: hops2.
 		engine
@@ -3767,18 +3627,18 @@ Feature require: 'LinearAlgebra'.
 		(d asFormMin: 0 max: 1) displayAt: 660@0.
 		{d elements min * 255. d elements max * 255. 'diff entre'. hops1. hops2} print ]! !
 
-!VectorEngine class methodsFor: 'experiments' stamp: 'jmv 7/14/2019 15:24:49'!
+!VectorEngineAbstract class methodsFor: 'experiments' stamp: 'jmv 4/12/2020 17:03:09'!
 experimentHopsPerPixel3
 	"Play with this to learn about the effect of hopsPerPixel
 	Experiment 3: No stroke, just fill
-	VectorEngine experimentHopsPerPixel3
+	VectorEngineBasic experimentHopsPerPixel3
 	"
 	| d engine f1 f2 hops1 hops2 |
 	hops1 _ 200.
 	hops2 _ 8.
 	f1 _ Form extent: 220@420 depth: 32.
 	f1 fillColor: Color white.
-	engine _ VectorEngine onForm: f1.
+	engine _ self onForm: f1.
 	engine fillColor: Color black do: [
 		engine instVarNamed: 'hopsPerPixel' put: hops1.
 		engine
@@ -3790,7 +3650,7 @@ experimentHopsPerPixel3
 
 	f2 _ Form extent: 220@420 depth: 32.
 	f2 fillColor: Color white.
-	engine _ VectorEngine onForm: f2.
+	engine _ self onForm: f2.
 	engine fillColor: Color black do: [
 		engine instVarNamed: 'hopsPerPixel' put: hops2.
 		engine
@@ -3808,7 +3668,7 @@ experimentHopsPerPixel3
 		(d asFormMin: 0 max: 1) displayAt: 660@0.
 		{d elements min * 255. d elements max * 255. 'diff entre'. hops1. hops2} print ]! !
 
-!VectorEngine class methodsFor: 'samples' stamp: 'jmv 1/1/2018 16:23:50'!
+!VectorEngineAbstract class methodsFor: 'samples' stamp: 'jmv 1/1/2018 16:23:50'!
 experiment1
 	"
 	No perfecto aun, pero se puede empezar a comparar con
@@ -3869,7 +3729,7 @@ Display forceToScreen.
 	f writePNGfileNamed: 'pp17.png'
 "! !
 
-!VectorEngine class methodsFor: 'samples' stamp: 'jmv 1/1/2018 16:23:54'!
+!VectorEngineAbstract class methodsFor: 'samples' stamp: 'jmv 1/1/2018 16:23:54'!
 experiment2
 	"
 	self experiment2
@@ -3914,7 +3774,7 @@ delta _ nil.
 Display forceToScreen.
 ! !
 
-!VectorEngine class methodsFor: 'samples' stamp: 'jmv 12/31/2017 15:23:12'!
+!VectorEngineAbstract class methodsFor: 'samples' stamp: 'jmv 12/31/2017 15:23:12'!
 experiment3
 	"
 	self experiment3
@@ -3934,7 +3794,7 @@ experiment3
 	].
 Display forceToScreen! !
 
-!VectorEngine class methodsFor: 'samples' stamp: 'jmv 1/1/2018 16:14:38'!
+!VectorEngineAbstract class methodsFor: 'samples' stamp: 'jmv 1/1/2018 16:14:38'!
 experiment4
 	"
 	self experiment4
@@ -3953,10 +3813,10 @@ experiment4
 	].
 Display forceToScreen! !
 
-!VectorEngine class methodsFor: 'samples' stamp: 'jmv 8/16/2018 15:47:00'!
+!VectorEngineAbstract class methodsFor: 'samples' stamp: 'jmv 2/20/2020 12:29:38'!
 siemensStar
 	"
-	VectorEngine siemensStar display
+	self siemensStar display
 	"
 	| angle backColor canvas count extent foreColor form location offsetFromCenter |
 	count _ 32.
@@ -3977,27 +3837,577 @@ siemensStar
 				lineToX: 1 y: 0;
 				lineToX: angle cos y: angle sin;
 				lineToX: 0 y: 0.
-		canvas engine geometryTransformation: canvas currentTransformation
 		].
 	].
 	^form! !
 
-!VectorEngine class methodsFor: 'instance creation' stamp: 'jmv 12/16/2017 18:17:50'!
+!VectorEngineAbstract class methodsFor: 'instance creation' stamp: 'jmv 4/17/2020 09:47:42'!
 onForm: aForm
 
-	^ self new setForm: aForm! !
+	^ self new initializeOnForm: aForm! !
 
-!VectorEngine class methodsFor: 'accessing' stamp: 'jmv 4/4/2018 15:11:07'!
+!VectorEngineAbstract class methodsFor: 'accessing' stamp: 'jmv 4/4/2018 15:11:07'!
 antiAliasingWidthForOutlineFonts
 	^1.4! !
 
-!VectorEngine class methodsFor: 'accessing' stamp: 'jmv 4/4/2018 15:11:10'!
+!VectorEngineAbstract class methodsFor: 'accessing' stamp: 'jmv 4/4/2018 15:11:10'!
 antiAliasingWidthForStrokeFonts
 	^1.1! !
 
-!VectorEngine class methodsFor: 'accessing' stamp: 'jmv 4/4/2018 15:11:13'!
+!VectorEngineAbstract class methodsFor: 'accessing' stamp: 'jmv 4/4/2018 15:11:13'!
 defaultAntiAliasingWidth
 	^1.3. "default for graphics"! !
+
+!VectorEngineBasic methodsFor: 'private' stamp: 'jmv 4/29/2020 10:57:04'!
+updateAlphasForX: x y: y
+
+	"slight optimization possible when we know width = 0... perhaps implement:
+		-we know palpha is never 127
+		- we know distanceToEdge is always > erodedHalfWidth.
+	In smalltalk, performance icrease 1.5%. Perhaps in c/asm it is more than that...
+	Mas importante:
+		Cuando width es medio grande, entonces dibujar la bolita rellena de entrada es importante... en los casos en que no necesito calcular la distancia"
+	| distanceToAxisSquared alpha t b l r alphaWord doUpdate dySquared dx dxSquared dy pixelIndex dxp |
+
+	"Compute affected rect. Honor clipRect"
+	t _ (y -auxStrokeWidthDilatedHalf) truncated +1.
+	t < clipTop ifTrue: [ t _ clipTop ].
+	b _ (y +auxStrokeWidthDilatedHalf) truncated.
+	b > clipBottom ifTrue: [ b _ clipBottom ].
+	l _ (x -auxStrokeWidthDilatedHalf -subPixelDelta) truncated +1.
+	l < clipLeft ifTrue: [ l _ clipLeft ].
+	r _ (x +auxStrokeWidthDilatedHalf +subPixelDelta) truncated.
+	r > clipRight ifTrue: [ r _ clipRight ].
+
+	t to: b do: [ :displayY |
+		pixelIndex _ displayY * targetWidth +  l.
+		l to: r do: [ :displayX |
+			pixelIndex _ pixelIndex + 1.
+			alphaWord _ alphaMask bytesAt: pixelIndex.
+			alphaWord = "16r007F7F7F" #[16r7F 16r7F 16r7F 16r00] ifFalse: [
+				doUpdate _ false.
+				dy _ displayY - y.
+				dySquared _ dy * dy.
+				dx _ displayX - x.
+				"Red"
+				dxp _ dx - subPixelDelta.
+				dxSquared _ dxp * dxp.
+				distanceToAxisSquared _ dxSquared + dySquared.
+				distanceToAxisSquared < auxStrokeWidthDilatedHalfSquared
+					ifTrue: [
+						alpha _ distanceToAxisSquared <= auxStrokeWidthErodedHalfSquared
+							ifTrue: [ 16r7F ]
+							ifFalse: [ (auxStrokeWidthDilatedHalf - distanceToAxisSquared sqrt * auxAntiAliasingWidthScaledInverse) rounded ].
+						alpha > (alphaWord at: 3) ifTrue: [
+							alphaWord at: 3 put: alpha.
+							doUpdate _ true ]].
+				"Green"
+				dxSquared _ dx * dx.
+				distanceToAxisSquared _ dxSquared + dySquared.
+				distanceToAxisSquared < auxStrokeWidthDilatedHalfSquared
+					ifTrue: [
+						alpha _ distanceToAxisSquared <= auxStrokeWidthErodedHalfSquared
+							ifTrue: [ 16r7F ]
+							ifFalse: [ (auxStrokeWidthDilatedHalf - distanceToAxisSquared sqrt * auxAntiAliasingWidthScaledInverse) rounded ].
+						alpha > (alphaWord at: 2) ifTrue: [
+							alphaWord at: 2 put: alpha.
+							doUpdate _ true ]].
+				"Blue"
+				dxp _ dx + subPixelDelta.
+				dxSquared _ dxp * dxp.
+				distanceToAxisSquared _ dxSquared + dySquared.
+				distanceToAxisSquared < auxStrokeWidthDilatedHalfSquared
+					ifTrue: [
+						alpha _ distanceToAxisSquared <= auxStrokeWidthErodedHalfSquared
+							ifTrue: [ 16r7F ]
+							ifFalse: [ (auxStrokeWidthDilatedHalf - distanceToAxisSquared sqrt * auxAntiAliasingWidthScaledInverse) rounded ].
+						alpha > (alphaWord at: 1) ifTrue: [
+							alphaWord at: 1 put: alpha.
+							doUpdate _ true ]].
+				doUpdate ifTrue: [
+					alphaMask bytesAt: pixelIndex put: alphaWord ]]]]! !
+
+!VectorEngineBasic methodsFor: 'private' stamp: 'jmv 4/12/2020 17:14:21'!
+updateEdgeCountAtX: x y: y
+	| thisYTruncated pixelY pixelIndexBase redPixelIndex greenPixelIndex bluePixelIndex increment countWord redCount greenCount blueCount redOffset greenOffest blueOffset |
+
+	thisYTruncated _ (y truncated max: clipTop-1) min: clipBottom-1.
+	prevYTruncated ifNil: [ 
+		^ prevYTruncated _ thisYTruncated ].
+	thisYTruncated = prevYTruncated ifTrue: [
+		^ prevYTruncated _ thisYTruncated ].
+
+	thisYTruncated > prevYTruncated
+		ifTrue: [
+			pixelY _ thisYTruncated.
+			increment _ 1 ]
+		ifFalse: [
+			pixelY _ prevYTruncated.
+			increment _ -1 ].
+
+	"All edge count at the left of the clipRect are added there (at the left of the clipRect).
+	The effect is the same, and we need to clean up less stuff afterwards.
+	More important, it avoids trying to acess pixels outside our form, i.e. invalid array acesses."
+	pixelIndexBase _ pixelY * targetWidth + 1.
+	redOffset _ (x+subPixelDelta) truncated + 1 max: clipLeft.
+	greenOffest _ x truncated + 1 max: clipLeft.
+	blueOffset _ (x-subPixelDelta) truncated + 1 max: clipLeft.
+	redPixelIndex _ pixelIndexBase + redOffset.
+	greenPixelIndex _ pixelIndexBase + greenOffest.
+	bluePixelIndex _ pixelIndexBase + blueOffset.
+
+	"Three possible cases here: RGB in one word (pixel); RG in one, and G in another; R in one, GB in another"
+	redPixelIndex = bluePixelIndex
+		ifTrue: [						"First case: RGB in the same word"
+			redOffset <= clipRight ifTrue: [
+				countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
+				redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
+				countWord at: 3 put: redCount.
+				greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
+				countWord at: 2 put: greenCount.
+				blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
+				countWord at: 1 put: blueCount.
+				edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
+		]
+		ifFalse: [
+			redPixelIndex = greenPixelIndex
+				ifTrue: [				"Second case: RG in one word, B in following"
+					redOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
+						redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
+						countWord at: 3 put: redCount.
+						greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
+						countWord at: 2 put: greenCount.
+						edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
+
+					blueOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: bluePixelIndex.
+						blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
+						countWord at: 1 put: blueCount.
+						edgeCountPerPixel bytesAt: bluePixelIndex put: countWord ].
+				]
+				ifFalse: [			"Third case: R in one word, GB in the following"
+					redOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
+						redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
+						countWord at: 3 put: redCount.
+						edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
+
+					blueOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: bluePixelIndex.
+						greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
+						countWord at: 2 put: greenCount.
+						blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
+						countWord at: 1 put: blueCount.
+						edgeCountPerPixel bytesAt: bluePixelIndex put: countWord ].
+				]
+		].
+	prevYTruncated _ thisYTruncated! !
+
+!VectorEngineBasic methodsFor: 'private' stamp: 'jmv 4/29/2020 17:28:33'!
+updateEdgesAndBoundsForX: x y: y
+
+"
+Inlinear en senders. Extraer afectar bounds si es posible (linea, circulo)
+"
+
+	blendBoundsTop _ blendBoundsTop min: y.
+	blendBoundsBottom _ blendBoundsBottom max: y.
+	blendBoundsLeft _ blendBoundsLeft min: x.
+	blendBoundsRight _ blendBoundsRight max: x.
+
+	"Compute edges intersecting with this horizontal line, for fills."
+	fillColor notNil ifTrue: [
+		self updateEdgeCountAtX: x y: y ].! !
+
+!VectorEngineBasic methodsFor: 'primitive algorithms' stamp: 'jmv 4/13/2020 18:07:08'!
+primArcCenterX: cx centerY: cy radiusX: rx radiusY: ry start: startAngle rotationCos: thetaCos rotationSin: thetaSin hops: hops angleDelta: d
+
+	| angle xp yp x y |
+	angle _ startAngle.
+	hops+1 timesRepeat: [
+		xp _ angle cos * rx.
+		yp _ angle sin * ry.
+		x _ thetaCos * xp - (thetaSin * yp) + cx.
+		y _ thetaSin * xp + (thetaCos * yp) + cy.
+		self updateAlphasForX: x y: y.
+		self updateEdgesAndBoundsForX: x y: y.
+		angle _ angle + d. ].! !
+
+!VectorEngineBasic methodsFor: 'primitive algorithms' stamp: 'jmv 4/13/2020 18:11:50'!
+primCubicBezierFromX: x0 y: y0 toX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2 hops: hops
+	| t oneLessT increment f2 f3 f1 f23 f4 x y |
+	increment _ 1.0 / hops.
+	t _ 0.0.
+	hops timesRepeat: [
+		oneLessT _ 1.0 - t.
+		f1 _ oneLessT * oneLessT * oneLessT.
+		f23 _ 3 * oneLessT * t.
+		f2 _ f23 * oneLessT.
+		f3 _ f23 * t.
+		f4 _ t * t * t.
+		x _ (f1 * x0) + (f2 * x1) + (f3 * x2) + (f4 * x3).
+		y _ (f1 * y0) + (f2 * y1) + (f3 * y2) + (f4 * y3).
+		self updateAlphasForX: x y: y.
+		self updateEdgesAndBoundsForX: x y: y.
+		t _ t + increment. ].
+	self updateAlphasForX: x3 y: y3.
+	self updateEdgesAndBoundsForX: x3 y: y3.! !
+
+!VectorEngineBasic methodsFor: 'primitive algorithms' stamp: 'jmv 4/13/2020 17:34:27'!
+primLineFromX: x0 y: y0 toX: x2 y: y2 hops: hops incrementX: incrementX incrementY: incrementY
+
+	| x y |
+	x _ x0.
+	y _ y0.
+	hops timesRepeat: [
+		self updateAlphasForX: x y: y.
+		self updateEdgesAndBoundsForX: x y: y.
+		x _ x + incrementX.
+		y _ y + incrementY ].
+	self updateAlphasForX: x2 y: y2.
+	self updateEdgesAndBoundsForX: x2 y: y2.! !
+
+!VectorEngineBasic methodsFor: 'primitive algorithms' stamp: 'jmv 4/13/2020 18:16:03'!
+primQuadraticBezierFromX: x0 y: y0 toX: x2 y: y2 controlX: x1 y: y1 hops: hops
+	| t oneLessT increment f2 f3 f1 x y |
+	increment _ 1.0 / hops.
+	t _ 0.0.
+	hops timesRepeat: [
+		oneLessT _ 1.0 - t.
+		f1 _ oneLessT * oneLessT.
+		f2 _ 2* oneLessT * t.
+		f3 _ t * t.
+		x _ (f1 * x0) + (f2 * x1) + (f3 * x2).
+		y _ (f1 * y0) + (f2 * y1) + (f3 * y2).
+		self updateAlphasForX: x y: y.
+		self updateEdgesAndBoundsForX: x y: y.
+		t _ t + increment. ].
+	self updateAlphasForX: x2 y: y2.
+	self updateEdgesAndBoundsForX: x2 y: y2.! !
+
+!VectorEngineParallelizable methodsFor: 'private' stamp: 'jmv 4/15/2020 17:52:13'!
+adjustPixX: x y: y
+	| adjusted |
+	adjusted _ false.
+	pathPrimitivePixelY = -1 ifTrue: [
+		pathPrimitivePixelY _ y // pathPrimitiveKernelHeight * pathPrimitiveKernelHeight + kernelI.
+		pathPrimitivePixelX _ x // pathPrimitiveKernelWidth * pathPrimitiveKernelWidth + kernelJ.
+		adjusted _ true ].
+	[y - pathPrimitivePixelY > (pathPrimitiveKernelHeight/2)] whileTrue: [ pathPrimitivePixelY _ pathPrimitivePixelY + pathPrimitiveKernelHeight. adjusted _ true].
+	[pathPrimitivePixelY - y > (pathPrimitiveKernelHeight/2)] whileTrue: [ pathPrimitivePixelY _ pathPrimitivePixelY - pathPrimitiveKernelHeight. adjusted _ true].
+	[x - pathPrimitivePixelX > (pathPrimitiveKernelWidth/2)] whileTrue: [ pathPrimitivePixelX _ pathPrimitivePixelX + pathPrimitiveKernelWidth. adjusted _ true].
+	[pathPrimitivePixelX - x > (pathPrimitiveKernelWidth/2)] whileTrue: [ pathPrimitivePixelX _ pathPrimitivePixelX - pathPrimitiveKernelWidth. adjusted _ true].
+	^ adjusted! !
+
+!VectorEngineParallelizable methodsFor: 'private' stamp: 'jmv 4/15/2020 17:50:38'!
+pvtStrokeWidth: aNumber
+
+	super pvtStrokeWidth: aNumber.
+	pathPrimitiveKernelWidth _ ((auxStrokeWidthDilatedHalf + subPixelDelta) * 2) truncated + 1.
+	pathPrimitiveKernelHeight _ (auxStrokeWidthDilatedHalf * 2) truncated + 1.! !
+
+!VectorEngineParallelizable methodsFor: 'private' stamp: 'jmv 4/15/2020 17:51:13'!
+readAlphaWord
+	"Read alpha (transparency) mask."
+
+	((pathPrimitivePixelY between: clipTop and: clipBottom) and: [pathPrimitivePixelX between: clipLeft and: clipRight])
+		ifTrue: [
+			pathPrimitivePixelIndex _ pathPrimitivePixelY * targetWidth +  pathPrimitivePixelX.
+			pathPrimitivePixelIndex _ pathPrimitivePixelIndex + 1.
+			pathPrimitiveAlphaWord _ alphaMask bytesAt: pathPrimitivePixelIndex.
+			pathPrimitiveRedAlpha _ pathPrimitiveAlphaWord at: 3.
+			pathPrimitiveGreenAlpha _ pathPrimitiveAlphaWord at: 2.
+			pathPrimitiveBlueAlpha _ pathPrimitiveAlphaWord at: 1 ]
+		ifFalse: [
+			pathPrimitivePixelIndex _ -1 ].
+	pathPrimitivePreviousRedAlpha _ pathPrimitiveRedAlpha.
+	pathPreviousGreenAlpha _ pathPrimitiveGreenAlpha.
+	pathPreviousBlueAlpha _ pathPrimitiveBlueAlpha! !
+
+!VectorEngineParallelizable methodsFor: 'private' stamp: 'jmv 4/15/2020 17:51:13'!
+updateAlphaWordForX: x y: y
+	"Apdate alpha (transparency) mask using trajectoryPoints."
+	| distanceToAxisSquared alpha dySquared dx dxSquared dy dxp |
+
+	pathPrimitivePixelIndex = -1 ifTrue: [ ^ self ].
+
+	"Minimizar"
+	dy _ pathPrimitivePixelY - y.
+	dySquared _ dy * dy.
+	dx _ pathPrimitivePixelX - x.
+	"Red"
+	dxp _ dx - subPixelDelta.
+	dxSquared _ dxp * dxp.
+	distanceToAxisSquared _ dxSquared + dySquared.
+	distanceToAxisSquared < auxStrokeWidthDilatedHalfSquared
+		ifTrue: [
+			alpha _ distanceToAxisSquared <= auxStrokeWidthErodedHalfSquared
+				ifTrue: [ 16r7F ]
+				ifFalse: [ (auxStrokeWidthDilatedHalf - distanceToAxisSquared sqrt * auxAntiAliasingWidthScaledInverse) rounded ].
+			alpha > pathPrimitiveRedAlpha ifTrue: [
+				pathPrimitiveRedAlpha _ alpha ]].
+	"Green"
+	dxSquared _ dx * dx.
+	distanceToAxisSquared _ dxSquared + dySquared.
+	distanceToAxisSquared < auxStrokeWidthDilatedHalfSquared
+		ifTrue: [
+			alpha _ distanceToAxisSquared <= auxStrokeWidthErodedHalfSquared
+				ifTrue: [ 16r7F ]
+				ifFalse: [ (auxStrokeWidthDilatedHalf - distanceToAxisSquared sqrt * auxAntiAliasingWidthScaledInverse) rounded ].
+			alpha > pathPrimitiveGreenAlpha ifTrue: [
+				pathPrimitiveGreenAlpha _ alpha ]].
+	"Blue"
+	dxp _ dx + subPixelDelta.
+	dxSquared _ dxp * dxp.
+	distanceToAxisSquared _ dxSquared + dySquared.
+	distanceToAxisSquared < auxStrokeWidthDilatedHalfSquared
+		ifTrue: [
+			alpha _ distanceToAxisSquared <= auxStrokeWidthErodedHalfSquared
+				ifTrue: [ 16r7F ]
+				ifFalse: [ (auxStrokeWidthDilatedHalf - distanceToAxisSquared sqrt * auxAntiAliasingWidthScaledInverse) rounded ].
+			alpha > pathPrimitiveBlueAlpha ifTrue: [
+				pathPrimitiveBlueAlpha _ alpha ]].! !
+
+!VectorEngineParallelizable methodsFor: 'private' stamp: 'jmv 4/12/2020 17:16:40'!
+updateEdgeCountAtX: x y: y
+	| thisYTruncated pixelY pixelIndexBase redPixelIndex greenPixelIndex bluePixelIndex increment countWord redCount greenCount blueCount redOffset greenOffest blueOffset |
+
+	thisYTruncated _ (y truncated max: clipTop-1) min: clipBottom-1.
+	prevYTruncated ifNil: [ 
+		^ prevYTruncated _ thisYTruncated ].
+	thisYTruncated = prevYTruncated ifTrue: [
+		^ prevYTruncated _ thisYTruncated ].
+
+	thisYTruncated > prevYTruncated
+		ifTrue: [
+			pixelY _ thisYTruncated.
+			increment _ 1 ]
+		ifFalse: [
+			pixelY _ prevYTruncated.
+			increment _ -1 ].
+
+	"All edge count at the left of the clipRect are added there (at the left of the clipRect).
+	The effect is the same, and we need to clean up less stuff afterwards.
+	More important, it avoids trying to acess pixels outside our form, i.e. invalid array acesses."
+	pixelIndexBase _ pixelY * targetWidth + 1.
+	redOffset _ (x+subPixelDelta) truncated + 1 max: clipLeft.
+	greenOffest _ x truncated + 1 max: clipLeft.
+	blueOffset _ (x-subPixelDelta) truncated + 1 max: clipLeft.
+	redPixelIndex _ pixelIndexBase + redOffset.
+	greenPixelIndex _ pixelIndexBase + greenOffest.
+	bluePixelIndex _ pixelIndexBase + blueOffset.
+
+	"Three possible cases here: RGB in one word (pixel); RG in one, and G in another; R in one, GB in another"
+	redPixelIndex = bluePixelIndex
+		ifTrue: [						"First case: RGB in the same word"
+			redOffset <= clipRight ifTrue: [
+				countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
+				redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
+				countWord at: 3 put: redCount.
+				greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
+				countWord at: 2 put: greenCount.
+				blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
+				countWord at: 1 put: blueCount.
+				edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
+		]
+		ifFalse: [
+			redPixelIndex = greenPixelIndex
+				ifTrue: [				"Second case: RG in one word, B in following"
+					redOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
+						redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
+						countWord at: 3 put: redCount.
+						greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
+						countWord at: 2 put: greenCount.
+						edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
+
+					blueOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: bluePixelIndex.
+						blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
+						countWord at: 1 put: blueCount.
+						edgeCountPerPixel bytesAt: bluePixelIndex put: countWord ].
+				]
+				ifFalse: [			"Third case: R in one word, GB in the following"
+					redOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: redPixelIndex.
+						redCount _ (countWord at: 3) + increment bitAnd: 16rFF.
+						countWord at: 3 put: redCount.
+						edgeCountPerPixel bytesAt: redPixelIndex put: countWord ].
+
+					blueOffset <= clipRight ifTrue: [
+						countWord _ edgeCountPerPixel bytesAt: bluePixelIndex.
+						greenCount _ (countWord at: 2) + increment bitAnd: 16rFF.
+						countWord at: 2 put: greenCount.
+						blueCount _ (countWord at: 1) + increment bitAnd: 16rFF.
+						countWord at: 1 put: blueCount.
+						edgeCountPerPixel bytesAt: bluePixelIndex put: countWord ].
+				]
+		].
+	prevYTruncated _ thisYTruncated! !
+
+!VectorEngineParallelizable methodsFor: 'private' stamp: 'jmv 4/29/2020 17:28:35'!
+updateEdgesAndBoundsForX: x y: y
+
+"
+Inlinear en senders. Extraer afectar bounds si es posible (linea, circulo)
+"
+
+	(kernelI = 0 and: [ kernelJ = 0 ]) ifTrue: [
+		blendBoundsTop _ blendBoundsTop min: y.
+		blendBoundsBottom _ blendBoundsBottom max: y.
+		blendBoundsLeft _ blendBoundsLeft min: x.
+		blendBoundsRight _ blendBoundsRight max: x.
+
+		"Compute edges intersecting with this horizontal line, for fills."
+		fillColor notNil ifTrue: [
+			self updateEdgeCountAtX: x y: y ].
+	]! !
+
+!VectorEngineParallelizable methodsFor: 'private' stamp: 'jmv 4/15/2020 17:49:53'!
+writeAlphaWord
+	"Update alpha (transparency) mask using trajectoryPoints."
+
+	(pathPrimitivePreviousRedAlpha ~= pathPrimitiveRedAlpha or: [
+	pathPreviousGreenAlpha ~= pathPrimitiveGreenAlpha or: [
+	pathPreviousBlueAlpha ~= pathPrimitiveBlueAlpha ]]) ifTrue: [
+		pathPrimitiveAlphaWord at: 3 put: pathPrimitiveRedAlpha.
+		pathPrimitiveAlphaWord at: 2 put: pathPrimitiveGreenAlpha.
+		pathPrimitiveAlphaWord at: 1 put: pathPrimitiveBlueAlpha.
+		alphaMask bytesAt: pathPrimitivePixelIndex put: pathPrimitiveAlphaWord ]! !
+
+!VectorEngineParallelizable methodsFor: 'primitive algorithms' stamp: 'jmv 4/15/2020 17:52:13'!
+primArcCenterX: cx centerY: cy radiusX: rx radiusY: ry start: startAngle rotationCos: thetaCos rotationSin: thetaSin hops: hops angleDelta: d
+
+	| angle xp yp x y |
+	0 to: pathPrimitiveKernelHeight-1 do: [ :i |
+		0 to: pathPrimitiveKernelWidth-1 do: [ :j |
+			kernelJ _ j. kernelI _ i.
+
+			"Load pixY and pixX. Adjust them. Don't write alpha word the first time."
+			pathPrimitivePixelY _ -1.
+			pathPrimitivePreviousRedAlpha _ pathPrimitiveRedAlpha.
+			pathPreviousGreenAlpha _ pathPrimitiveGreenAlpha.
+			pathPreviousBlueAlpha _ pathPrimitiveBlueAlpha.
+
+			angle _ startAngle.
+			hops+1 timesRepeat: [
+				xp _ angle cos * rx.
+				yp _ angle sin * ry.
+				x _ thetaCos * xp - (thetaSin * yp) + cx.
+				y _ thetaSin * xp + (thetaCos * yp) + cy.
+				(self adjustPixX: x y: y) ifTrue: [
+					self writeAlphaWord.
+					self readAlphaWord ].
+				self updateAlphaWordForX: x y: y.
+				self updateEdgesAndBoundsForX: x y: y.
+				angle _ angle + d. ].
+			self writeAlphaWord ]]! !
+
+!VectorEngineParallelizable methodsFor: 'primitive algorithms' stamp: 'jmv 4/15/2020 17:52:13'!
+primCubicBezierFromX: x0 y: y0 toX: x3 y: y3 control1X: x1 y: y1 control2X: x2 y: y2 hops: hops
+
+	| t oneLessT increment f2 f3 f1 f23 f4 x y |
+	0 to: pathPrimitiveKernelHeight-1 do: [ :i |
+		0 to: pathPrimitiveKernelWidth-1 do: [ :j |
+			kernelJ _ j. kernelI _ i.
+
+			"Load pixY and pixX. Adjust them. Don't write alpha word the first time."
+			pathPrimitivePixelY _ -1.
+			pathPrimitivePreviousRedAlpha _ pathPrimitiveRedAlpha.
+			pathPreviousGreenAlpha _ pathPrimitiveGreenAlpha.
+			pathPreviousBlueAlpha _ pathPrimitiveBlueAlpha.
+
+			increment _ 1.0 / hops.
+			t _ 0.0.
+			hops timesRepeat: [
+				oneLessT _ 1.0 - t.
+				f1 _ oneLessT * oneLessT * oneLessT.
+				f23 _ 3 * oneLessT * t.
+				f2 _ f23 * oneLessT.
+				f3 _ f23 * t.
+				f4 _ t * t * t.
+				x _ (f1 * x0) + (f2 * x1) + (f3 * x2) + (f4 * x3).
+				y _ (f1 * y0) + (f2 * y1) + (f3 * y2) + (f4 * y3).
+				(self adjustPixX: x y: y) ifTrue: [
+					self writeAlphaWord.
+					self readAlphaWord ].
+				self updateAlphaWordForX: x y: y.
+				self updateEdgesAndBoundsForX: x y: y.
+				t _ t + increment. ].
+			(self adjustPixX: x3 y: y3) ifTrue: [
+				self writeAlphaWord.
+				self readAlphaWord ].
+			self updateAlphaWordForX: x3 y: y3.
+			self writeAlphaWord.
+			self updateEdgesAndBoundsForX: x3 y: y3. ]]! !
+
+!VectorEngineParallelizable methodsFor: 'primitive algorithms' stamp: 'jmv 4/15/2020 17:52:13'!
+primLineFromX: x0 y: y0 toX: x2 y: y2 hops: hops incrementX: incrementX incrementY: incrementY
+
+	| x y |
+	0 to: pathPrimitiveKernelHeight-1 do: [ :i |
+		0 to: pathPrimitiveKernelWidth-1 do: [ :j |
+			kernelJ _ j. kernelI _ i.
+
+			"Load pixY and pixX. Adjust them. Don't write alpha word the first time."
+			pathPrimitivePixelY _ -1.
+			pathPrimitivePreviousRedAlpha _ pathPrimitiveRedAlpha.
+			pathPreviousGreenAlpha _ pathPrimitiveGreenAlpha.
+			pathPreviousBlueAlpha _ pathPrimitiveBlueAlpha.
+
+			x _ x0.
+			y _ y0.
+			hops timesRepeat: [
+				(self adjustPixX: x y: y) ifTrue: [
+					self writeAlphaWord.
+					self readAlphaWord ].
+				self updateAlphaWordForX: x y: y.
+				self updateEdgesAndBoundsForX: x y: y.
+				x _ x + incrementX.
+				y _ y + incrementY ].
+			(self adjustPixX: x2 y: y2) ifTrue: [
+				self writeAlphaWord.
+				self readAlphaWord ].
+			self updateAlphaWordForX: x2 y: y2.
+			self writeAlphaWord.
+			self updateEdgesAndBoundsForX: x2 y: y2. ]]! !
+
+!VectorEngineParallelizable methodsFor: 'primitive algorithms' stamp: 'jmv 4/15/2020 17:52:13'!
+primQuadraticBezierFromX: x0 y: y0 toX: x2 y: y2 controlX: x1 y: y1 hops: hops
+
+	| t oneLessT increment f2 f3 f1 x y |
+	0 to: pathPrimitiveKernelHeight-1 do: [ :i |
+		0 to: pathPrimitiveKernelWidth-1 do: [ :j |
+			kernelJ _ j. kernelI _ i.
+
+			"Load pixY and pixX. Adjust them. Don't write alpha word the first time."
+			pathPrimitivePixelY _ -1.
+			pathPrimitivePreviousRedAlpha _ pathPrimitiveRedAlpha.
+			pathPreviousGreenAlpha _ pathPrimitiveGreenAlpha.
+			pathPreviousBlueAlpha _ pathPrimitiveBlueAlpha.
+
+			increment _ 1.0 / hops.
+			t _ 0.0.
+			hops timesRepeat: [
+				oneLessT _ 1.0 - t.
+				f1 _ oneLessT * oneLessT.
+				f2 _ 2* oneLessT * t.
+				f3 _ t * t.
+				x _ (f1 * x0) + (f2 * x1) + (f3 * x2).
+				y _ (f1 * y0) + (f2 * y1) + (f3 * y2).
+				(self adjustPixX: x y: y) ifTrue: [
+					self writeAlphaWord.
+					self readAlphaWord ].
+				self updateAlphaWordForX: x y: y.
+				self updateEdgesAndBoundsForX: x y: y.
+				t _ t + increment. ].
+			(self adjustPixX: x2 y: y2) ifTrue: [
+				self writeAlphaWord.
+				self readAlphaWord ].
+			self updateAlphaWordForX: x2 y: y2.
+			self writeAlphaWord.
+			self updateEdgesAndBoundsForX: x2 y: y2. ]]! !
 
 !FormGlyph methodsFor: 'initialization' stamp: 'jmv 5/13/2019 22:20:59'!
 form: aForm
@@ -4056,156 +4466,141 @@ makePointsAbsolute: aPoint
 		points at: i put: t ].
 	^ t! !
 
-!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 7/14/2019 14:24:30'!
-initialMoveToCommand
+!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 3/1/2020 18:12:36'!
+cuadraticBeziersDo: aBlock
+	"Iterate over Bezier curves of the receiver.
+	aBlock has two arguments: endPoint and controlPoint.
+	StartPoint is assumed to be previous endPoint, or points first for the first curve.
+	Contour parts may either be straight line segments or quadratic bezier curves.
+	The decision is made upon the type flags in controlPointFlags as follows:
+	a) Two subsequent #isEndPoint points define a straight segment
+	b) An #isEndPoint point followed by an #isControlPoint point followed 
+		by an #isEndPoint point defines a quadratic bezier segment
+	c)Two subsequent #isControlPoint points have an implicitely defined 
+		#isEndPoint point at half the distance between them"
+	| firstEndPoint pointIsControlPoint previousPoint previousPointWasControlPoint |
+	firstEndPoint _ points at: 1.
+	previousPoint _ firstEndPoint.
+	previousPointWasControlPoint _ controlPointFlags bitBooleanAt: 1.
+	2 to: points size do: [ :i | | point |
+		point _ points at: i.
+		pointIsControlPoint _ controlPointFlags bitBooleanAt: i.
+		pointIsControlPoint
+			ifTrue: [
+				previousPointWasControlPoint
+					ifTrue: [	"Quadratic Bezier"
+						aBlock value: point + previousPoint / 2.0 value: previousPoint ]]
+			ifFalse: [
+				previousPointWasControlPoint
+					ifTrue: [	"Quadratic Bezier"
+						aBlock value: point value: previousPoint ]
+					ifFalse: [	"Line segment"
+						aBlock value: point value: point ]].
+		previousPoint _ point.
+		previousPointWasControlPoint _ pointIsControlPoint.
+	].
+	(previousPoint = firstEndPoint) ifFalse: [
+		previousPointWasControlPoint
+			ifTrue: [
+				aBlock value: firstEndPoint value: previousPoint ]
+			ifFalse: [
+				aBlock value: firstEndPoint value: firstEndPoint ]]! !
 
-	^ PathMoveToCommand new toPoint: points first! !
+!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 3/2/2020 13:16:44'!
+initialMoveToCommand: anAffineTransformationOrNil
+	"TrueType reasonably assumes Y coordinates increase upwards."
+
+	| p |
+	p _ points first.
+	anAffineTransformationOrNil notNil ifTrue: [
+		p _ anAffineTransformationOrNil transform: p ].
+	^ PathMoveToCommand new toRelativePoint: p! !
 
 !TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 4/22/2019 20:36:47'!
 isEmpty
 	^points size < 2! !
 
-!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 7/14/2019 14:24:41'!
-pathCommand
-	"Answer SVG Path Commands of the receiver. This may either be straight line
-	segments or quadratic bezier curves. The decision is made upon the type flags
-	in TTPoint as follows:
-	a) Two subsequent #isEndPoint points define a straight segment
-	b) An #isEndPoint point followed by an #isControlPoint point followed 
-		by an #isEndPoint point defines a quadratic bezier segment
-	c)Two subsequent #isControlPoint points have an implicitely defined 
-		#isEndPoint point at half the distance between them"
-	| previousPoint firstEndPoint endPoints controlPoints |
+!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 3/2/2020 13:16:50'!
+pathCommand: anAffineTransformationOrNil
+	"TrueType reasonably assumes Y coordinates increase upwards."
+
+	| prevEndPoint endPoints controlPoints cp ep |
+	prevEndPoint _ points first.
+	anAffineTransformationOrNil notNil ifTrue: [
+		prevEndPoint _ anAffineTransformationOrNil transform: prevEndPoint ].
 	endPoints _ OrderedCollection new.
 	controlPoints _ OrderedCollection new.
-	previousPoint _ nil.
-	1 to: points size do: [ :i | | point |
-		point _ points at: i.
-		previousPoint
-			ifNil: [ firstEndPoint _ point ]
-			ifNotNil: [
-				(controlPointFlags bitBooleanAt: i)
-					ifTrue: [
-						(controlPointFlags bitBooleanAt: i-1)
-							ifTrue: [	"Quadratic Bezier"
-								controlPoints add: previousPoint.
-								endPoints add: point + previousPoint / 2.0 ]]
-					ifFalse: [
-						(controlPointFlags bitBooleanAt: i-1)
-							ifTrue: [	"Quadratic Bezier"
-								controlPoints add: previousPoint.
-								endPoints add: point ]
-							ifFalse: [	"Line segment"
-								controlPoints add: point.
-								endPoints add: point ]]].
-		previousPoint _ point.
-	].
-	(controlPointFlags bitBooleanAt: points size)
-		ifTrue: [
-			controlPoints add: previousPoint.
-			endPoints add: firstEndPoint.]
-		ifFalse: [
-			controlPoints add: firstEndPoint.
-			endPoints add: firstEndPoint.].
-	^ PathQuadraticCurveToCommand new toPoints: endPoints controlPoints: controlPoints
-	! !
+	self cuadraticBeziersDo: [ :endPoint :controlPoint |
+		ep _ endPoint.
+		cp _ controlPoint.
+		anAffineTransformationOrNil notNil ifTrue: [
+			ep _ anAffineTransformationOrNil transform: ep.
+			cp _ anAffineTransformationOrNil transform: cp ].
+		endPoints add: ep - prevEndPoint.
+		controlPoints add:  cp - prevEndPoint.
+		prevEndPoint _ ep ].
+	^ PathQuadraticCurveToCommand new toRelativePoints: endPoints controlPoints: controlPoints! !
 
-!TTContourConstruction methodsFor: 'enumerating' stamp: 'jmv 5/17/2019 08:54:43'!
-pathCommandsDo: aBlock
-"
-Usar paths relativos o absolutos?
-"
-	"Evaluate aBlock with the SVG Path Commands of the receiver. This may either be straight line
-	segments or quadratic bezier curves. The decision is made upon the type flags
-	in TTPoint as follows:
-	a) Two subsequent #isEndPoint points define a straight segment
-	b) An #isEndPoint point followed by an #isControlPoint point followed 
-		by an #isEndPoint point defines a quadratic bezier segment
-	c)Two subsequent #isControlPoint points have an implicitely defined 
-		#isEndPoint point at half the distance between them"
-	| lastControlPoint lastEndPoint previousEndPoint previousPoint firstEndPoint |
+!TTContourConstruction methodsFor: 'primitive format' stamp: 'jmv 3/3/2020 09:46:06'!
+addContourDataTo: stream tx: aGeometryTransformationOrNil
+	| bezierCount firstPoint cp ep prevEndPoint cpr epr |
+	self isEmpty ifTrue: [
+		^self ].
 
-	previousPoint _ nil.
-	lastEndPoint _ nil.
-	lastControlPoint _ nil.
-	previousEndPoint _ nil.
-	1 to: points size do: [ :i | | point |
-		point _ points at: i.
-		previousPoint
-			ifNil: [ firstEndPoint _ lastEndPoint _ point ]
-			ifNotNil: [
-				(controlPointFlags bitBooleanAt: i)
-					ifTrue: [
-						(controlPointFlags bitBooleanAt: i-1)
-							ifTrue: [
-								previousEndPoint _ lastEndPoint. lastEndPoint _ point + previousPoint / 2.0.
-								{'bezier1'. previousEndPoint. lastControlPoint. lastEndPoint } print.
-								].
-							lastControlPoint _ point.
-							]
-					ifFalse: [
-						previousEndPoint _ lastEndPoint. lastEndPoint _ point.
-						(controlPointFlags at: i-1) = 1
-							ifTrue: [
-								lastControlPoint _ previousPoint.
-								{'bezier2'. previousEndPoint. lastControlPoint. lastEndPoint } print.
-								]
-							ifFalse: [
-								lastControlPoint _ nil.
-								{'recta'. previousEndPoint. lastEndPoint } print.
-								]]].
-		previousPoint _ point.
-	].
-	lastEndPoint = firstEndPoint ifFalse: [
-		(controlPointFlags bitBooleanAt: points size)
-			ifTrue: [
-				lastControlPoint _ previousPoint.
-				{'bezier3'. lastEndPoint. lastControlPoint. firstEndPoint } print]
-			ifFalse: [{'recta'. lastEndPoint. firstEndPoint } print]
-		 ]
-	! !
+	bezierCount _ 0.
+	self cuadraticBeziersDo: [ :endPoint :controlPoint | bezierCount _ bezierCount + 1 ].
+	stream nextPut: bezierCount.
+
+	firstPoint _ points first.
+	aGeometryTransformationOrNil ifNotNil: [
+		firstPoint _ aGeometryTransformationOrNil transform: firstPoint ].
+	stream nextPut: firstPoint x; nextPut: firstPoint y.
+
+
+	prevEndPoint _ firstPoint.
+	self cuadraticBeziersDo: [ :endPoint :controlPoint |
+		ep _ endPoint.
+		cp _ controlPoint.
+		aGeometryTransformationOrNil notNil ifTrue: [
+			ep _ aGeometryTransformationOrNil transform: ep.
+			cp _ aGeometryTransformationOrNil transform: cp ].
+		epr _ ep - prevEndPoint.
+		cpr _ cp - prevEndPoint.
+		stream nextPut: epr x; nextPut: epr y.
+		stream nextPut: cpr x; nextPut: cpr y.
+		prevEndPoint _ ep ].! !
 
 !TTContourConstruction class methodsFor: 'instance creation'!
 on: points
 
 	^self new points: points! !
 
-!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 6/11/2019 11:16:18'!
-at: aCharOrInteger
-	| codePoint answer fallbackGlyph |
-	fallbackGlyph _ glyphTable at: 1.
-	aCharOrInteger isNumber
-		ifTrue: [
-			answer _ glyphTable at: aCharOrInteger + 1 ]
-		ifFalse: [
-			codePoint _ aCharOrInteger codePointOfGlyphToUse.
-			answer _ glyphTable at: codePoint + 1.
-			answer == fallbackGlyph ifTrue: [
-				answer _ glyphTable at: aCharOrInteger codePoint + 1 ]].
-	"If not included, don't answer fallback but nil."
-	(answer == fallbackGlyph and: [codePoint ~= 0])
-		ifTrue: [ ^ nil ].
-	^ answer! !
+!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 3/13/2020 14:18:19'!
+contourDataForIso8859s15
+	^contourDataForIso8859s15! !
 
-!TTFontDescription methodsFor: 'accessing' stamp: 'ar 11/2/1998 01:08'!
-at: index put: value
-	^self shouldNotImplement! !
+!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 3/12/2020 12:45:59'!
+contourDataForUtf8
+	^contourDataForUtf8! !
 
-!TTFontDescription methodsFor: 'accessing' stamp: 'topa 3/9/2015 23:00'!
-fallbackGlyph
-	"Answer the fallback glyph, the first in the loca table "
-	^ glyphs at: 1! !
+!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 3/4/2020 12:06:14'!
+contourDataIndexesByIso8859s15
+	^contourDataIndexesByIso8859s15! !
+
+!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 3/18/2020 20:19:27'!
+contourDataIndexesByIso8859s15ST80Glyphs: aBoolean
+	^ aBoolean
+		ifTrue: [contourDataIndexesForSmalltalkGlyphs]
+		ifFalse: [contourDataIndexesByIso8859s15]! !
+
+!TTFontDescription methodsFor: 'accessing' stamp: 'jmv 3/12/2020 12:46:10'!
+contourDataIndexesByUtf8
+	^contourDataIndexesByUtf8 ! !
 
 !TTFontDescription methodsFor: 'accessing' stamp: 'yo 12/7/2007 10:33'!
 first
 
 	^ self.
-! !
-
-!TTFontDescription methodsFor: 'accessing' stamp: 'bf 9/29/2010 11:09'!
-size
-
-	^ glyphTable size.
 ! !
 
 !TTFontDescription methodsFor: 'information' stamp: 'ar 11/14/1998 23:48'!
@@ -4240,17 +4635,6 @@ uniqueName
 versionName
 	^versionName! !
 
-!TTFontDescription methodsFor: 'migration' stamp: 'jmv 4/8/2019 14:14:51'!
-blankGlyphForSeparators
-
-	| space |
-	space := (self at: Character space codePoint) copy.
-	space contours: #().
-	Character separators do: [:s | 
-		glyphTable at: s codePoint +1 put: space.
-	].
-! !
-
 !TTFontDescription methodsFor: 'properties' stamp: 'jmv 4/24/2019 20:23:48'!
 ascent
 	"Ascent of the font. Relative to unitsPerEm. Usually positive."
@@ -4265,10 +4649,10 @@ descent
 	"Descender of the font. Relative to unitsPerEm. Usually negative."
 	^descent! !
 
-!TTFontDescription methodsFor: 'properties' stamp: 'jmv 4/24/2019 20:24:52'!
+!TTFontDescription methodsFor: 'properties' stamp: 'jmv 3/14/2020 23:23:22'!
 letterMTopSideBearing
 	"This number is what needs to be scaled by i.e. 12 to render a 12 pixel font"
-	letterMTopSideBearing ifNil: [ letterMTopSideBearing _ (self at: $M) topSideBearing ].
+
 	^letterMTopSideBearing! !
 
 !TTFontDescription methodsFor: 'properties' stamp: 'jmv 4/24/2019 20:23:51'!
@@ -4284,6 +4668,51 @@ lineSpacing
 unitsPerEm
 	^unitsPerEm! !
 
+!TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 3/13/2020 09:16:46'!
+appendGlyphDataTo: stream glyphsArray: glyphsArray indexes: indexes base: baseIndex
+		glyphsArray withIndexDo: [ :glyphOrArrayOrNil :index |
+			glyphOrArrayOrNil notNil ifTrue: [
+				glyphOrArrayOrNil isArray
+					ifTrue: [
+						| nextBaseIndex |
+						nextBaseIndex := indexes size - 128.
+						indexes addAll: (IntegerArray new: 64).
+						indexes at: baseIndex + index put: nextBaseIndex negated.
+						self appendGlyphDataTo: stream glyphsArray: glyphOrArrayOrNil indexes: indexes base: nextBaseIndex
+					]
+					ifFalse: [
+						indexes at: baseIndex + index put: stream position+1.
+						glyphOrArrayOrNil addContourDataTo: stream.
+					]
+				]]! !
+
+!TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 3/18/2020 20:16:20'!
+glyphsByIso8859s15: array8 glyphsByUtf8Bytes: arrayUtf8 unknownGlyph: theUnknownGlyph
+
+	| mGlyph |
+	
+	mGlyph _ array8 at: $M numericValue + 1.
+	letterMTopSideBearing _ mGlyph topSideBearing.
+
+	contourDataIndexesByIso8859s15 _ IntegerArray new: array8 size.
+	contourDataForIso8859s15 _ FloatArray streamContents: [ :stream |
+		theUnknownGlyph addContourDataTo: stream. 	"First data is for unknownGlyph"
+		array8 withIndexDo: [ :ttGlyphOrNil :index |
+			ttGlyphOrNil notNil
+				ifTrue: [
+					contourDataIndexesByIso8859s15 at: index put: stream position+1.
+					ttGlyphOrNil addContourDataTo: stream ]
+				ifFalse: [ contourDataIndexesByIso8859s15 at: index put: 1]]].
+	self perform: Preferences assignmentGlyphSelector.
+
+	"This takes a significant amout of space, makes loading slower, and we're still not able to take full advantage of it."
+	Preferences loadOnlyLatinGlyphData ifFalse: [
+		contourDataIndexesByUtf8 _ (IntegerArray new: 256) as: OrderedCollection.
+		contourDataForUtf8 _ FloatArray streamContents: [ :stream |
+			theUnknownGlyph addContourDataTo: stream.		"First data is for unknownGlyph"
+			self appendGlyphDataTo: stream glyphsArray: arrayUtf8 indexes: contourDataIndexesByUtf8 base: 0 ].
+		contourDataIndexesByUtf8 _ contourDataIndexesByUtf8 as: IntegerArray]! !
+
 !TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 4/24/2019 20:12:58'!
 setAscent: asc descent: desc lineGap: lgap
 	ascent := asc.
@@ -4294,12 +4723,6 @@ setAscent: asc descent: desc lineGap: lgap
 setBounds: aRect unitsPerEm: aNumber
 	bounds := aRect.
 	unitsPerEm := aNumber.! !
-
-!TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 5/17/2019 09:08:36'!
-setGlyphs: glyphArray mapping: mappingTable
-	glyphs _ glyphArray.
-	glyphTable _ mappingTable.
-	self blankGlyphForSeparators! !
 
 !TTFontDescription methodsFor: 'private-initialization' stamp: 'ar 11/2/1998 00:48'!
 setKernPairs: array
@@ -4317,6 +4740,30 @@ setStrings: anArray
 	trademark := anArray at: 8.
 ! !
 
+!TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 3/18/2020 20:33:17'!
+useLeftArrow
+	"When Smalltalk glyphs requested"
+	| arrowIndex |
+	contourDataIndexesForSmalltalkGlyphs _ contourDataIndexesByIso8859s15 copy.
+	arrowIndex _ contourDataIndexesByIso8859s15 at: Character arrowLeft numericValue + 1.
+	arrowIndex = 1 ifFalse: [	"If font doesn't include the arrow, don't do substitution."
+		contourDataIndexesForSmalltalkGlyphs at: $_ numericValue + 1 put: arrowIndex ].
+	arrowIndex _ contourDataIndexesByIso8859s15 at: Character arrowUp numericValue + 1.
+	arrowIndex = 1 ifFalse: [	"If font doesn't include the arrow, don't do substitution."
+		contourDataIndexesForSmalltalkGlyphs at: $^ numericValue + 1 put: arrowIndex ].! !
+
+!TTFontDescription methodsFor: 'private-initialization' stamp: 'jmv 3/18/2020 20:33:12'!
+useRightArrow
+	"When Smalltalk glyphs requested"
+	| arrowIndex |
+	contourDataIndexesForSmalltalkGlyphs _ contourDataIndexesByIso8859s15 copy.
+	arrowIndex _ contourDataIndexesByIso8859s15 at: Character arrowRight numericValue + 1.
+	arrowIndex = 1 ifFalse: [	"If font doesn't include the arrow, don't do substitution."
+		contourDataIndexesForSmalltalkGlyphs at: $_ numericValue + 1 put: arrowIndex ].
+	arrowIndex _ contourDataIndexesByIso8859s15 at: Character arrowUp numericValue + 1.
+	arrowIndex = 1 ifFalse: [	"If font doesn't include the arrow, don't do substitution."
+		contourDataIndexesForSmalltalkGlyphs at: $^ numericValue + 1 put: arrowIndex ].! !
+
 !TTFontDescription methodsFor: 'testing' stamp: 'jmv 5/4/2019 14:28:56'!
 isBaseFont
 	^ self emphasis = 0! !
@@ -4332,54 +4779,130 @@ emphasis
 	('*Italic*' match: subfamilyName) ifTrue: [ emphasis := emphasis bitOr: 2 ].
 	^ emphasis! !
 
-!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 5/21/2019 10:47:47'!
-formGlyphFor: aTTGlyph pixelSize: pixelSize
-	| toPixelsScale glyphOffsetFromFormLeft formWidth glyphOffsetFromFormTop formHeight scaledGlyphBoundsBottom scaledGlyphBoundsLeft scaledGlyphBoundsRight scaledGlyphBoundsTop leftPixelOffset unPixelDeMasParaAAjmvX unPixelDeMasParaAAjmvY offsetVerticalParaQueY0caigaEnHalfPixel topPixelOffset form canvas |
-	unPixelDeMasParaAAjmvX _ 1.
-	unPixelDeMasParaAAjmvY _ 1.
-	offsetVerticalParaQueY0caigaEnHalfPixel _ 0.5.
+!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 3/18/2020 20:24:43'!
+formGlyphFor: aCharacter useST80Glyphs: aBoolean pixelSize: pixelSize
+	"Needed only for BitBltCanvasEngine"
+	| toPixelsScale formWidth formHeight leftPixelOffset topPixelOffset xtraSpaceForAntiAliasingAndRounding horizontalStrokesAtPixelCenter form canvas advanceWidth boundsBottom boundsLeft boundsRight boundsTop i |
+
+	i _ (self contourDataIndexesByIso8859s15ST80Glyphs: aBoolean) at: aCharacter numericValue + 1.
+	advanceWidth _ contourDataForIso8859s15 at: i. i _ i + 1.
+	boundsLeft _ contourDataForIso8859s15 at: i. i _ i + 1.
+	boundsRight _ contourDataForIso8859s15 at: i. i _ i + 1.
+	boundsTop _ contourDataForIso8859s15 at: i. i _ i + 1.
+	boundsBottom _ contourDataForIso8859s15 at: i. i _ i + 1.
+
+	horizontalStrokesAtPixelCenter _ 0.5.
+	xtraSpaceForAntiAliasingAndRounding _ 3.
 	toPixelsScale _ pixelSize * 1.0 / self letterMTopSideBearing.
 
-	scaledGlyphBoundsLeft _ aTTGlyph boundsLeft * toPixelsScale.
-	scaledGlyphBoundsRight _ aTTGlyph boundsRight * toPixelsScale.
-	leftPixelOffset _ (scaledGlyphBoundsLeft - unPixelDeMasParaAAjmvX) floor. "If positive, pixels we save at the left. if negative, xtra pix needed"
-	"Offset desde el pixel mas a la izquierda del Form hasta el x=0.0 del glyph TrueType"
-	glyphOffsetFromFormLeft _ leftPixelOffset > 0
-		ifTrue: [ scaledGlyphBoundsLeft - leftPixelOffset ] "Draw glyph taking into account unneeded pixels shaved from the left"
-		ifFalse: [ leftPixelOffset ]. "Make glyph parts at the left of x=0 fint in the form: draw glyph this ammount to the right"
-	formWidth _ (scaledGlyphBoundsRight + unPixelDeMasParaAAjmvX - glyphOffsetFromFormLeft) ceiling.
-	"{scaledGlyphBoundsLeft. deltaXForDisplayingForm. glyphOffsetFromFormLeft} print."
-	
-	scaledGlyphBoundsTop _ aTTGlyph boundsBottom * toPixelsScale.
-	scaledGlyphBoundsBottom _ aTTGlyph boundsTop * toPixelsScale.
-	topPixelOffset _ (scaledGlyphBoundsTop + unPixelDeMasParaAAjmvY) ceiling. "Usually positive. Needed pixels above the baseline"
-	"Offset desde el pixel mas a la arriba del Form hasta el y=0.0 del glyph TrueType"
-	glyphOffsetFromFormTop _ topPixelOffset + offsetVerticalParaQueY0caigaEnHalfPixel.
-	"
-	glyphOffsetFromFormTop _ scaledGlyphBoundsTop - offsetVerticalParaQueY0caigaEnHalfPixel + unPixelDeMasParaAAjmvY.
-glyphOffsetFromFormTop _ glyphOffsetFromFormTop ceiling.
-	topPixelOffset _ glyphOffsetFromFormTop rounded."
-	formHeight _ (scaledGlyphBoundsBottom negated + unPixelDeMasParaAAjmvY + glyphOffsetFromFormTop) ceiling.
-	"
-	{scaledGlyphBoundsLeft. scaledGlyphBoundsRight. scaledGlyphBoundsTop. scaledGlyphBoundsBottom} print.
-	{deltaXForDisplayingForm. glyphOffsetFromFormLeft. formWidth. deltaYForDisplayingForm. glyphOffsetFromFormTop. formHeight } print.
-	"
+	"If positive, pixels we save at the left. if negative, xtra pix needed"
+	leftPixelOffset _ (boundsLeft * toPixelsScale - xtraSpaceForAntiAliasingAndRounding) floor.
+	formWidth _ (boundsRight - boundsLeft) * toPixelsScale + (xtraSpaceForAntiAliasingAndRounding*2).
+
+	"Usually positive. Needed pixels above the baseline"
+	topPixelOffset _ (boundsBottom * toPixelsScale + xtraSpaceForAntiAliasingAndRounding) ceiling.
+	formHeight _ (boundsBottom - boundsTop) * toPixelsScale + (xtraSpaceForAntiAliasingAndRounding*2).
 	
 	form _ Form extent: formWidth@formHeight depth: 32.
 	form fillColor: Color white.
-	
 	canvas _ VectorCanvas onForm: form.
-	canvas engine geometryTransformation: (AffineTransformation withRadians: 0 scale: toPixelsScale 
-		position: glyphOffsetFromFormLeft negated@glyphOffsetFromFormTop) withYAxisNegated.
-	canvas fillColor: Color black do: [
-		aTTGlyph drawGlyphOn: canvas ].
+	canvas 
+		engine
+			displayString: aCharacter asString
+			from: 1
+			to: 1
+			at: leftPixelOffset negated@(topPixelOffset - horizontalStrokesAtPixelCenter)
+			trueTypeFont: self
+			useST80Glyphs: aBoolean
+			color: Color black
+			scaleX: 1.0 * pixelSize
+			scaleY: -1.0 * pixelSize.
 	^FormGlyph
 		form: form
 		leftOffset: leftPixelOffset
 		topOffset: topPixelOffset
-		advanceWidth: (aTTGlyph advanceWidth * toPixelsScale)"ceiling" "Convertir a entero puede ayudar a que se vea mejor en BitBlt, pero el layout es distinto que en VectorGraphics..."! !
+		advanceWidth: (advanceWidth * toPixelsScale)! !
 
-!TTFontDescription class methodsFor: 'instance creation' stamp: 'jmv 5/10/2019 09:42:44'!
+!TTFontDescription methodsFor: 'conversion' stamp: 'jmv 3/22/2020 16:41:22'!
+formGlyphForUtf8Byte1: byte1 byte2: byte2OrNil byte3: byte3OrNil byte4: byte4OrNil pixelSize: pixelSize
+	"Needed only for BitBltCanvasEngine"
+	| utf8ByteArray toPixelsScale formWidth formHeight leftPixelOffset topPixelOffset xtraSpaceForAntiAliasingAndRounding horizontalStrokesAtPixelCenter form canvas advanceWidth boundsBottom boundsLeft boundsRight boundsTop i |
+
+	i _ contourDataIndexesByUtf8 at: byte1 + 1.
+	utf8ByteArray _ ByteArray with: byte1.
+	byte2OrNil notNil ifTrue: [
+		i _ contourDataIndexesByUtf8 at: i negated + byte2OrNil + 1.
+		utf8ByteArray _ ByteArray with: byte1 with: byte2OrNil.
+		byte3OrNil notNil ifTrue: [
+			i _ contourDataIndexesByUtf8 at: i negated + byte3OrNil + 1.
+			utf8ByteArray _ ByteArray with: byte1 with: byte2OrNil with: byte3OrNil.
+			byte4OrNil notNil ifTrue: [
+				i _ contourDataIndexesByUtf8 at: i negated + byte4OrNil + 1.
+				utf8ByteArray _ ByteArray with: byte1 with: byte2OrNil with: byte3OrNil with: byte4OrNil ]]].
+
+	advanceWidth _ contourDataForUtf8 at: i. i _ i + 1.
+	boundsLeft _ contourDataForUtf8 at: i. i _ i + 1.
+	boundsRight _ contourDataForUtf8 at: i. i _ i + 1.
+	boundsTop _ contourDataForUtf8 at: i. i _ i + 1.
+	boundsBottom _ contourDataForUtf8 at: i. i _ i + 1.
+
+	horizontalStrokesAtPixelCenter _ 0.5.
+	xtraSpaceForAntiAliasingAndRounding _ 3.
+	toPixelsScale _ pixelSize * 1.0 / self letterMTopSideBearing.
+
+	"If positive, pixels we save at the left. if negative, xtra pix needed"
+	leftPixelOffset _ (boundsLeft * toPixelsScale - xtraSpaceForAntiAliasingAndRounding) floor.
+	formWidth _ (boundsRight - boundsLeft) * toPixelsScale + (xtraSpaceForAntiAliasingAndRounding*2).
+
+	"Usually positive. Needed pixels above the baseline"
+	topPixelOffset _ (boundsBottom * toPixelsScale + xtraSpaceForAntiAliasingAndRounding) ceiling.
+	formHeight _ (boundsBottom - boundsTop) * toPixelsScale + (xtraSpaceForAntiAliasingAndRounding*2).
+	
+	form _ Form extent: formWidth@formHeight depth: 32.
+	form fillColor: Color white.
+	canvas _ VectorCanvas onForm: form.
+	canvas 
+		engine
+			displayUtf8: utf8ByteArray
+			at: leftPixelOffset negated@(topPixelOffset - horizontalStrokesAtPixelCenter)
+			trueTypeFont: self
+			color: Color black
+			scaleX: 1.0 * pixelSize
+			scaleY: -1.0 * pixelSize.
+	^FormGlyph
+		form: form
+		leftOffset: leftPixelOffset
+		topOffset: topPixelOffset
+		advanceWidth: (advanceWidth * toPixelsScale)! !
+
+!TTFontDescription methodsFor: 'glyph properties' stamp: 'jmv 3/18/2020 20:25:08'!
+widthOf: aCharacter useST80Glyphs: aBoolean
+
+	| i advanceWidth |
+	i _ (self contourDataIndexesByIso8859s15ST80Glyphs: aBoolean) at: aCharacter numericValue + 1.
+	advanceWidth _ contourDataForIso8859s15 at: i.
+	^ advanceWidth / letterMTopSideBearing! !
+
+!TTFontDescription methodsFor: 'glyph properties' stamp: 'jmv 4/1/2020 12:06:13'!
+widthOfCodePoint: aUnicodeCodePoint
+
+	| i advanceWidth |
+	i _ contourDataIndexesByUtf8 at: aUnicodeCodePoint + 1.
+	Character
+		evaluateOnce: [ :byte1 :byte2OrNil :byte3OrNil :byte4OrNil |
+
+			i _ contourDataIndexesByUtf8 at: byte1 + 1.
+			byte2OrNil notNil ifTrue: [
+				i _ contourDataIndexesByUtf8 at: i negated + byte2OrNil + 1.
+				byte3OrNil notNil ifTrue: [
+					i _ contourDataIndexesByUtf8 at: i negated + byte3OrNil + 1.
+					byte4OrNil notNil ifTrue: [
+						i _ contourDataIndexesByUtf8 at: i negated + byte4OrNil + 1 ]]]]
+		withUtf8BytesOfUnicodeCodePoint: aUnicodeCodePoint.
+	advanceWidth _ contourDataForUtf8 at: i.
+	^ advanceWidth / letterMTopSideBearing! !
+
+!TTFontDescription class methodsFor: 'instance creation' stamp: 'jmv 1/18/2020 15:14:11'!
 read: aDirectoryEntry
 	"
 	TTFontDescription read: DirectoryEntry smalltalkImageDirectory / 'TrueTypeFonts'
@@ -4388,10 +4911,8 @@ read: aDirectoryEntry
 	Descriptions ifNil: [ Descriptions _ Dictionary new ].
 	readFamilyNames _ Set new.
 	aDirectoryEntry
-		allFilesDo: [ :file | | ttfCollection ttf |
-			ttfCollection _ TTCFontReader readTTFFrom: file binaryContents.
-			self assert: ttfCollection size = 1. "Or else must understand!!"
-			ttf _ ttfCollection first.
+		allFilesDo: [ :file | | ttf |
+			ttf _ TTFontReader readTTFFrom: file binaryContents.
 			(Descriptions at: ttf familyName ifAbsentPut: [ Dictionary new]) at: ttf emphasis put: ttf.
 			readFamilyNames add: ttf familyName ]
 		matches: [ :file | '*.ttf' match: file name ].
@@ -4411,92 +4932,140 @@ initialize
 	"
 	Descriptions _ nil! !
 
-!TTCFontDescription methodsFor: 'accessing' stamp: 'yo 11/14/2002 18:28'!
-size
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 1/18/2020 14:17:01'!
+getTableDirEntry: tagString from: fontData offset: offset
+	"Find the table named tagString in fontData and return a table directory entry for it."
 
-	^ glyphs size.
-! !
+	| numTables pos currentTag tag |
+	numTables := fontData shortAt: 5 + offset bigEndian: true.
+	tag := ByteArray new: 4.
+	1 to: 4 do:[:i| tag byteAt: i put: (tagString at: i) asciiValue].
+	tag := tag longAt: 1 bigEndian: true.
+	pos := 13 + offset.
+	1 to: numTables do:[:i|
+		currentTag := fontData longAt: pos bigEndian: true.
+		currentTag = tag ifTrue:[^TTFontTableDirEntry on: fontData at: pos].
+		pos := pos+16].
+	^nil! !
 
-!TTFontReader methodsFor: 'processing' stamp: 'topa 3/19/2015 11:48'!
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 4/21/2020 14:07:14'!
+mapAndStoreGlyphsUsing: characterMap
+	"
+	https://developer.apple.com/fonts/TrueType-Reference-Manual/RM07/appendixB.html
+	"
+	| glyphsByIso5559s15 glyphsByUTF8 unknownGlyph nullGlyph spaceGlyph mapSize preferredCodePoint |
+	unknownGlyph _ glyphs first.
+	nullGlyph _ glyphs second.
+	mapSize _ characterMap size.
+	glyphsByIso5559s15 _ Array new: 256.
+	glyphsByUTF8 _ Array new: 256.
+	0 to: mapSize - 1 do: [ :codePoint | | g array prevByte|
+
+		preferredCodePoint _ codePoint.
+		codePoint = $- codePoint ifTrue: [ preferredCodePoint _ 16r2212 ]. "WIDE MINUS"
+		codePoint = $* codePoint ifTrue: [ preferredCodePoint _ 16r2217 ]. "CENTERED ASTERISK"
+		g _ glyphs at: (characterMap at: preferredCodePoint+1)+1 ifAbsent: [ unknownGlyph ].
+		g == unknownGlyph ifTrue: [
+			g _ glyphs at: (characterMap at: codePoint+1)+1 ifAbsent: [ unknownGlyph ]].
+
+		g == unknownGlyph ifFalse: [
+			(Character iso8859s15CodeForUnicodeCodePoint: codePoint) ifNotNil: [ :iso8859s15 |
+				glyphsByIso5559s15 at: iso8859s15 + 1 put: g ]].
+
+		array _ glyphsByUTF8.
+		prevByte _ nil.
+		Character
+			evaluate: [ :byte |
+				prevByte notNil ifTrue: [
+					array _ (array at: prevByte+1) ifNil: [ array at: prevByte+1 put: (Array new: 256) ].
+					].
+				prevByte _ byte.
+				]
+			withUtf8BytesOfUnicodeCodePoint: codePoint.
+			array at: prevByte+1 put: g.
+		codePoint = 32 ifTrue: [
+			spaceGlyph _ g ].
+
+	].
+	Character separators do: [ :s |
+		glyphsByIso5559s15 at: s codePoint +1 put: spaceGlyph.
+		glyphsByUTF8 at: s codePoint +1 put: spaceGlyph.
+	].
+	fontDescription glyphsByIso8859s15: glyphsByIso5559s15 glyphsByUtf8Bytes: glyphsByUTF8 unknownGlyph: unknownGlyph! !
+
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 1/18/2020 15:32:49'!
 processCharacterMappingTable: entry
 	"Read the font's character to glyph index mapping table.
 	If an appropriate mapping can be found then return an association
 	with the format identifier and the contents of the table"
-	| copy initialOffset nSubTables pID sID offset cmap assoc |
+	| initialOffset nSubTables platformID platformSpecificEncodingID offset |
 	initialOffset := entry offset.
 	entry skip: 2. "Skip table version"
 	nSubTables := entry nextUShort.
-	1 to: nSubTables do:[:i|
-		pID := entry nextUShort.
-		sID := entry nextUShort.
+	1 to: nSubTables do: [ :i |
+		platformID := entry nextUShort.
+		platformSpecificEncodingID := entry nextUShort.
 		offset := entry nextULong.
-		"Check if this is either a Macintosh encoded table
-		or a Windows encoded table"
-		(#(0 1 3) includes: pID) ifTrue: [
-			(assoc notNil and: [assoc key = pID]) ifFalse: [
-				"Go to the beginning of the table"
-				copy := entry copy.
-				copy offset: initialOffset + offset.
-				cmap := self decodeCmapFmtTable: copy.
-				(pID = 0 and: [cmap notNil]) "Prefer Unicode encoding over everything else"
-					ifTrue: [^ pID -> cmap].
-				"(pID = 1 and: [cmap notNil])" "Prefer Macintosh encoding over everything else"
-					"ifTrue: [pID -> cmap]."
-				assoc := pID -> cmap. "Keep it in case we don't find a better table"
-			].
-		].
-	].
-	^assoc! !
+		platformID = 0 ifTrue: [	"Only consider Unicode"
+			"Go to the beginning of the table"
+			entry offset: initialOffset + offset.
+			^ self decodeCmapFmtTable: entry ]].
+	^nil! !
 
-!TTFontReader methodsFor: 'processing' stamp: 'jmv 5/16/2019 21:21:08'!
-processCompositeGlyph: glyph contours: nContours from: entry
-	"Read a composite glyph from the font data. The glyph passed into this method contains some state variables that must be copied into the resulting composite glyph."
-	| flags glyphIndex hasInstr cGlyph ofsX ofsY iLen a11 a12 a21 a22 m |
-	cGlyph := TTCompositeGlyph new.
-	a11 := a22 := 16r4000.	"1.0 in F2Dot14"
-	a21 := a12 := 0.		"0.0 in F2Dot14"
-	"Copy state"
-	cGlyph
-		boundsLeft: glyph boundsLeft boundsRight: glyph boundsRight
-			boundsTop: glyph boundsTop boundsBottom: glyph boundsBottom;
-		glyphIndex: glyph glyphIndex.
-	hasInstr := false.
-	[ flags := entry nextUShort.
-	glyphIndex := entry nextUShort + 1.
-	(flags bitAnd: 1) = 1 ifTrue:[
-		ofsX := entry nextShort.
-		ofsY := entry nextShort.
-	] ifFalse:[
-		(ofsX := entry nextByte) > 127 ifTrue:[ofsX := ofsX - 256].
-		(ofsY := entry nextByte) > 127 ifTrue:[ofsY := ofsY - 256]].
-	((flags bitAnd: 2) = 2) ifFalse:[self halt].
-	(flags bitAnd: 8) = 8 ifTrue:[
-		a11 := a22 := entry nextShort].
-	(flags bitAnd: 64) = 64 ifTrue:[
-		a11 := entry nextShort.
-		a22 := entry nextShort].
-	(flags bitAnd: 128) = 128 ifTrue:[
-		"2x2 transformation"
-		a11 := entry nextShort.
-		a21 := entry nextShort.
-		a12 := entry nextShort.
-		a22 := entry nextShort].
-	m := AffineTransformation new.
-	"Convert entries from F2Dot14 to float"
-	m a11: (a11 asFloat / 16r4000).
-	m a12: (a12 asFloat / 16r4000).
-	m a21: (a21 asFloat / 16r4000).
-	m a22: (a22 asFloat / 16r4000).
-	m a13: ofsX.
-	m a23: ofsY.
-	cGlyph addGlyph: (glyphs at: glyphIndex) transformation: m.
-	hasInstr := hasInstr or:[ (flags bitAnd: 256) = 256].
-	"Continue as long as the MORE_COMPONENTS bit is set"
-	(flags bitAnd: 32) = 32] whileTrue.
-	hasInstr ifTrue:[
-		iLen := entry nextUShort.
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 2/28/2020 18:23:06'!
+processCompositeGlyphFrom: entry
+	"Read a composite glyph from the font data."
+	| glyph flags glyphIndex hasInstructions ofsX ofsY iLen geometryTransformation bb bl br bt |
+	glyph _ TTCompositeGlyph new.
+	bl _ entry nextShort.
+	bt _ entry nextShort.
+	br _ entry nextShort.
+	bb _ entry nextShort.
+	glyph boundsLeft: bl boundsRight: br boundsTop: bt boundsBottom: bb.
+	hasInstructions := false.
+	[
+		flags := entry nextUShort.
+		glyphIndex := entry nextUShort + 1.
+
+		(flags allMask: 1 "ARG_1_AND_2_ARE_WORDS") ifTrue: [
+			"'Hay Offset short x@y' print."
+			ofsX := entry nextShort.
+			ofsY := entry nextShort.
+		] ifFalse: [
+			"'Hay Offset byte x@y' print."
+			(ofsX := entry nextByte) > 127 ifTrue: [ofsX := ofsX - 256].
+			(ofsY := entry nextByte) > 127 ifTrue: [ofsY := ofsY - 256]].
+
+		(flags allMask: 2 "ARGS_ARE_XY_VALUES") ifFalse: [self halt]. "Unsupported"
+		"ROUND_XY_TO_GRID = 4. Ignored"
+		(flags anyMask: 8+64+128) ifFalse: [
+			geometryTransformation := MorphicTranslation withTranslation: ofsX@ofsY ].
+		(flags allMask: 8 "WE_HAVE_A_SCALE") ifTrue: [
+			geometryTransformation := AffineTransformation withScale: entry nextShort asFloat / 16r4000 ].
+		(flags allMask: 64 "WE_HAVE_AN_X_AND_Y_SCALE") ifTrue: [
+			geometryTransformation := AffineTransformation
+				withPointScale: (entry nextShort asFloat / 16r4000)@(entry nextShort asFloat / 16r4000)
+				position: ofsX@ofsY ].
+		(flags allMask: 128 "WE_HAVE_A_TWO_BY_TWO") ifTrue: [
+			"2x2 transformation"
+			geometryTransformation := AffineTransformation new
+				a11: entry nextShort asFloat / 16r4000;
+				a21: entry nextShort asFloat / 16r4000;
+				a12: entry nextShort asFloat / 16r4000;
+				a22: entry nextShort asFloat / 16r4000;
+				a13: ofsX;
+				a23: ofsY ].
+
+		glyph addGlyph: glyphIndex transformation: geometryTransformation.
+		hasInstructions := hasInstructions or: [ flags allMask: 256 "WE_HAVE_INSTRUCTIONS"].
+		"Continue as long as the MORE_COMPONENTS bit is set"
+		flags allMask: 32 "MORE_COMPONENTS"
+	] whileTrue.
+	hasInstructions ifTrue: [
+		"Ignore them"
+		iLen _ entry nextUShort.
 		entry skip: iLen].
-	^cGlyph! !
+	^glyph! !
 
 !TTFontReader methodsFor: 'processing' stamp: 'ar 11/2/1998 00:42'!
 processFontHeaderTable: entry
@@ -4531,41 +5100,35 @@ indexToLocFormat	SHORT       Used when processing the Index To Loc Table."
 	fontDescription setBounds: (origin corner: corner) unitsPerEm: units.
 	^indexToLocFormat! !
 
-!TTFontReader methodsFor: 'processing' stamp: 'jmv 5/17/2019 09:01:28'!
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 1/18/2020 19:48:15'!
 processGlyphDataTable: entry offsets: offsetArray
 	"Read the actual glyph data from the font.
 	offsetArray contains the start offsets in the data for each glyph."
 	| initialOffset |
 	initialOffset _ entry offset.
 	glyphs _ Array new: nGlyphs.
-	1 to: nGlyphs do: [ :i | 
-		glyphs at: i put: (TTGlyph new glyphIndex: i-1)].
 	'Reading glyph data' 
 		displayProgressAt: 100@100
 		from: 1 
 		to: nGlyphs 
 		during: [ :bar |
-			| glyph glyphOffset nextOffset glyphLength numberOfContours bb bl br bt |
+			| glyph glyphOffset nextOffset glyphLength numberOfContours |
 			1 to: nGlyphs do: [ :glyphIndex |
 				bar value: glyphIndex.
-				glyph _ glyphs at: glyphIndex.
 				glyphOffset _ offsetArray at: glyphIndex.
 				nextOffset _ offsetArray at: glyphIndex+1.
 				glyphLength _ nextOffset - glyphOffset.
-				glyphLength = 0 ifFalse:[
-					entry offset: initialOffset + glyphOffset.
-					numberOfContours _ entry nextShort.
-					bl _ entry nextShort.
-					bt _ entry nextShort.
-					br _ entry nextShort.
-					bb _ entry nextShort.
-					glyph boundsLeft: bl boundsRight: br boundsTop: bt boundsBottom: bb.
-					numberOfContours >= 0
-						ifTrue: [
-							self processSimpleGlyph: glyph contours: numberOfContours from: entry ]
-						ifFalse: [
-							glyph _ self processCompositeGlyph: glyph contours: numberOfContours from: entry.
-							glyphs at: glyphIndex put: glyph ]]]].! !
+				glyph _ glyphLength = 0
+					ifTrue: [ TTGlyph new. ]
+					ifFalse: [
+						entry offset: initialOffset + glyphOffset.
+						numberOfContours _ entry nextShort.
+						numberOfContours >= 0
+							ifTrue: [ self processSimpleGlyphContours: numberOfContours from: entry ]
+							ifFalse: [ self processCompositeGlyphFrom: entry ]].
+				glyphs at: glyphIndex put: glyph ]].
+	glyphs do: [ :g | g replaceIndexesByComponentGlyphsIn: glyphs ]
+	! !
 
 !TTFontReader methodsFor: 'processing' stamp: 'jmv 4/24/2019 20:12:00'!
 processHorizontalHeaderTable: entry
@@ -4655,7 +5218,7 @@ processKerningSubTableType0: entry
 	^true
 ! !
 
-!TTFontReader methodsFor: 'processing' stamp: 'topa 3/19/2015 01:34'!
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 2/28/2020 10:46:04'!
 processKerningTable: entry
 	"Extract the kerning information for pairs of glyphs."
 	| version  nTables covLow covHigh |
@@ -4670,7 +5233,7 @@ processKerningTable: entry
 	covLow := entry nextByte.
 
 	"Make sure the format is right (kerning table and format type 0)"
-	((covLow bitAnd: 2) = 2 or:[ covHigh ~= 0]) ifTrue:[^false].
+	((covLow allMask: 2) or: [ covHigh ~= 0]) ifTrue: [^false].
 	"Subtable"
 	^ self processKerningSubTableType0: entry.
 ! !
@@ -4749,49 +5312,53 @@ processOSXKerningTable: entry
 	^ self processKerningSubTableType0: entry.
 ! !
 
-!TTFontReader methodsFor: 'processing' stamp: 'jmv 4/10/2019 09:33:27'!
-processSimpleGlyph: glyph contours: nContours from: entry
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 1/18/2020 19:45:30'!
+processSimpleGlyphContours: nContours from: entry
 
-	| endPts  nPts iLength flags |
-	endPts := Array new: nContours.
-	1 to: nContours do:[:i| endPts at: i put: entry nextUShort].
+	| glyph endPts nPts iLength flags bb bl br bt |
+	glyph _ TTGlyph new.
+	bl _ entry nextShort.
+	bt _ entry nextShort.
+	br _ entry nextShort.
+	bb _ entry nextShort.
+	glyph boundsLeft: bl boundsRight: br boundsTop: bt boundsBottom: bb.
+	endPts _ Array new: nContours.
+	1 to: nContours do: [ :i | endPts at: i put: entry nextUShort ].
 	glyph initializeContours: nContours with: endPts.
 	nContours = 0 ifTrue: [^ self].
-	nPts := endPts last + 1.
-	iLength := entry nextUShort. "instruction length"
+	nPts _ endPts last + 1.
+	iLength _ entry nextUShort. "instruction length"
 	entry skip: iLength.
-	flags := self getGlyphFlagsFrom: entry size: nPts.
+	flags _ self getGlyphFlagsFrom: entry size: nPts.
 	self readGlyphXCoords: entry glyph: glyph nContours: nContours flags: flags endPoints: endPts.
 	self readGlyphYCoords: entry glyph: glyph nContours: nContours flags: flags endPoints: endPts.
-	glyph makePointsAbsolute! !
+	glyph makePointsAbsolute.
+	^glyph! !
 
-!TTFontReader methodsFor: 'public' stamp: 'jmv 4/8/2019 17:55:29'!
-readFrom: fontData
+!TTFontReader methodsFor: 'processing' stamp: 'jmv 1/18/2020 21:19:39'!
+readFrom: fontData fromOffset: offset
 
-	| headerEntry maxProfileEntry nameEntry indexLocEntry charMapEntry glyphEntry horzHeaderEntry horzMetricsEntry kerningEntry glyphOffset cmap numHMetrics indexToLocFormat |
-
-	"Read the raw font byte data"
-	fontDescription := TTFontDescription new.
+	| headerEntry maxProfileEntry nameEntry indexLocEntry charMapEntry glyphEntry horzHeaderEntry horzMetricsEntry kerningEntry glyphOffset characterMap numHMetrics indexToLocFormat |
 
 	"Search the tables required to build the font"
-	(headerEntry := self getTableDirEntry: 'head' from: fontData) == nil ifTrue:[
+	(headerEntry := self getTableDirEntry: 'head' from: fontData offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a header table'].
-	(maxProfileEntry := self getTableDirEntry: 'maxp' from: fontData) == nil ifTrue:[
+	(maxProfileEntry := self getTableDirEntry: 'maxp' from: fontData offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a maximum profile table'].
-	(nameEntry := self getTableDirEntry: 'name' from: fontData) == nil ifTrue:[
+	(nameEntry := self getTableDirEntry: 'name' from: fontData offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a name table'].
-	(indexLocEntry := self getTableDirEntry: 'loca' from: fontData) == nil ifTrue:[
+	(indexLocEntry := self getTableDirEntry: 'loca' from: fontData offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a relocation table'].
-	(charMapEntry := self getTableDirEntry: 'cmap' from: fontData) == nil ifTrue:[
+	(charMapEntry := self getTableDirEntry: 'cmap' from: fontData offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a character map table'].
-	(glyphEntry := self getTableDirEntry: 'glyf' from: fontData) == nil ifTrue:[
+	(glyphEntry := self getTableDirEntry: 'glyf' from: fontData  offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a glyph table'].
-	(horzHeaderEntry := self getTableDirEntry: 'hhea' from: fontData) == nil ifTrue:[
+	(horzHeaderEntry := self getTableDirEntry: 'hhea' from: fontData offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a horizontal header table'].
-	(horzMetricsEntry := self getTableDirEntry: 'hmtx' from: fontData) == nil ifTrue:[
+	(horzMetricsEntry := self getTableDirEntry: 'hmtx' from: fontData offset: offset) == nil ifTrue: [
 		^self error:'This font does not have a horizontal metrics table'].
-	(kerningEntry := self getTableDirEntry: 'kern' from: fontData) == nil ifTrue:[
-		Transcript cr; show:'This font does not have a kerning table';endEntry].
+	(kerningEntry := self getTableDirEntry: 'kern' from: fontData offset: offset) == nil ifTrue: [
+		"Transcript cr; show:'This font does not have a kerning table';endEntry" ].
 
 
 	"Process the data"
@@ -4799,21 +5366,28 @@ readFrom: fontData
 	self processMaximumProfileTable: maxProfileEntry.
 	self processNamingTable: nameEntry.
 	glyphOffset := self processIndexToLocationTable: indexLocEntry format: indexToLocFormat.
-	cmap := self processCharacterMappingTable: charMapEntry.
-	(cmap == nil or:[cmap value == nil])
-		ifTrue:[^self error:'This font has no suitable character mappings'].
+	characterMap := self processCharacterMappingTable: charMapEntry.
+	characterMap isNil
+		ifTrue: [^self error:'This font has no Unicode character mappings'].
 	self processGlyphDataTable: glyphEntry offsets: glyphOffset.
 	numHMetrics := self processHorizontalHeaderTable: horzHeaderEntry.
 	self processHorizontalMetricsTable: horzMetricsEntry length: numHMetrics.
 	kerningEntry isNil 
-		ifTrue:[kernPairs := #()]
-		ifFalse:[self processKerningTable: kerningEntry].
-	charMap := self processCharMap: cmap.
-	fontDescription setGlyphs: glyphs mapping: charMap.
-	fontDescription setKernPairs: kernPairs.
-	^fontDescription! !
+		ifTrue: [kernPairs := #()]
+		ifFalse: [self processKerningTable: kerningEntry].
+	self mapAndStoreGlyphsUsing: characterMap.
+	"jmv kernPairs refer to glyph number (in the .ttf file) while fontDescription glyphs are indexed by Unicode code point...
+	Correct this before making any use of the kernPairs data."
+	fontDescription setKernPairs: kernPairs.! !
 
-!TTFontReader methodsFor: 'private' stamp: 'topa 9/1/2015 20:14'!
+!TTFontReader methodsFor: 'public' stamp: 'jmv 1/18/2020 15:13:49'!
+readTTFFrom: aByteArray
+	"Read the raw font byte data"
+	fontDescription := TTFontDescription new.
+	self readFrom: aByteArray fromOffset: 0.
+	^ fontDescription! !
+
+!TTFontReader methodsFor: 'private' stamp: 'jmv 1/18/2020 15:07:33'!
 decodeCmapFmtTable: entry
 	| cmapFmt length entryCount segCount segments offset cmap firstCode |
 	cmapFmt := entry nextUShort.
@@ -4864,7 +5438,7 @@ decodeCmapFmtTable: entry
 		^ cmap].
 	^ nil! !
 
-!TTFontReader methodsFor: 'private' stamp: 'ar 11/2/1998 01:33'!
+!TTFontReader methodsFor: 'private' stamp: 'jmv 2/28/2020 10:45:12'!
 getGlyphFlagsFrom: entry size: nPts
 	"Read in the flags for this glyph.  The outer loop gathers the flags that
 	are actually contained in the table.  If the repeat bit is set in a flag
@@ -4877,7 +5451,7 @@ getGlyphFlagsFrom: entry size: nPts
 	[index <= nPts] whileTrue:[
 		flagBits := entry nextByte.
 		flags at: index put: flagBits.
-		(flagBits bitAnd: 8) = 8 ifTrue:[
+		(flagBits allMask: 8) ifTrue:[
 			repCount := entry nextByte.
 			repCount timesRepeat:[
 				index := index + 1.
@@ -4885,27 +5459,8 @@ getGlyphFlagsFrom: entry size: nPts
 		index := index + 1].
 	^flags! !
 
-!TTFontReader methodsFor: 'private' stamp: 'jmv 5/2/2019 21:21:40'!
-getTableDirEntry: tagString from: fontData
-	"Find the table named tagString in fontData and return a table directory entry for it."
-	| nTables pos currentTag tag |
-	nTables := fontData shortAt: 5 bigEndian: true.
-	tag := ByteArray new: 4.
-	1 to: 4 do:[:i| tag byteAt: i put: (tagString at: i) asciiValue].
-	tag := tag longAt: 1 bigEndian: true.
-	pos := 13.
-	1 to: nTables do:[:i|
-		currentTag := fontData longAt: pos bigEndian: true.
-		currentTag = tag ifTrue:[^TTFontTableDirEntry on: fontData at: pos].
-		pos := pos+16].
-	^nil! !
-
-!TTFontReader methodsFor: 'private' stamp: 'ar 4/10/2005 16:10'!
-macToWin: index
-	^ (index - 1) asCharacter macToSqueak asciiValue + 1! !
-
-!TTFontReader methodsFor: 'private' stamp: 'jmv 5/16/2019 16:35:47'!
-readGlyphXCoords:entry glyph: glyph nContours: nContours flags: flags endPoints: endPts
+!TTFontReader methodsFor: 'private' stamp: 'jmv 2/28/2020 11:05:54'!
+readGlyphXCoords: entry glyph: glyph nContours: nContours flags: flags endPoints: endPts
 	"Read the x coordinates for the given glyph from the font file."
 	| startPoint endPoint flagBits xValue contour |
 	startPoint _ 1.
@@ -4922,24 +5477,24 @@ readGlyphXCoords:entry glyph: glyph nContours: nContours flags: flags endPoints:
 			"First we check to see if bit one is set.  This would indicate that
 			the corresponding coordinate data in the table is 1 byte long.
 			If the bit is not set, then the coordinate data is 2 bytes long."
-			xValue _ (flagBits bitAnd: 2) = 2
+			xValue _ (flagBits allMask: 2)
 				ifTrue: [ "one byte"
-					(flagBits bitAnd: 16)=16 
+					(flagBits allMask: 16)
 						ifTrue: [entry nextByte]
 						ifFalse: [entry nextByte negated].
 				] ifFalse: [ "two byte"
 					"If bit four is set, then this coordinate is the same as the
 					last one, so the relative offset (of zero) is stored.  If bit
 					is not set, then read in two bytes and store it as a signed value."
-					(flagBits bitAnd: 16) = 16
+					(flagBits allMask: 16)
 						ifTrue: [ 0 ]
 						ifFalse: [ entry nextShort ]].
 			contour points at: (j - startPoint + 1) putX: xValue.
 		].
 		startPoint _ endPoint + 1 ]! !
 
-!TTFontReader methodsFor: 'private' stamp: 'jmv 5/16/2019 16:32:24'!
-readGlyphYCoords:entry glyph: glyph nContours: nContours flags: flags endPoints: endPts
+!TTFontReader methodsFor: 'private' stamp: 'jmv 2/28/2020 11:05:57'!
+readGlyphYCoords: entry glyph: glyph nContours: nContours flags: flags endPoints: endPts
 	"Read the y coordinates for the given glyph from the font file."
 	| startPoint endPoint flagBits yValue contour |
 	startPoint _ 1.
@@ -4951,211 +5506,21 @@ readGlyphYCoords:entry glyph: glyph nContours: nContours flags: flags endPoints:
 		startPoint to: endPoint do: [ :j |
 			flagBits _ flags at: j.
 			"Check if this value one or two byte encoded"
-			yValue _ (flagBits bitAnd: 4) = 4
+			yValue _ (flagBits allMask: 4)
 				ifTrue: [ "one byte"
-					(flagBits bitAnd: 32)=32
+					(flagBits allMask: 32)
 						ifTrue: [entry nextByte]
 						ifFalse: [entry nextByte negated].
 				] ifFalse: [ "two byte"
-					(flagBits bitAnd: 32) = 32
+					(flagBits allMask: 32)
 						ifTrue: [ 0 ]
 						ifFalse: [ entry nextShort ]].
 			contour points at: (j - startPoint + 1) putY: yValue.
 		].
 		startPoint _ endPoint + 1 ]! !
 
-!TTFontReader class methodsFor: 'class initialization' stamp: 'nk 7/16/2003 15:56'!
-fileReaderServicesForFile: fullName suffix: suffix
-
-
-	^(suffix = 'fnt')  | (suffix = '*') 
-		ifTrue: [ self services]
-		ifFalse: [#()]
-! !
-
-!TTFontReader class methodsFor: 'class initialization' stamp: 'ar 9/5/2010 09:38'!
-initialize
-	"self initialize"
-
-	FileList registerFileReader: self! !
-
-!TTFontReader class methodsFor: 'class initialization' stamp: 'sd 2/1/2002 19:31'!
-openTTFFile: fullName 
-
-	(TTFontReader parseFileNamed: fullName) asMorph open! !
-
-!TTFontReader class methodsFor: 'class initialization' stamp: 'KR 3/21/2008 20:52'!
-serviceOpenTrueTypeFont
-
-	^ SimpleServiceEntry 
-				provider: self 
-				label: 'open true type font' translatedNoop
-				selector: #openTTFFile:
-				description: 'open true type font' translatedNoop! !
-
-!TTFontReader class methodsFor: 'class initialization' stamp: 'sd 2/1/2002 22:03'!
-services
-
-	^ Array with: self serviceOpenTrueTypeFont
-! !
-
-!TTFontReader class methodsFor: 'class initialization' stamp: 'ar 9/5/2010 09:38'!
-unload
-
-	FileList unregisterFileReader: self ! !
-
-!TTFontReader class methodsFor: 'instance creation' stamp: 'jmv 4/8/2019 17:55:05'!
-parseFileNamed: fileName
-	"TTFontReader parseFileNamed:'c:\windows\fonts\arial.ttf'"
-	"TTFontReader parseFileNamed:'c:\windows\times.ttf'"
-	
-	^ self readFrom: fileName asFileEntry binaryContents! !
-
-!TTCFontReader methodsFor: 'as yet unclassified' stamp: 'jmv 4/8/2019 17:47:24'!
-getTableDirEntry: tagString from: fontData offset: offset
-	"Find the table named tagString in fontData and return a table directory entry for it."
-
-	| numTables pos currentTag tag |
-	numTables := fontData shortAt: 5 + offset bigEndian: true.
-	tag := ByteArray new: 4.
-	1 to: 4 do:[:i| tag byteAt: i put: (tagString at: i) asciiValue].
-	tag := tag longAt: 1 bigEndian: true.
-	pos := 13 + offset.
-	1 to: numTables do:[:i|
-		currentTag := fontData longAt: pos bigEndian: true.
-		currentTag = tag ifTrue:[^TTFontTableDirEntry on: fontData at: pos].
-		pos := pos+16].
-	^nil! !
-
-!TTCFontReader methodsFor: 'as yet unclassified' stamp: 'yo 11/8/2002 15:47'!
-parseTTCHeaderFrom: fontData
-
-	| pos nTables |
-	nTables := fontData longAt: 9 bigEndian: true.
-	fonts := Array new: nTables.
-	pos := 13.
-	1 to: nTables do: [:i |
-		fonts at: i put: (fontData longAt: pos bigEndian: true).
-		pos := pos + 4.
-	].
-
-	^ fonts
-! !
-
-!TTCFontReader methodsFor: 'as yet unclassified' stamp: 'jmv 4/8/2019 12:50:44'!
-processCharMap: assoc
-	"Process the given character map"
-
-	| glyph cmap encode0 encode1 char value null |
-	cmap := assoc value.
-	null := (glyphs at: (cmap at: Character space codePoint + 1) + 1) copy.
-	null contours: #().
-
-	encode0 := Array new: 256 withAll: glyphs first.
-	encode1 := Array new: 65536 withAll: glyphs first.
-
-	0 to: 255 do: [:i |
-		char := Character numericValue: i.
-		glyph := glyphs at: (cmap at: char codePoint + 1) + 1.
-		encode0 at: i+1 put: glyph.
-	].
-	Character separators do: [:c |
-		encode0 at: (c asciiValue + 1) put: null.
-	].
-	0 to: 65536 - 1 do: [:i |
-		value := cmap at: i+1.
-		value = 65535 ifFalse: [ "???"
-			| g |
-			g := glyphs at: value+1 ifAbsent: [ null. ].
-			(g isKindOf: TTCompositeGlyph) ifFalse: [
-				encode1 at: i+1 put: g.
-			] ifTrue: [
-				g basicGlyphs: (((glyphs at: value+1) basicGlyphs) collect: [:t | t key->(glyphs at: (t value glyphIndex+1))]).
-				encode1 at: i+1 put: g
-			].
-		]
-	].
-
-	^ {encode0. encode1}.
-! !
-
-!TTCFontReader methodsFor: 'as yet unclassified' stamp: 'ul 4/24/2017 01:53'!
-readFrom: fontData fromOffset: offset at: encodingTag
-
-	| headerEntry maxProfileEntry nameEntry indexLocEntry charMapEntry glyphEntry horzHeaderEntry horzMetricsEntry kerningEntry glyphOffset cmap numHMetrics indexToLocFormat fontDescription0 fontDescription1 array result |
-
-	"Search the tables required to build the font"
-	(headerEntry := self getTableDirEntry: 'head' from: fontData offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a header table'].
-	(maxProfileEntry := self getTableDirEntry: 'maxp' from: fontData offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a maximum profile table'].
-	(nameEntry := self getTableDirEntry: 'name' from: fontData offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a name table'].
-	(indexLocEntry := self getTableDirEntry: 'loca' from: fontData offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a relocation table'].
-	(charMapEntry := self getTableDirEntry: 'cmap' from: fontData offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a character map table'].
-	(glyphEntry := self getTableDirEntry: 'glyf' from: fontData  offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a glyph table'].
-	(horzHeaderEntry := self getTableDirEntry: 'hhea' from: fontData offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a horizontal header table'].
-	(horzMetricsEntry := self getTableDirEntry: 'hmtx' from: fontData offset: offset) == nil ifTrue:[
-		^self error:'This font does not have a horizontal metrics table'].
-	(kerningEntry := self getTableDirEntry: 'kern' from: fontData offset: offset) == nil ifTrue:[
-		Transcript cr; show:'This font does not have a kerning table';endEntry].
-
-
-	"Process the data"
-	indexToLocFormat := self processFontHeaderTable: headerEntry.
-	self processMaximumProfileTable: maxProfileEntry.
-	self processNamingTable: nameEntry.
-	glyphOffset := self processIndexToLocationTable: indexLocEntry format: indexToLocFormat.
-	cmap := self processCharacterMappingTable: charMapEntry.
-	(cmap == nil or:[cmap value == nil])
-		ifTrue:[^self error:'This font has no suitable character mappings'].
-	self processGlyphDataTable: glyphEntry offsets: glyphOffset.
-	numHMetrics := self processHorizontalHeaderTable: horzHeaderEntry.
-	self processHorizontalMetricsTable: horzMetricsEntry length: numHMetrics.
-	kerningEntry isNil 
-		ifTrue:[kernPairs := #()]
-		ifFalse:[self processKerningTable: kerningEntry].
-	array := self processCharMap: cmap.
-	fontDescription0 := fontDescription shallowCopy.
-	fontDescription1 := fontDescription shallowCopy.
-	fontDescription0 setGlyphs: (array at: 1) mapping: (array at: 1)..
-	fontDescription1 setGlyphs: (array at: 2) mapping: (array at: 2)..
-	fontDescription0 setKernPairs: kernPairs.
-	fontDescription1 setKernPairs: kernPairs.
-	result := OrderedCollection new.
-	(encodingTag = nil or: [encodingTag = 0]) ifTrue: [^ Array with: fontDescription1].
-	result add: fontDescription0.
-	encodingTag -1 timesRepeat: [result add: nil].
-	result add: fontDescription1.
-	^ result asArray.
-
-! !
-
-!TTCFontReader methodsFor: 'as yet unclassified' stamp: 'jmv 5/4/2019 15:04:54'!
+!TTFontReader class methodsFor: 'instance creation' stamp: 'jmv 1/18/2020 14:18:14'!
 readTTFFrom: aByteArray
-	"For .ttf (not .ttc) files."
-	"Read the raw font byte data"
-	fontDescription := TTCFontDescription new.
-
-	^ self readFrom: aByteArray fromOffset: 0 at: EncodingTag.
-! !
-
-!TTCFontReader class methodsFor: 'as yet unclassified' stamp: 'yo 2/15/2004 18:45'!
-encodingTag: aNumber
-"
-	TTCFontReader encodingTag: 6
-"
-
-	EncodingTag := aNumber.
-! !
-
-!TTCFontReader class methodsFor: 'as yet unclassified' stamp: 'jmv 5/4/2019 15:18:14'!
-readTTFFrom: aByteArray
-	"For .ttf (not .ttc) files."
 
 	^self new readTTFFrom: aByteArray! !
 
@@ -5306,6 +5671,10 @@ boundsTop
 	boundsBottom
 	"! !
 
+!TTGlyph methodsFor: 'accessing' stamp: 'jmv 3/3/2020 09:43:36'!
+contourCount
+	^contours count: [ :each | each isEmpty not ]! !
+
 !TTGlyph methodsFor: 'accessing'!
 contours
 	^contours! !
@@ -5313,14 +5682,6 @@ contours
 !TTGlyph methodsFor: 'accessing' stamp: 'jmv 4/10/2019 09:41:20'!
 contours: aCollection
 	contours := aCollection asArray.! !
-
-!TTGlyph methodsFor: 'accessing'!
-glyphIndex
-	^glyphIndex! !
-
-!TTGlyph methodsFor: 'accessing'!
-glyphIndex: anInteger
-	glyphIndex := anInteger! !
 
 !TTGlyph methodsFor: 'accessing'!
 leftSideBearing
@@ -5381,34 +5742,56 @@ makePointsAbsolute
 	contours do: [ :contour | 
 		contourOrigin _ contour makePointsAbsolute: contourOrigin ]! !
 
+!TTGlyph methodsFor: 'private-initialization' stamp: 'jmv 1/18/2020 15:54:31'!
+replaceIndexesByComponentGlyphsIn: dummy
+	"NOP"! !
+
 !TTGlyph methodsFor: 'private-initialization' stamp: 'jmv 5/16/2019 21:21:51'!
 updateRightSideBearing
 	"Update the right side bearing value"
 	"@@: Is the following really correct?!!?!!"
 	rightSideBearing := advanceWidth - leftSideBearing - boundsRight + boundsLeft! !
 
-!TTGlyph methodsFor: 'drawing' stamp: 'jmv 5/11/2019 16:54:15'!
+!TTGlyph methodsFor: 'drawing' stamp: 'jmv 3/2/2020 12:52:41'!
 drawGlyphOn: aVectorCanvas
+	self drawGlyphOn: aVectorCanvas geometryTransformation: nil! !
+
+!TTGlyph methodsFor: 'drawing' stamp: 'jmv 3/2/2020 12:52:01'!
+drawGlyphOn: aVectorCanvas geometryTransformation: txOrNil
 	contours do: [ :contour |
 		contour isEmpty ifFalse: [
-			contour initialMoveToCommand runOn: aVectorCanvas .
-			contour pathCommand runOn: aVectorCanvas ]].! !
+			aVectorCanvas moveToX: 0 y: 0.
+			(contour initialMoveToCommand: txOrNil) runOn: aVectorCanvas .
+			(contour pathCommand: txOrNil) runOn: aVectorCanvas ]].! !
+
+!TTGlyph methodsFor: 'primitive format' stamp: 'jmv 3/14/2020 23:03:58'!
+addContourDataTo: stream
+	stream nextPut: self advanceWidth.
+	stream nextPut: self boundsLeft.
+	stream nextPut: self boundsRight.
+	stream nextPut: self boundsTop.
+	stream nextPut: self boundsBottom.
+	stream nextPut: self contourCount.
+	self addContourDataTo: stream tx: nil! !
+
+!TTGlyph methodsFor: 'primitive format' stamp: 'jmv 3/3/2020 09:46:30'!
+addContourDataTo: stream tx: aGeometryTransformationOrNil
+
+	contours do: [ :c | c addContourDataTo: stream tx: aGeometryTransformationOrNil ]! !
 
 !TTCompositeGlyph methodsFor: 'accessing' stamp: 'ar 11/2/1998 01:21'!
 addGlyph: aGlyph transformation: aMatrix
 	glyphs := glyphs copyWith: (aMatrix -> aGlyph)! !
 
-!TTCompositeGlyph methodsFor: 'accessing' stamp: 'yo 12/10/2007 17:15'!
-basicGlyphs
-
-	^ glyphs
-! !
-
-!TTCompositeGlyph methodsFor: 'accessing' stamp: 'topa 3/10/2015 21:01'!
-basicGlyphs: colOfAssocs
-
-	glyphs := colOfAssocs
-! !
+!TTCompositeGlyph methodsFor: 'accessing' stamp: 'jmv 3/3/2020 09:43:58'!
+contourCount
+	| glyph count |
+	count _ 0.
+	glyphs do: [ :txAndGlyph |
+		glyph _ txAndGlyph value.
+		count _ count + glyph contourCount.
+		].
+	^count! !
 
 !TTCompositeGlyph methodsFor: 'accessing' stamp: 'ar 11/2/1998 01:20'!
 glyphs
@@ -5423,13 +5806,29 @@ initialize
 isComposite
 	^true! !
 
-!TTCompositeGlyph methodsFor: 'drawing' stamp: 'jmv 5/11/2019 16:59:35'!
+!TTCompositeGlyph methodsFor: 'drawing' stamp: 'jmv 3/2/2020 12:52:20'!
 drawGlyphOn: aVectorCanvas
-	| initialGeometry |
-	initialGeometry _ aVectorCanvas engine geometryTransformation.
 	glyphs do: [ :each |
-		aVectorCanvas engine geometryTransformation: (initialGeometry composedWith: each key).
-		each value drawGlyphOn: aVectorCanvas ]! !
+		each value drawGlyphOn: aVectorCanvas geometryTransformation: each key ]! !
+
+!TTCompositeGlyph methodsFor: 'drawing' stamp: 'jmv 1/18/2020 16:29:44'!
+txAndContoursDo: aBlock
+	glyphs do: [ :assoc |
+		aBlock value: assoc key value: assoc value contours ]! !
+
+!TTCompositeGlyph methodsFor: 'private-initialization' stamp: 'jmv 1/18/2020 15:54:09'!
+replaceIndexesByComponentGlyphsIn: anArray
+	glyphs _ glyphs collect: [ :assoc | assoc key -> (anArray at: assoc value) ]! !
+
+!TTCompositeGlyph methodsFor: 'primitive format' stamp: 'jmv 3/4/2020 11:29:26'!
+addContourDataTo: stream tx: aGeometryTransformationOrNil
+	| glyph tx |
+	glyphs do: [ :txAndGlyph |
+		tx _ txAndGlyph key.
+		aGeometryTransformationOrNil notNil ifTrue: [
+			tx _ aGeometryTransformationOrNil composedWith: tx ].
+		glyph _ txAndGlyph value.
+		glyph addContourDataTo: stream tx: tx ]! !
 
 !TTKernPair methodsFor: 'accessing'!
 left
@@ -5730,6 +6129,11 @@ toPoint: endPoint
 	coordinatesAreRelative _ false.
 	points _ {endPoint}! !
 
+!PathMoveToCommand methodsFor: 'building' stamp: 'jmv 3/2/2020 11:41:49'!
+toRelativePoint: endPoint
+	coordinatesAreRelative _ true.
+	points _ {endPoint}! !
+
 !PathMoveToCommand methodsFor: 'private' stamp: 'jmv 6/11/2010 14:34'!
 privatePointsDo: aBlock
 	"evaluate aBlock with the x and y coordinates for our defining points."
@@ -5765,6 +6169,12 @@ buildFrom: commandChar stream: aStream
 !PathQuadraticCurveToCommand methodsFor: 'building' stamp: 'jmv 4/9/2019 13:30:05'!
 toPoints: endPoints controlPoints: aControlPoints
 	coordinatesAreRelative _ false.
+	toPoints _ endPoints.
+	controlPoints _ aControlPoints! !
+
+!PathQuadraticCurveToCommand methodsFor: 'building' stamp: 'jmv 2/29/2020 18:01:39'!
+toRelativePoints: endPoints controlPoints: aControlPoints
+	coordinatesAreRelative _ true.
 	toPoints _ endPoints.
 	controlPoints _ aControlPoints! !
 
@@ -5817,10 +6227,40 @@ externalizedWith: aMorphicLocation
 
 	^self! !
 
-!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'len 5/28/2019 15:20:31'!
+!Character methodsFor: '*vectorGraphics' stamp: 'jmv 4/1/2020 11:45:59'!
+widthInTrueTypeFontDescription: aTTFontDescription useST80Glyphs: aBoolean
+	"Double dispatch"
+
+	^aTTFontDescription widthOf: self useST80Glyphs: aBoolean! !
+
+!String methodsFor: '*vectorGraphics' stamp: 'jmv 4/1/2020 12:26:06'!
+displayOnBitBltCanvasEngine: engine from: startIndex to: stopIndex at: p trueTypeFont: aTrueTypeFont color: color
+	"Double dispatch"
+
+	^ engine
+		displayString: self
+		from: startIndex
+		to: stopIndex
+		at: p
+		trueTypeFont: aTrueTypeFont
+		color: color! !
+
+!Text methodsFor: '*vectorGraphics' stamp: 'jmv 4/21/2020 13:13:17'!
+displayOnBitBltCanvasEngine: engine from: startIndex to: stopIndex at: p trueTypeFont: aTrueTypeFont color: color
+	"Double dispatch"
+
+	^ engine
+		displayString: self
+		from: startIndex
+		to: stopIndex
+		at: p
+		trueTypeFont: aTrueTypeFont
+		color: color! !
+
+!BitBltCanvasEngine methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 3/22/2020 23:24:00'!
 basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont
 	"Answer last affected pixel position"
-	| fdestX char glyph maxHeight ddy toPixelsScale |
+	| fdestX char glyph maxHeight |
 
 	destY _ aPoint y.
 	fdestX _ aPoint x.
@@ -5829,11 +6269,12 @@ basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFo
 		char _ aString at: charIndex.
 		glyph _ aTrueTypeFont glyphAt: char.
 		destX _ (fdestX + glyph leftOffset) rounded.
-		self revisar.
-		ddy _ aTrueTypeFont fontDescription ascent + aTrueTypeFont fontDescription lineGap.
-		toPixelsScale _ aTrueTypeFont pointSize * 1.0 / aTrueTypeFont fontDescription letterMTopSideBearing.
-		destY _ aPoint y + (ddy * toPixelsScale) - glyph topOffset. 
-		aTrueTypeFont isSuperscript ifTrue: [destY _ destY - (aTrueTypeFont ascent*0.55)] ifFalse: [aTrueTypeFont isSubscript ifTrue: [destY _ destY + (aTrueTypeFont ascent*0.3)]].
+		destY _ aPoint y + aTrueTypeFont ascent + aTrueTypeFont lineGap-1 - glyph topOffset. 
+		aTrueTypeFont isSuperscript
+			ifTrue: [destY _ destY - (aTrueTypeFont ascent*0.55)]
+			ifFalse: [
+				aTrueTypeFont isSubscript
+					ifTrue: [destY _ destY + (aTrueTypeFont ascent*0.3)]].
 		sourceForm _ glyph form.
 		height _ sourceForm height.
 		width _ sourceForm width.
@@ -5843,7 +6284,63 @@ basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFo
 	].
 	^ destX ceiling@(destY+maxHeight)! !
 
-!GrafPort methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/21/2019 10:56:45'!
+!BitBltCanvasEngine methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 4/1/2020 12:30:47'!
+basicDisplayUtf32: anIntegerArray from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont
+	"Answer last affected pixel position"
+	| fdestX glyph maxHeight |
+	destY _ aPoint y.
+	fdestX _ aPoint x.
+	maxHeight _ 0.
+	startIndex to: stopIndex do: [ :i | | codePoint |
+		codePoint _ anIntegerArray at: i.
+		Character
+			evaluateOnce: [ :byte1 :byte2 :byte3 :byte4 |
+				glyph _ aTrueTypeFont glyphAtUtf8Byte1: byte1 byte2: byte2 byte3: byte3 byte4: byte4 ]
+			withUtf8BytesOfUnicodeCodePoint: codePoint.
+		destX _ (fdestX + glyph leftOffset) rounded.
+		destY _ aPoint y + aTrueTypeFont ascent + aTrueTypeFont lineGap-1 - glyph topOffset.
+		aTrueTypeFont isSuperscript
+			ifTrue: [destY _ destY - (aTrueTypeFont ascent*0.55)]
+			ifFalse: [
+				aTrueTypeFont isSubscript
+					ifTrue: [destY _ destY + (aTrueTypeFont ascent*0.3)]].
+		sourceForm _ glyph form.
+		height _ sourceForm height.
+		width _ sourceForm width.
+		self copyBits.
+		fdestX _ fdestX + "width + aTrueTypeFont baseKern"glyph advanceWidth.
+		maxHeight _ maxHeight max: height ].
+	^ destX ceiling@(destY+maxHeight)! !
+
+!BitBltCanvasEngine methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 3/22/2020 23:23:08'!
+basicDisplayUtf8: aByteArray at: aPoint trueTypeFont: aTrueTypeFont
+	"Answer last affected pixel position"
+	| fdestX glyph maxHeight utf8Stream |
+	destY _ aPoint y.
+	fdestX _ aPoint x.
+	maxHeight _ 0.
+	utf8Stream _ aByteArray readStream.
+	[ utf8Stream atEnd ] whileFalse: [
+		glyph _ Character
+			nextCodePointBytesFromUtf8: utf8Stream
+			into: [ :byte1 :byte2 :byte3 :byte4 |
+				aTrueTypeFont glyphAtUtf8Byte1: byte1 byte2: byte2 byte3: byte3 byte4: byte4 ].
+		destX _ (fdestX + glyph leftOffset) rounded.
+		destY _ aPoint y + aTrueTypeFont ascent + aTrueTypeFont lineGap-1 - glyph topOffset.
+		aTrueTypeFont isSuperscript
+			ifTrue: [destY _ destY - (aTrueTypeFont ascent*0.55)]
+			ifFalse: [
+				aTrueTypeFont isSubscript
+					ifTrue: [destY _ destY + (aTrueTypeFont ascent*0.3)]].
+		sourceForm _ glyph form.
+		height _ sourceForm height.
+		width _ sourceForm width.
+		self copyBits.
+		fdestX _ fdestX + "width + aTrueTypeFont baseKern"glyph advanceWidth.
+		maxHeight _ maxHeight max: height ].
+	^ destX ceiling@(destY+maxHeight)! !
+
+!BitBltCanvasEngine methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 5/21/2019 10:56:45'!
 displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont color: foregroundColor
 	"If required, do a second pass with new rule and colorMap.
 	Answer last affected pixel position
@@ -5882,6 +6379,313 @@ displayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: a
 		self basicDisplayString: aString from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont.
 		combinationRule := prevRule ].
 	^answer! !
+
+!BitBltCanvasEngine methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 4/1/2020 12:31:45'!
+displayUtf32: anIntegerArray from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont color: foregroundColor
+	"If required, do a second pass with new rule and colorMap.
+	Answer last affected pixel position
+	Answer nil if nothing was done
+	"
+
+	| answer prevRule secondPassMap sourceDepth destDepth |
+
+	"Slight optimization when there's nothing to do."
+	clipHeight = 0 ifTrue: [^nil].
+	clipWidth = 0 ifTrue: [^nil].
+
+	"self installStrikeFont: font foregroundColor: (foregroundColor alpha: 1)."
+	sourceForm _ nil. "Set it for each glyph"
+	sourceX _ 0.
+	sourceY _ 0.
+	height _ nil. "Set it for each glyph as sourceForm height".
+	self setRuleAndMapFor: 32 foregroundColor: (foregroundColor alpha: 1).
+
+	"If combinationRule is rgbMul, we might need the special two-pass technique for component alpha blending.
+	If not, do it simply"
+	combinationRule = 37 "rgbMul" ifFalse: [
+		^self basicDisplayUtf32: anIntegerArray from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont ].
+	
+	"We need to do a second pass. The colormap set is for use in the second pass."
+	secondPassMap _ colorMap.
+	sourceDepth _ aTrueTypeFont cachedFormDepth.
+	destDepth _ destForm depth.
+	colorMap _ sourceDepth ~= destDepth
+		ifTrue: [ Color cachedColormapFrom: sourceDepth to: destDepth ].
+	answer := self basicDisplayUtf32: anIntegerArray from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont.
+	colorMap := secondPassMap.
+	secondPassMap ifNotNil: [
+		prevRule := combinationRule.
+		combinationRule := 20. "rgbAdd"
+		self basicDisplayUtf32: anIntegerArray from: startIndex to: stopIndex at: aPoint trueTypeFont: aTrueTypeFont.
+		combinationRule := prevRule ].
+	^answer! !
+
+!BitBltCanvasEngine methodsFor: '*VectorGraphics-TrueType' stamp: 'jmv 3/21/2020 19:15:23'!
+displayUtf8: aByteArray at: aPoint trueTypeFont: aTrueTypeFont color: foregroundColor
+	"If required, do a second pass with new rule and colorMap.
+	Answer last affected pixel position
+	Answer nil if nothing was done
+	"
+
+	| answer prevRule secondPassMap sourceDepth destDepth |
+
+	"Slight optimization when there's nothing to do."
+	clipHeight = 0 ifTrue: [^nil].
+	clipWidth = 0 ifTrue: [^nil].
+
+	"self installStrikeFont: font foregroundColor: (foregroundColor alpha: 1)."
+	sourceForm _ nil. "Set it for each glyph"
+	sourceX _ 0.
+	sourceY _ 0.
+	height _ nil. "Set it for each glyph as sourceForm height".
+	self setRuleAndMapFor: 32 foregroundColor: (foregroundColor alpha: 1).
+
+	"If combinationRule is rgbMul, we might need the special two-pass technique for component alpha blending.
+	If not, do it simply"
+	combinationRule = 37 "rgbMul" ifFalse: [
+		^self basicDisplayUtf8: aByteArray at: aPoint trueTypeFont: aTrueTypeFont ].
+	
+	"We need to do a second pass. The colormap set is for use in the second pass."
+	secondPassMap _ colorMap.
+	sourceDepth _ aTrueTypeFont cachedFormDepth.
+	destDepth _ destForm depth.
+	colorMap _ sourceDepth ~= destDepth
+		ifTrue: [ Color cachedColormapFrom: sourceDepth to: destDepth ].
+	answer := self basicDisplayUtf8: aByteArray at: aPoint trueTypeFont: aTrueTypeFont.
+	colorMap := secondPassMap.
+	secondPassMap ifNotNil: [
+		prevRule := combinationRule.
+		combinationRule := 20. "rgbAdd"
+		self basicDisplayUtf8: aByteArray at: aPoint trueTypeFont: aTrueTypeFont.
+		combinationRule := prevRule ].
+	^answer! !
+
+!MorphicCanvas methodsFor: '*vectorGraphics-drawing-text' stamp: 'jmv 3/22/2020 20:03:06'!
+drawUtf8: aByteArray at: aPoint font: aTrueTypeFont color: aColor
+	self subclassResponsibility! !
+
+!BitBltCanvas methodsFor: '*vectorGraphics-drawing-text' stamp: 'jmv 4/1/2020 13:02:25'!
+drawUtf32: anIntegerArray from: startIndex to: stopIndex at: aPoint font: aTrueTypeFont color: aColor
+	"Answer last affected pixel position
+	Answer nil if nothing was done"
+	"
+| c f utf32 |
+Preferences disable: #loadOnlyLatinGlyphData. 'And now load optional fonts'.
+c _ BitBltCanvas onForm: Display.
+f _ FontFamily familyName: 'DejaVu Sans' pointSize: 72.
+utf32 _ #(923 959 961 949 956 32 953 960 963 952 956 32 948 959 955 959 961 32 963 953 964 32 945 956 949 964 44 32 956 959 948 959 32 118 949 957 953 945 956 32 118 953 948 949 961 949 961 32 953 957 32 99 952 956 44 32 949 958 32 945 952 964 949 956 32 956 945 955 953 963 32 959 966 966 949 957 948 953 964 32 949 963 964 46 32 921 948 32 964 959 955 955 953 964 32 963 952 963 99 953 960 953 964 32 963 945 955 952 964 945 964 952 963 32 113 952 953 44 32 99 952 32 113 952 945 957 948 959 32 960 961 959 960 961 953 945 949 32 953 956 960 949 961 948 953 949 964 32 118 949 955 44 32 956 949 945 32 949 964 32 949 961 961 949 956 32 947 955 959 961 953 945 964 952 961 46 32 917 958 949 961 99 953 32 948 949 966 953 957 953 964 953 959 957 949 956 32 956 949 955 32 949 945 46 32 917 958 32 963 949 945 32 949 955 953 964 32 948 953 963 963 949 957 964 953 949 964 44 32 956 945 955 953 963 32 964 961 953 964 945 957 953 32 118 953 963 32 953 948 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@200 font: f color: Color random.
+c drawUtf8:  #[97 195 177 111 ]  at: 10@400 font: f color: Color random.
+Display forceToScreen
+	"
+
+	| p font |
+
+	p _ (currentTransformation transform: aPoint) rounded.
+	engine colorMap: nil.
+	font _ aTrueTypeFont ifNil: [ AbstractFont default ].
+	^ engine
+		displayUtf32: anIntegerArray
+		from: startIndex
+		to: stopIndex 
+		at: p
+		trueTypeFont: font
+		color: aColor! !
+
+!BitBltCanvas methodsFor: '*vectorGraphics-drawing-text' stamp: 'jmv 3/22/2020 23:46:12'!
+drawUtf8: aByteArray at: aPoint font: aTrueTypeFont color: aColor
+	"Answer last affected pixel position
+	Answer nil if nothing was done"
+	"
+| c f |
+Preferences disable: #loadOnlyLatinGlyphData. 'And now load optional fonts'.
+c _ BitBltCanvas onForm: Display.
+f _ FontFamily familyName: 'DejaVu Sans' pointSize: 72.
+c drawString: 'Hola' at: 10@10 font: f color: Color random.
+c drawUtf8: #[208 176 208 177 208 178 208 179 208 180 208 181 209 145 208 182 208 183 208 184 208 185 208 186 208 187 208 188 208 189 208 190 209 143 209 142 209 141 209 140 209 139 209 138 209 137 209 136 209 135 209 134 209 133 209 132 209 131 209 130 209 129 209 128 208 191] at: 10@100 font: f color: Color random.
+c drawUtf8:  #[208 146 208 190 209 130 32 208 184 208 183 32 208 181 208 189 32 208 184 208 179 208 183 208 176 208 188 208 191 208 187 32 208 190 209 132 32 208 181 208 189 32 208 152 208 189 208 179 208 187 208 184 209 136 32 209 130 208 181 208 186 209 129 209 130 32 209 128 208 184 209 130 208 189 32 208 184 208 189 32 208 180 32 208 161 208 184 209 128 208 184 208 187 208 184 208 186 32 208 176 208 187 209 132 208 176 208 177 208 181 209 130 63]  at: 10@200 font: f color: Color random.
+c drawString: 'año' at: 10@300 font: f color: Color random.
+c drawUtf8:  #[97 195 177 111 ]  at: 10@400 font: f color: Color random.
+Display forceToScreen
+	"
+
+	| p font |
+
+	p _ (currentTransformation transform: aPoint) rounded.
+	engine colorMap: nil.
+	font _ aTrueTypeFont ifNil: [ AbstractFont default ].
+	^ engine
+		displayUtf8: aByteArray
+		at: p
+		trueTypeFont: font
+		color: aColor! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:49:45'!
+exampleArabic: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _  #[217 131 217 132 32 216 163 217 136 216 179 216 185 32 216 167 217 132 216 170 217 134 216 167 216 178 217 132 217 138 32 217 129 216 181 217 132 44 32 217 133 216 185 32 216 185 217 133 217 132 217 138 216 169 32 216 167 217 132 216 180 216 177 217 130 217 138 32 216 167 217 134 216 170 216 168 216 167 217 135 32 217 138 217 131 217 134 44 32 216 185 217 132 32 216 168 216 173 217 130 32 216 171 217 133 217 145 216 169 32 217 136 216 173 217 132 217 129 216 167 216 164 217 135 216 167 46 32 217 133 216 185 32 216 182 216 177 216 168 32 216 175 217 129 217 145 216 169 32 216 180 216 177 216 179 216 169 32 216 167 217 132 216 181 217 129 216 173 216 167 216 170 44 32 217 133 216 179 216 164 217 136 217 132 217 138 216 169 32 216 167 217 132 216 177 216 168 217 138 216 185 216 140 32 217 132 216 168 217 136 217 132 217 134 216 175 216 167 216 140 32 217 136 216 170 217 133 32 217 130 216 175 46 32 216 174 216 183 217 145 216 169 32 217 132 217 133 216 173 216 167 217 131 217 133 32 217 136 216 181 217 132 32 217 129 217 138 44 32 217 136 217 129 217 134 217 132 217 134 216 175 216 167 32 216 167 217 132 216 165 217 134 216 178 216 167 217 132 32 216 167 217 132 217 133 216 170 216 167 216 174 217 133 216 169 32 216 185 217 134 32 216 173 217 138 216 171 46 32 216 167 217 132 217 137 32 217 135 216 167 217 133 216 180 32 216 167 217 132 217 138 216 167 216 168 216 167 217 134 32 217 132 217 133 46 32 216 170 216 183 217 136 217 138 216 177 32 217 129 217 135 216 177 216 179 216 170 32 217 132 217 133 32 217 129 216 185 217 132 46 32 216 175 217 134 217 136 32 216 167 217 132 216 185 216 179 217 131 216 177 217 138 32 217 136 217 133 216 183 216 167 217 132 216 168 216 169 32 216 168 217 132 44 32 217 133 217 132 217 138 217 136 217 134 32 217 136 216 168 216 167 216 179 216 170 216 171 217 134 216 167 216 161 32 217 133 216 185 32 216 175 217 136 217 134 44 32 217 133 217 134 32 217 133 217 131 217 134 32 216 165 216 168 217 145 216 167 217 134 32 216 167 217 132 216 172 217 134 217 136 216 168 217 138 46 32 216 168 217 128 32 217 133 216 167 216 176 216 167 32 216 163 217 136 216 177 216 167 217 130 217 135 217 133 32 216 173 217 138 216 171 44 32 217 131 216 167 217 134 32 216 170 217 133 32 216 179 216 167 216 168 217 130 32 217 133 217 131 217 145 217 134 32 216 167 217 132 216 179 217 138 216 161 44 32 216 163 216 179 216 177 32 217 129 217 135 216 177 216 179 216 170 32 216 167 217 132 216 179 216 167 216 175 216 179 32 216 167 217 132 216 165 216 173 216 170 217 129 216 167 216 184 32 217 136 46].
+c drawUtf8: utf8 at: 10@210 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:50:06'!
+exampleArmenian: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _  #[213 172 213 184 213 188 213 165 213 180 32 213 171 213 186 213 189 213 184 214 130 213 180 32 213 164 213 184 213 172 213 184 213 188 32 213 189 213 171 213 169 32 213 161 213 180 213 165 213 169 44 32 214 132 213 184 214 130 213 161 213 165 214 132 213 184 214 130 213 165 32 213 165 213 184 214 130 213 171 213 189 213 180 213 184 213 164 32 213 188 213 165 213 186 213 184 214 130 213 164 213 171 213 161 213 188 213 165 32 213 184 214 130 213 169 32 213 189 213 171 213 169 46 32 213 190 213 165 213 188 213 184 32 213 188 213 165 214 134 213 184 213 188 213 180 213 171 213 164 213 161 213 182 213 189 32 213 174 213 184 214 130 32 213 189 213 171 213 169 44 32 213 164 213 165 213 162 213 165 213 169 32 213 186 213 165 213 188 214 134 213 165 213 174 213 169 213 184 32 213 189 213 161 213 172 213 184 214 130 213 169 213 161 213 169 213 184 214 130 213 189 32 213 165 213 169 32 213 174 213 184 214 130 213 180 44 32 213 176 213 161 213 189 32 213 169 213 188 213 171 213 169 213 161 213 182 213 171 32 213 182 213 184 213 182 213 184 214 130 213 180 213 165 213 189 32 213 182 213 165 46 32 213 180 213 165 213 171 32 213 182 213 184 32 213 189 213 184 213 172 213 184 214 130 213 169 213 161 32 213 172 213 161 213 162 213 184 213 188 213 165 213 189 32 213 184 213 180 213 171 213 169 213 169 213 161 213 180 44 32 213 165 213 173 32 213 163 213 188 213 161 213 165 213 174 213 184 32 213 164 213 165 214 134 213 171 213 182 213 171 213 169 213 171 213 184 213 182 213 165 213 189 32 213 176 213 161 213 189 44 32 213 165 213 161 32 213 180 213 165 213 172 32 214 132 213 184 214 130 213 171 213 189 32 213 182 213 171 213 189 213 172 32 213 161 213 189 213 189 213 184 214 130 213 180 46 32 213 171 213 182 32 213 161 213 180 213 165 213 169 32 213 182 213 165 213 180 213 184 213 188 213 165 32 213 184 214 130 213 189 213 184 214 130 46 32 213 165 213 188 213 161 213 169 32 213 171 213 184 214 130 213 190 213 161 213 188 213 165 213 169 32 213 165 213 161 32 213 189 213 165 213 164 44 32 213 176 213 161 213 189 32 213 161 213 172 213 171 213 161 32 214 132 213 184 214 130 213 161 213 165 214 132 213 184 214 130 213 165 32 213 174 213 184 213 188 213 186 213 184 213 188 213 161 32 213 161 213 164 46 32 213 165 213 184 213 189 32 214 134 213 161 213 189 213 169 213 171 213 164 213 171 213 171 32 213 164 213 165 214 134 213 171 213 182 213 171 213 169 213 171 213 184 213 182 213 165 213 180 32 213 182 213 165 46].
+c drawUtf8: utf8  at: 10@130 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:50:23'!
+exampleChinese: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _ #[233 159 179 229 138 155 233 164 168 229 136 134 233 167 191 229 155 163 230 152 147 229 142 154 229 165 189 230 149 151 231 132 188 233 150 139 229 186 183 229 134 134 227 128 130 230 149 133 229 176 143 229 162 151 233 157 162 230 150 135 230 169 139 232 187 162 229 149 143 233 150 128 228 188 154 231 142 132 233 150 139 229 142 187 230 137 128 230 173 163 230 131 179 232 169 177 230 157 165 227 128 130 229 185 180 228 186 161 229 166 187 229 173 152 232 186 171 230 143 144 233 128 159 228 186 172 229 186 171 230 153 130 228 184 188 230 177 186 232 131 189 227 128 130 229 143 184 229 174 159 229 134 133 229 177 164 232 179 170 229 143 163 232 178 162 230 177 130 229 133 172 233 157 153 230 179 129 229 136 182 229 188 149 230 153 130 229 157 135 233 171 152 230 150 176 227 128 130 231 162 186 230 156 159 230 149 176 233 155 134 230 156 168 232 172 155 230 173 162 230 178 191 229 130 153 233 129 142 229 155 189 232 179 188 230 168 170 229 150 156 229 136 183 229 186 183 230 136 144 229 175 186 227 128 130 232 168 152 229 136 134 229 143 130 229 145 188 229 179 182 229 155 189 232 170 160 230 168 169 229 155 158 230 173 163 229 185 180 232 187 141 230 167 152 228 187 138 229 132 170 230 150 135 231 166 129 229 144 166 227 128 130 230 149 180 230 130 163 232 182 163 231 164 190 230 152 142 230 164 156 231 149 170 230 158 156 230 142 168 231 178 149 228 184 150 230 156 172 229 176 143 231 132 161 231 167 176 231 148 186 227 128 130 230 138 149 230 160 188 229 140 187 229 190 140 228 187 187 231 179 187 232 187 162 230 148 191 230 157 161 232 169 177 230 142 178 230 156 136 231 144 131 227 128 130 230 130 148 233 133 184 232 166 139 229 164 169 229 134 153 229 164 137 229 143 130 233 153 184 229 155 155 229 144 141 229 140 150 232 139 151 229 141 136 230 178 187 233 154 155 228 189 143 232 166 135 228 184 184 230 149 153 231 149 140].
+c drawUtf8: utf8 at: 10@290 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:50:43'!
+exampleCyrillic: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _ #[208 155 208 190 209 128 208 181 208 188 32 208 184 208 191 209 129 209 131 208 188 32 208 180 208 190 208 187 208 190 209 128 32 209 129 208 184 209 130 32 208 176 208 188 208 181 209 130 44 32 208 180 208 181 208 177 208 181 209 130 32 209 129 208 176 208 187 209 131 209 130 208 176 208 189 208 180 208 184 32 208 188 208 181 208 184 32 208 181 208 184 46 32 208 144 208 189 32 209 133 208 184 209 129 32 208 179 209 128 208 176 208 181 209 134 208 181 32 209 131 209 130 208 176 208 188 209 131 209 128 32 208 180 208 190 208 187 208 190 209 128 209 131 208 188 44 32 208 187 208 190 209 128 208 181 208 188 32 208 191 209 128 208 184 208 189 209 134 208 184 208 191 208 181 209 129 32 208 188 208 190 208 187 208 181 209 129 209 130 208 184 208 176 208 181 32 208 180 209 131 208 190 32 208 184 208 189 46 32 208 149 208 184 32 208 188 208 190 208 178 208 181 209 130 32 208 189 208 190 209 129 209 130 209 128 208 190 32 208 190 208 191 209 130 208 184 208 190 208 189 32 208 189 208 176 208 188 44 32 208 181 208 190 209 129 32 208 181 208 191 208 184 209 134 209 131 209 128 208 184 32 208 190 208 188 208 184 209 130 209 130 208 176 208 189 209 130 209 131 209 128 32 209 131 209 130 46 32 208 163 209 130 32 208 188 209 131 208 189 208 181 209 128 208 181 32 208 187 208 176 208 177 208 190 209 128 208 181 32 208 184 208 189 209 130 208 181 208 187 208 187 208 181 208 179 208 181 208 177 208 176 209 130 32 209 131 209 129 209 131 44 32 208 181 208 176 32 209 129 208 181 208 180 32 208 180 208 181 208 177 208 181 209 130 32 208 187 209 131 208 191 209 130 208 176 209 130 209 131 208 188 44 32 208 178 208 184 208 180 208 184 209 130 32 208 184 208 187 208 187 209 131 208 180 32 208 184 209 131 208 180 208 184 209 134 208 190 32 209 143 209 131 208 190 32 209 131 209 130 46].
+c drawUtf8: utf8 at: 10@50 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:50:59'!
+exampleGeorgian: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _ #[225 131 154 225 131 157 225 131 160 225 131 148 225 131 155 32 225 131 152 225 131 164 225 131 161 225 131 163 225 131 155 32 225 131 147 225 131 157 225 131 154 225 131 157 225 131 160 32 225 131 161 225 131 152 225 131 151 32 225 131 144 225 131 155 225 131 148 225 131 151 44 32 225 131 167 225 131 163 225 131 157 32 225 131 163 225 131 151 32 225 131 147 225 131 152 225 131 170 225 131 144 225 131 151 32 225 131 144 225 131 154 225 131 152 225 131 167 225 131 163 225 131 152 225 131 147 44 32 225 131 144 225 131 147 32 225 131 154 225 131 152 225 131 145 225 131 160 225 131 152 225 131 161 32 225 131 170 225 131 148 225 131 151 225 131 148 225 131 160 225 131 157 225 131 161 32 225 131 160 225 131 148 225 131 164 225 131 160 225 131 148 225 131 176 225 131 148 225 131 156 225 131 147 225 131 163 225 131 156 225 131 151 32 225 131 148 225 131 161 225 131 151 46 32 225 131 154 225 131 148 225 131 146 225 131 148 225 131 160 225 131 148 32 225 131 170 225 131 157 225 131 160 225 131 164 225 131 157 225 131 160 225 131 144 32 225 131 148 225 131 164 225 131 164 225 131 152 225 131 170 225 131 152 225 131 144 225 131 156 225 131 151 225 131 163 225 131 160 32 225 131 144 225 131 151 32 225 131 148 225 131 144 225 131 155 44 32 225 131 156 225 131 157 32 225 131 167 225 131 163 225 131 144 225 131 161 32 225 131 155 225 131 148 225 131 156 225 131 144 225 131 156 225 131 147 225 131 160 225 131 152 32 225 131 160 225 131 148 225 131 164 225 131 148 225 131 160 225 131 160 225 131 148 225 131 156 225 131 151 225 131 163 225 131 160 32 225 131 167 225 131 163 225 131 152 46 32 225 131 151 225 131 148 32 225 131 164 225 131 163 225 131 151 225 131 148 225 131 156 225 131 151 32 225 131 155 225 131 157 225 131 154 225 131 154 225 131 152 225 131 161 32 225 131 170 225 131 148 225 131 151 225 131 148 225 131 160 225 131 157 225 131 161 32 225 131 149 225 131 152 225 131 161 46 32 225 131 149 225 131 152 225 131 155 32 225 131 147 225 131 148 225 131 156 225 131 152 225 131 167 225 131 163 225 131 148 32 225 131 149 225 131 152 225 131 149 225 131 148 225 131 156 225 131 147 225 131 163 225 131 155 32 225 131 151 225 131 176 225 131 148 225 131 157 225 131 164 225 131 176 225 131 160 225 131 144 225 131 161 225 131 151 225 131 163 225 131 161 32 225 131 148 225 131 174 44 32 225 131 148 225 131 144 32 225 131 176 225 131 144 225 131 161 32 225 131 149 225 131 157 225 131 154 225 131 163 225 131 155 225 131 163 225 131 161 32 225 131 164 225 131 144 225 131 161 225 131 151 225 131 152 225 131 147 225 131 152 225 131 152 32 225 131 147 225 131 148 225 131 161 225 131 148 225 131 160 225 131 163 225 131 156 225 131 151 46 32 225 131 148 225 131 174 32 225 131 157 225 131 164 225 131 164 225 131 152 225 131 170 225 131 152 225 131 152 225 131 161 32 225 131 151 225 131 157 225 131 160 225 131 167 225 131 163 225 131 144 225 131 151 225 131 157 225 131 161 32 225 131 155 225 131 148 225 131 152 44 32 225 131 147 225 131 157 225 131 170 225 131 151 225 131 163 225 131 161 32 225 131 149 225 131 152 225 131 149 225 131 148 225 131 156 225 131 147 225 131 163 225 131 155 32 225 131 152 225 131 156 32 225 131 167 225 131 163 225 131 157 46 32 225 131 161 225 131 163 225 131 155 225 131 155 225 131 157 32 225 131 151 225 131 160 225 131 144 225 131 170 225 131 151 225 131 144 225 131 151 225 131 157 225 131 161 32 225 131 148 225 131 152 32 225 131 152 225 131 163 225 131 161 44 32 225 131 163 225 131 151 32 225 131 157 225 131 155 225 131 156 225 131 148 225 131 161 32 225 131 149 225 131 152 225 131 160 225 131 151 225 131 163 225 131 151 225 131 148 32 225 131 147 225 131 148 225 131 151 225 131 160 225 131 144 225 131 174 225 131 152 225 131 151 46].
+c drawUtf8: utf8 at: 10@170 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:51:24'!
+exampleGreek: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _ #[206 155 206 191 207 129 206 181 206 188 32 206 185 207 128 207 131 206 184 206 188 32 206 180 206 191 206 187 206 191 207 129 32 207 131 206 185 207 132 32 206 177 206 188 206 181 207 132 44 32 206 188 206 191 206 180 206 191 32 118 206 181 206 189 206 185 206 177 206 188 32 118 206 185 206 180 206 181 207 129 206 181 207 129 32 206 185 206 189 32 99 206 184 206 188 44 32 206 181 206 190 32 206 177 206 184 207 132 206 181 206 188 32 206 188 206 177 206 187 206 185 207 131 32 206 191 207 134 207 134 206 181 206 189 206 180 206 185 207 132 32 206 181 207 131 207 132 46 32 206 153 206 180 32 207 132 206 191 206 187 206 187 206 185 207 132 32 207 131 206 184 207 131 99 206 185 207 128 206 185 207 132 32 207 131 206 177 206 187 206 184 207 132 206 177 207 132 206 184 207 131 32 113 206 184 206 185 44 32 99 206 184 32 113 206 184 206 177 206 189 206 180 206 191 32 207 128 207 129 206 191 207 128 207 129 206 185 206 177 206 181 32 206 185 206 188 207 128 206 181 207 129 206 180 206 185 206 181 207 132 32 118 206 181 206 187 44 32 206 188 206 181 206 177 32 206 181 207 132 32 206 181 207 129 207 129 206 181 206 188 32 206 179 206 187 206 191 207 129 206 185 206 177 207 132 206 184 207 129 46 32 206 149 206 190 206 181 207 129 99 206 185 32 206 180 206 181 207 134 206 185 206 189 206 185 207 132 206 185 206 191 206 189 206 181 206 188 32 206 188 206 181 206 187 32 206 181 206 177 46 32 206 149 206 190 32 207 131 206 181 206 177 32 206 181 206 187 206 185 207 132 32 206 180 206 185 207 131 207 131 206 181 206 189 207 132 206 185 206 181 207 132 44 32 206 188 206 177 206 187 206 185 207 131 32 207 132 207 129 206 185 207 132 206 177 206 189 206 185 32 118 206 185 207 131 32 206 185 206 180 46].
+c drawUtf8: utf8 at: 10@90 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:51:40'!
+exampleHebrew: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _ #[215 162 215 156 32 215 158 215 144 215 158 215 168 32 215 150 215 167 215 149 215 167 32 215 169 215 147 215 168 215 149 215 170 32 215 144 215 168 215 165 44 32 215 148 215 158 215 156 215 166 215 170 32 215 158 215 147 215 149 215 153 215 167 215 153 215 157 32 215 169 215 155 215 156 32 215 169 215 156 44 32 215 162 215 153 215 166 215 149 215 145 32 215 160 215 153 215 149 215 149 215 152 32 215 169 215 153 215 170 215 149 215 164 215 153 215 170 32 215 162 215 149 215 147 32 215 145 46 32 215 161 215 147 215 168 32 215 144 215 149 32 215 168 215 164 215 149 215 144 215 148 32 215 169 215 153 215 158 215 149 215 169 215 153 32 215 158 215 149 215 162 215 158 215 147 215 153 215 157 46 32 215 148 215 153 215 144 32 215 164 215 153 215 161 215 153 215 167 215 148 32 215 148 215 146 215 168 215 164 215 153 215 157 32 215 169 215 153 215 158 215 149 215 169 215 153 215 153 215 157 32 215 169 215 156 46 32 215 169 215 155 215 156 32 215 162 215 156 32 215 162 215 150 215 168 215 148 32 215 156 215 148 215 164 215 149 215 154 32 215 144 215 149 215 149 215 153 215 168 215 149 215 160 215 144 215 149 215 152 215 153 215 167 215 148 44 32 215 144 215 160 215 144 32 215 144 215 170 32 215 162 215 150 215 168 215 148 32 215 156 215 158 215 160 215 149 215 162 32 215 156 215 158 215 151 215 153 215 167 215 148 46].
+c drawUtf8: utf8 at: 10@250 font: aTrueTypeFont color: Color random. Display forceToScreen.
+Display forceToScreen! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:51:58'!
+exampleLatin: aTrueTypeFont
+
+| c utf8 |
+c _ BitBltCanvas onForm: Display.
+utf8 _ #[76 111 114 101 109 32 105 112 115 117 109 32 100 111 108 111 114 32 115 105 116 32 97 109 101 116 44 32 112 111 112 117 108 111 32 108 97 116 105 110 101 32 97 108 105 113 117 105 100 32 112 114 111 32 110 111 44 32 115 101 100 32 116 101 32 103 114 97 101 99 111 32 112 101 114 99 105 112 105 116 32 97 100 105 112 105 115 99 105 110 103 46 32 68 101 102 105 110 105 101 98 97 115 32 100 105 115 115 101 110 116 105 97 115 32 109 101 97 32 105 110 44 32 118 101 108 32 110 117 108 108 97 32 116 111 108 108 105 116 32 101 120 46 32 65 108 105 113 117 105 112 32 112 101 114 115 101 113 117 101 114 105 115 32 101 108 111 113 117 101 110 116 105 97 109 32 104 105 115 32 101 116 46 32 67 117 32 100 105 97 109 32 110 111 118 117 109 32 97 110 105 109 97 108 32 118 105 120 44 32 110 97 109 32 101 116 32 112 114 111 98 97 116 117 115 32 116 114 97 99 116 97 116 111 115 32 100 101 116 101 114 114 117 105 115 115 101 116 46 32 80 101 114 99 105 112 105 116 32 101 102 102 105 99 105 97 110 116 117 114 32 112 114 105 32 101 120 44 32 105 100 32 97 110 105 109 97 108 32 100 101 98 105 116 105 115 32 118 117 108 112 117 116 97 116 101 32 101 111 115 44 32 97 100 32 105 117 115 32 112 111 115 115 101 32 101 114 114 111 114 32 112 111 112 117 108 111 46].
+c drawUtf8: utf8 at: 10@10 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:57:30'!
+exampleUtf32Arabic: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(1603 1604 32 1571 1608 1587 1593 32 1575 1604 1578 1606 1575 1586 1604 1610 32 1601 1589 1604 44 32 1605 1593 32 1593 1605 1604 1610 1577 32 1575 1604 1588 1585 1602 1610 32 1575 1606 1578 1576 1575 1607 32 1610 1603 1606 44 32 1593 1604 32 1576 1581 1602 32 1579 1605 1617 1577 32 1608 1581 1604 1601 1575 1572 1607 1575 46 32 1605 1593 32 1590 1585 1576 32 1583 1601 1617 1577 32 1588 1585 1587 1577 32 1575 1604 1589 1601 1581 1575 1578 44 32 1605 1587 1572 1608 1604 1610 1577 32 1575 1604 1585 1576 1610 1593 1548 32 1604 1576 1608 1604 1606 1583 1575 1548 32 1608 1578 1605 32 1602 1583 46 32 1582 1591 1617 1577 32 1604 1605 1581 1575 1603 1605 32 1608 1589 1604 32 1601 1610 44 32 1608 1601 1606 1604 1606 1583 1575 32 1575 1604 1573 1606 1586 1575 1604 32 1575 1604 1605 1578 1575 1582 1605 1577 32 1593 1606 32 1581 1610 1579 46 32 1575 1604 1609 32 1607 1575 1605 1588 32 1575 1604 1610 1575 1576 1575 1606 32 1604 1605 46 32 1578 1591 1608 1610 1585 32 1601 1607 1585 1587 1578 32 1604 1605 32 1601 1593 1604 46 32 1583 1606 1608 32 1575 1604 1593 1587 1603 1585 1610 32 1608 1605 1591 1575 1604 1576 1577 32 1576 1604 44 32 1605 1604 1610 1608 1606 32 1608 1576 1575 1587 1578 1579 1606 1575 1569 32 1605 1593 32 1583 1608 1606 44 32 1605 1606 32 1605 1603 1606 32 1573 1576 1617 1575 1606 32 1575 1604 1580 1606 1608 1576 1610 46 32 1576 1600 32 1605 1575 1584 1575 32 1571 1608 1585 1575 1602 1607 1605 32 1581 1610 1579 44 32 1603 1575 1606 32 1578 1605 32 1587 1575 1576 1602 32 1605 1603 1617 1606 32 1575 1604 1587 1610 1569 44 32 1571 1587 1585 32 1601 1607 1585 1587 1578 32 1575 1604 1587 1575 1583 1587 32 1575 1604 1573 1581 1578 1601 1575 1592 32 1608 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@210 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:58:41'!
+exampleUtf32Armenian: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(1388 1400 1404 1381 1396 32 1387 1402 1405 1400 1410 1396 32 1380 1400 1388 1400 1404 32 1405 1387 1385 32 1377 1396 1381 1385 44 32 1412 1400 1410 1377 1381 1412 1400 1410 1381 32 1381 1400 1410 1387 1405 1396 1400 1380 32 1404 1381 1402 1400 1410 1380 1387 1377 1404 1381 32 1400 1410 1385 32 1405 1387 1385 46 32 1406 1381 1404 1400 32 1404 1381 1414 1400 1404 1396 1387 1380 1377 1398 1405 32 1390 1400 1410 32 1405 1387 1385 44 32 1380 1381 1378 1381 1385 32 1402 1381 1404 1414 1381 1390 1385 1400 32 1405 1377 1388 1400 1410 1385 1377 1385 1400 1410 1405 32 1381 1385 32 1390 1400 1410 1396 44 32 1392 1377 1405 32 1385 1404 1387 1385 1377 1398 1387 32 1398 1400 1398 1400 1410 1396 1381 1405 32 1398 1381 46 32 1396 1381 1387 32 1398 1400 32 1405 1400 1388 1400 1410 1385 1377 32 1388 1377 1378 1400 1404 1381 1405 32 1400 1396 1387 1385 1385 1377 1396 44 32 1381 1389 32 1379 1404 1377 1381 1390 1400 32 1380 1381 1414 1387 1398 1387 1385 1387 1400 1398 1381 1405 32 1392 1377 1405 44 32 1381 1377 32 1396 1381 1388 32 1412 1400 1410 1387 1405 32 1398 1387 1405 1388 32 1377 1405 1405 1400 1410 1396 46 32 1387 1398 32 1377 1396 1381 1385 32 1398 1381 1396 1400 1404 1381 32 1400 1410 1405 1400 1410 46 32 1381 1404 1377 1385 32 1387 1400 1410 1406 1377 1404 1381 1385 32 1381 1377 32 1405 1381 1380 44 32 1392 1377 1405 32 1377 1388 1387 1377 32 1412 1400 1410 1377 1381 1412 1400 1410 1381 32 1390 1400 1404 1402 1400 1404 1377 32 1377 1380 46 32 1381 1400 1405 32 1414 1377 1405 1385 1387 1380 1387 1387 32 1380 1381 1414 1387 1398 1387 1385 1387 1400 1398 1381 1396 32 1398 1381 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@130 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:58:46'!
+exampleUtf32Chinese: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(38899 21147 39208 20998 39423 22243 26131 21402 22909 25943 28988 38283 24247 20870 12290 25925 23567 22679 38754 25991 27211 36578 21839 38272 20250 29572 38283 21435 25152 27491 24819 35441 26469 12290 24180 20129 22971 23384 36523 25552 36895 20140 24235 26178 20028 27770 33021 12290 21496 23455 20869 23652 36074 21475 36002 27714 20844 38745 27841 21046 24341 26178 22343 39640 26032 12290 30906 26399 25968 38598 26408 35611 27490 27839 20633 36942 22269 36092 27178 21916 21047 24247 25104 23546 12290 35352 20998 21442 21628 23798 22269 35488 27177 22238 27491 24180 36557 27096 20170 20778 25991 31105 21542 12290 25972 24739 36259 31038 26126 26908 30058 26524 25512 31893 19990 26412 23567 28961 31216 30010 12290 25237 26684 21307 24460 20219 31995 36578 25919 26465 35441 25522 26376 29699 12290 24724 37240 35211 22825 20889 22793 21442 38520 22235 21517 21270 33495 21320 27835 38555 20303 35207 20024 25945 30028) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@290 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:58:49'!
+exampleUtf32Cyrillic: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(1051 1086 1088 1077 1084 32 1080 1087 1089 1091 1084 32 1076 1086 1083 1086 1088 32 1089 1080 1090 32 1072 1084 1077 1090 44 32 1076 1077 1073 1077 1090 32 1089 1072 1083 1091 1090 1072 1085 1076 1080 32 1084 1077 1080 32 1077 1080 46 32 1040 1085 32 1093 1080 1089 32 1075 1088 1072 1077 1094 1077 32 1091 1090 1072 1084 1091 1088 32 1076 1086 1083 1086 1088 1091 1084 44 32 1083 1086 1088 1077 1084 32 1087 1088 1080 1085 1094 1080 1087 1077 1089 32 1084 1086 1083 1077 1089 1090 1080 1072 1077 32 1076 1091 1086 32 1080 1085 46 32 1045 1080 32 1084 1086 1074 1077 1090 32 1085 1086 1089 1090 1088 1086 32 1086 1087 1090 1080 1086 1085 32 1085 1072 1084 44 32 1077 1086 1089 32 1077 1087 1080 1094 1091 1088 1080 32 1086 1084 1080 1090 1090 1072 1085 1090 1091 1088 32 1091 1090 46 32 1059 1090 32 1084 1091 1085 1077 1088 1077 32 1083 1072 1073 1086 1088 1077 32 1080 1085 1090 1077 1083 1083 1077 1075 1077 1073 1072 1090 32 1091 1089 1091 44 32 1077 1072 32 1089 1077 1076 32 1076 1077 1073 1077 1090 32 1083 1091 1087 1090 1072 1090 1091 1084 44 32 1074 1080 1076 1080 1090 32 1080 1083 1083 1091 1076 32 1080 1091 1076 1080 1094 1086 32 1103 1091 1086 32 1091 1090 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@50 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:58:53'!
+exampleUtf32Georgian: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(4314 4317 4320 4308 4315 32 4312 4324 4321 4323 4315 32 4307 4317 4314 4317 4320 32 4321 4312 4311 32 4304 4315 4308 4311 44 32 4327 4323 4317 32 4323 4311 32 4307 4312 4330 4304 4311 32 4304 4314 4312 4327 4323 4312 4307 44 32 4304 4307 32 4314 4312 4305 4320 4312 4321 32 4330 4308 4311 4308 4320 4317 4321 32 4320 4308 4324 4320 4308 4336 4308 4316 4307 4323 4316 4311 32 4308 4321 4311 46 32 4314 4308 4306 4308 4320 4308 32 4330 4317 4320 4324 4317 4320 4304 32 4308 4324 4324 4312 4330 4312 4304 4316 4311 4323 4320 32 4304 4311 32 4308 4304 4315 44 32 4316 4317 32 4327 4323 4304 4321 32 4315 4308 4316 4304 4316 4307 4320 4312 32 4320 4308 4324 4308 4320 4320 4308 4316 4311 4323 4320 32 4327 4323 4312 46 32 4311 4308 32 4324 4323 4311 4308 4316 4311 32 4315 4317 4314 4314 4312 4321 32 4330 4308 4311 4308 4320 4317 4321 32 4309 4312 4321 46 32 4309 4312 4315 32 4307 4308 4316 4312 4327 4323 4308 32 4309 4312 4309 4308 4316 4307 4323 4315 32 4311 4336 4308 4317 4324 4336 4320 4304 4321 4311 4323 4321 32 4308 4334 44 32 4308 4304 32 4336 4304 4321 32 4309 4317 4314 4323 4315 4323 4321 32 4324 4304 4321 4311 4312 4307 4312 4312 32 4307 4308 4321 4308 4320 4323 4316 4311 46 32 4308 4334 32 4317 4324 4324 4312 4330 4312 4312 4321 32 4311 4317 4320 4327 4323 4304 4311 4317 4321 32 4315 4308 4312 44 32 4307 4317 4330 4311 4323 4321 32 4309 4312 4309 4308 4316 4307 4323 4315 32 4312 4316 32 4327 4323 4317 46 32 4321 4323 4315 4315 4317 32 4311 4320 4304 4330 4311 4304 4311 4317 4321 32 4308 4312 32 4312 4323 4321 44 32 4323 4311 32 4317 4315 4316 4308 4321 32 4309 4312 4320 4311 4323 4311 4308 32 4307 4308 4311 4320 4304 4334 4312 4311 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@170 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:58:57'!
+exampleUtf32Greek: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(923 959 961 949 956 32 953 960 963 952 956 32 948 959 955 959 961 32 963 953 964 32 945 956 949 964 44 32 956 959 948 959 32 118 949 957 953 945 956 32 118 953 948 949 961 949 961 32 953 957 32 99 952 956 44 32 949 958 32 945 952 964 949 956 32 956 945 955 953 963 32 959 966 966 949 957 948 953 964 32 949 963 964 46 32 921 948 32 964 959 955 955 953 964 32 963 952 963 99 953 960 953 964 32 963 945 955 952 964 945 964 952 963 32 113 952 953 44 32 99 952 32 113 952 945 957 948 959 32 960 961 959 960 961 953 945 949 32 953 956 960 949 961 948 953 949 964 32 118 949 955 44 32 956 949 945 32 949 964 32 949 961 961 949 956 32 947 955 959 961 953 945 964 952 961 46 32 917 958 949 961 99 953 32 948 949 966 953 957 953 964 953 959 957 949 956 32 956 949 955 32 949 945 46 32 917 958 32 963 949 945 32 949 955 953 964 32 948 953 963 963 949 957 964 953 949 964 44 32 956 945 955 953 963 32 964 961 953 964 945 957 953 32 118 953 963 32 953 948 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@90 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:59:01'!
+exampleUtf32Hebrew: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(1506 1500 32 1502 1488 1502 1512 32 1494 1511 1493 1511 32 1513 1491 1512 1493 1514 32 1488 1512 1509 44 32 1492 1502 1500 1510 1514 32 1502 1491 1493 1497 1511 1497 1501 32 1513 1499 1500 32 1513 1500 44 32 1506 1497 1510 1493 1489 32 1504 1497 1493 1493 1496 32 1513 1497 1514 1493 1508 1497 1514 32 1506 1493 1491 32 1489 46 32 1505 1491 1512 32 1488 1493 32 1512 1508 1493 1488 1492 32 1513 1497 1502 1493 1513 1497 32 1502 1493 1506 1502 1491 1497 1501 46 32 1492 1497 1488 32 1508 1497 1505 1497 1511 1492 32 1492 1490 1512 1508 1497 1501 32 1513 1497 1502 1493 1513 1497 1497 1501 32 1513 1500 46 32 1513 1499 1500 32 1506 1500 32 1506 1494 1512 1492 32 1500 1492 1508 1493 1498 32 1488 1493 1493 1497 1512 1493 1504 1488 1493 1496 1497 1511 1492 44 32 1488 1504 1488 32 1488 1514 32 1506 1494 1512 1492 32 1500 1502 1504 1493 1506 32 1500 1502 1495 1497 1511 1492 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@250 font: aTrueTypeFont color: Color random. Display forceToScreen.
+Display forceToScreen! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:59:04'!
+exampleUtf32Latin: aTrueTypeFont
+
+| c utf32 |
+c _ BitBltCanvas onForm: Display.
+utf32 _ #(76 111 114 101 109 32 105 112 115 117 109 32 100 111 108 111 114 32 115 105 116 32 97 109 101 116 44 32 112 111 112 117 108 111 32 108 97 116 105 110 101 32 97 108 105 113 117 105 100 32 112 114 111 32 110 111 44 32 115 101 100 32 116 101 32 103 114 97 101 99 111 32 112 101 114 99 105 112 105 116 32 97 100 105 112 105 115 99 105 110 103 46 32 68 101 102 105 110 105 101 98 97 115 32 100 105 115 115 101 110 116 105 97 115 32 109 101 97 32 105 110 44 32 118 101 108 32 110 117 108 108 97 32 116 111 108 108 105 116 32 101 120 46 32 65 108 105 113 117 105 112 32 112 101 114 115 101 113 117 101 114 105 115 32 101 108 111 113 117 101 110 116 105 97 109 32 104 105 115 32 101 116 46 32 67 117 32 100 105 97 109 32 110 111 118 117 109 32 97 110 105 109 97 108 32 118 105 120 44 32 110 97 109 32 101 116 32 112 114 111 98 97 116 117 115 32 116 114 97 99 116 97 116 111 115 32 100 101 116 101 114 114 117 105 115 115 101 116 46 32 80 101 114 99 105 112 105 116 32 101 102 102 105 99 105 97 110 116 117 114 32 112 114 105 32 101 120 44 32 105 100 32 97 110 105 109 97 108 32 100 101 98 105 116 105 115 32 118 117 108 112 117 116 97 116 101 32 101 111 115 44 32 97 100 32 105 117 115 32 112 111 115 115 101 32 101 114 114 111 114 32 112 111 112 117 108 111 46) asIntegerArray.
+c drawUtf32: utf32 from: 1 to: utf32 size at: 10@10 font: aTrueTypeFont color: Color random. Display forceToScreen.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 3/31/2020 16:08:14'!
+unicodeExamples
+	"
+	Preferences disable: #loadOnlyLatinGlyphData.
+	FontFamily readAdditionalTrueTypeFonts. 
+	BitBltCanvas unicodeExamples
+	"
+	| f |
+	[ f class == TrueTypeFont ] whileFalse: [ 
+		f _ FontPicker promptUser atPointSize: 24 ].
+	self exampleLatin: f.
+	self exampleCyrillic: f.
+	self exampleGreek: f.
+	self exampleArmenian: f.
+	self exampleGeorgian: f.
+	self exampleArabic: f.
+	self exampleHebrew: f.
+	self exampleChinese: f.! !
+
+!BitBltCanvas class methodsFor: '*vectorGraphics-examples' stamp: 'jmv 4/1/2020 12:58:14'!
+unicodeUtf32Examples
+	"
+	Preferences disable: #loadOnlyLatinGlyphData.
+	FontFamily readAdditionalTrueTypeFonts. 
+	BitBltCanvas unicodeUtf32Examples
+	"
+	| f |
+	[ f class == TrueTypeFont ] whileFalse: [ 
+		f _ FontPicker promptUser atPointSize: 24 ].
+	self exampleUtf32Latin: f.
+	self exampleUtf32Cyrillic: f.
+	self exampleUtf32Greek: f.
+	self exampleUtf32Armenian: f.
+	self exampleUtf32Georgian: f.
+	self exampleUtf32Arabic: f.
+	self exampleUtf32Hebrew: f.
+	self exampleUtf32Chinese: f.! !
 VectorCanvas initialize!
 TTFontDescription initialize!
-TTFontReader initialize!

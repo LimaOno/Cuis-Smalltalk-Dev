@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3835] on 5 August 2019 at 12:00:23 pm'!
-'Description Hierarchy Scope fix tests. #highegstClassImplementing:ifNone: tests'!
-!provides: 'BaseImageTests' 1 172!
+'From Cuis 5.0 [latest update: #4120] on 25 April 2020 at 12:13:13 pm'!
+'Description Extract cascade to method test'!
+!provides: 'BaseImageTests' 1 220!
 !requires: '__Refactoring-TestData__' 1 0 nil!
 SystemOrganization addCategory: #'BaseImageTests-Collections'!
 SystemOrganization addCategory: #'BaseImageTests-Kernel-Classes'!
@@ -31,6 +31,9 @@ SystemOrganization addCategory: #'BaseImageTests-System-Support'!
 SystemOrganization addCategory: #'BaseImageTests-Graphics-Primitives'!
 SystemOrganization addCategory: #'BaseImageTests-Graphics-Display Objects'!
 SystemOrganization addCategory: #'BaseImageTests-Kernel-Objects'!
+SystemOrganization addCategory: #'BaseImageTests-Tools-Browser'!
+SystemOrganization addCategory: #'BaseImageTests-Tools-Changes'!
+SystemOrganization addCategory: #'BaseImageTests-Kernel-Text'!
 
 
 !classDefinition: #MyResumableTestError category: #'BaseImageTests-Exceptions'!
@@ -181,6 +184,16 @@ BehaviorTest subclass: #BehaviorTestSubclass
 	category: 'BaseImageTests-Kernel-Classes'!
 !classDefinition: 'BehaviorTestSubclass class' category: #'BaseImageTests-Kernel-Classes'!
 BehaviorTestSubclass class
+	instanceVariableNames: ''!
+
+!classDefinition: #ClassTest category: #'BaseImageTests-Kernel-Classes'!
+TestCase subclass: #ClassTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Kernel-Classes'!
+!classDefinition: 'ClassTest class' category: #'BaseImageTests-Kernel-Classes'!
+ClassTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #AbstractNumberTest category: #'BaseImageTests-Kernel-Numbers'!
@@ -395,7 +408,7 @@ YearTest class
 
 !classDefinition: #CompiledMethodTest category: #'BaseImageTests-Kernel-Methods'!
 TestCase subclass: #CompiledMethodTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'iv1 iv2'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'BaseImageTests-Kernel-Methods'!
@@ -623,6 +636,16 @@ TestCase subclass: #ClosureCompilerTest
 ClosureCompilerTest class
 	instanceVariableNames: ''!
 
+!classDefinition: #ClosureSerializationTest category: #'BaseImageTests-Compiler'!
+TestCase subclass: #ClosureSerializationTest
+	instanceVariableNames: 'ivar'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Compiler'!
+!classDefinition: 'ClosureSerializationTest class' category: #'BaseImageTests-Compiler'!
+ClosureSerializationTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #ClosureTests category: #'BaseImageTests-Compiler'!
 TestCase subclass: #ClosureTests
 	instanceVariableNames: 'collection ivar'
@@ -631,26 +654,6 @@ TestCase subclass: #ClosureTests
 	category: 'BaseImageTests-Compiler'!
 !classDefinition: 'ClosureTests class' category: #'BaseImageTests-Compiler'!
 ClosureTests class
-	instanceVariableNames: ''!
-
-!classDefinition: #CompilerExceptionsTest category: #'BaseImageTests-Compiler'!
-TestCase subclass: #CompilerExceptionsTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'BaseImageTests-Compiler'!
-!classDefinition: 'CompilerExceptionsTest class' category: #'BaseImageTests-Compiler'!
-CompilerExceptionsTest class
-	instanceVariableNames: ''!
-
-!classDefinition: #CompilerTest category: #'BaseImageTests-Compiler'!
-TestCase subclass: #CompilerTest
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'BaseImageTests-Compiler'!
-!classDefinition: 'CompilerTest class' category: #'BaseImageTests-Compiler'!
-CompilerTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #ContextCompilationTest category: #'BaseImageTests-Compiler'!
@@ -691,6 +694,16 @@ TestCase subclass: #MirrorPrimitiveTests
 	category: 'BaseImageTests-Compiler'!
 !classDefinition: 'MirrorPrimitiveTests class' category: #'BaseImageTests-Compiler'!
 MirrorPrimitiveTests class
+	instanceVariableNames: ''!
+
+!classDefinition: #ParserTest category: #'BaseImageTests-Compiler'!
+TestCase subclass: #ParserTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Compiler'!
+!classDefinition: 'ParserTest class' category: #'BaseImageTests-Compiler'!
+ParserTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #PrettyPrintingTest category: #'BaseImageTests-Compiler'!
@@ -865,12 +878,22 @@ WorldTest class
 
 !classDefinition: #SmalltalkCompleterTest category: #'BaseImageTests-Tools-Autocompletion'!
 TestCase subclass: #SmalltalkCompleterTest
+	instanceVariableNames: 'instanceVariable1 classToBrowse selectorToBrowse'
+	classVariableNames: 'ClassVariableForTesting'
+	poolDictionaries: 'poolDictionaryForTesting'
+	category: 'BaseImageTests-Tools-Autocompletion'!
+!classDefinition: 'SmalltalkCompleterTest class' category: #'BaseImageTests-Tools-Autocompletion'!
+SmalltalkCompleterTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #DynamicTypingSmalltalkCompleterTest category: #'BaseImageTests-Tools-Autocompletion'!
+SmalltalkCompleterTest subclass: #DynamicTypingSmalltalkCompleterTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'BaseImageTests-Tools-Autocompletion'!
-!classDefinition: 'SmalltalkCompleterTest class' category: #'BaseImageTests-Tools-Autocompletion'!
-SmalltalkCompleterTest class
+!classDefinition: 'DynamicTypingSmalltalkCompleterTest class' category: #'BaseImageTests-Tools-Autocompletion'!
+DynamicTypingSmalltalkCompleterTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #TaskbarTest category: #'BaseImageTests-Tools-Taskbar'!
@@ -933,9 +956,29 @@ TestCase subclass: #TestValueWithinFix
 TestValueWithinFix class
 	instanceVariableNames: ''!
 
-!classDefinition: #RefactoringTest category: #'BaseImageTests-Tools-Refactoring'!
-TestCase subclass: #RefactoringTest
+!classDefinition: #DynamicallyCodeCreationTest category: #'BaseImageTests-Tools-Refactoring'!
+TestCase subclass: #DynamicallyCodeCreationTest
 	instanceVariableNames: 'classCategories setUpAssertionsPassed'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'DynamicallyCodeCreationTest class' category: #'BaseImageTests-Tools-Refactoring'!
+DynamicallyCodeCreationTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #CompilerExceptionsTest category: #'BaseImageTests-Compiler'!
+DynamicallyCodeCreationTest subclass: #CompilerExceptionsTest
+	instanceVariableNames: 'sourceCode'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Compiler'!
+!classDefinition: 'CompilerExceptionsTest class' category: #'BaseImageTests-Compiler'!
+CompilerExceptionsTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #RefactoringTest category: #'BaseImageTests-Tools-Refactoring'!
+DynamicallyCodeCreationTest subclass: #RefactoringTest
+	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'BaseImageTests-Tools-Refactoring'!
@@ -973,9 +1016,19 @@ RefactoringTest subclass: #ChangeKeywordsSelectorOrderTest
 ChangeKeywordsSelectorOrderTest class
 	instanceVariableNames: ''!
 
+!classDefinition: #ExtractMethodTest category: #'BaseImageTests-Tools-Refactoring'!
+RefactoringTest subclass: #ExtractMethodTest
+	instanceVariableNames: 'classToRefactor'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'ExtractMethodTest class' category: #'BaseImageTests-Tools-Refactoring'!
+ExtractMethodTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #ExtractToTemporaryTest category: #'BaseImageTests-Tools-Refactoring'!
 RefactoringTest subclass: #ExtractToTemporaryTest
-	instanceVariableNames: ''
+	instanceVariableNames: 'classToRefactor'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'BaseImageTests-Tools-Refactoring'!
@@ -991,6 +1044,56 @@ RefactoringTest subclass: #InsertSuperclassTest
 	category: 'BaseImageTests-Tools-Refactoring'!
 !classDefinition: 'InsertSuperclassTest class' category: #'BaseImageTests-Tools-Refactoring'!
 InsertSuperclassTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #MoveToInstanceOrClassMethodTest category: #'BaseImageTests-Tools-Refactoring'!
+RefactoringTest subclass: #MoveToInstanceOrClassMethodTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'MoveToInstanceOrClassMethodTest class' category: #'BaseImageTests-Tools-Refactoring'!
+MoveToInstanceOrClassMethodTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #PushDownInstanceVariableTest category: #'BaseImageTests-Tools-Refactoring'!
+RefactoringTest subclass: #PushDownInstanceVariableTest
+	instanceVariableNames: 'classToRefactor instanceVariableToPushDown'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'PushDownInstanceVariableTest class' category: #'BaseImageTests-Tools-Refactoring'!
+PushDownInstanceVariableTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #PushDownMethodTest category: #'BaseImageTests-Tools-Refactoring'!
+RefactoringTest subclass: #PushDownMethodTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'PushDownMethodTest class' category: #'BaseImageTests-Tools-Refactoring'!
+PushDownMethodTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #PushUpInstanceVariableTest category: #'BaseImageTests-Tools-Refactoring'!
+RefactoringTest subclass: #PushUpInstanceVariableTest
+	instanceVariableNames: 'classToRefactor instanceVariableToPushUp classToRefactorSuperClass'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'PushUpInstanceVariableTest class' category: #'BaseImageTests-Tools-Refactoring'!
+PushUpInstanceVariableTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #PushUpMethodTest category: #'BaseImageTests-Tools-Refactoring'!
+RefactoringTest subclass: #PushUpMethodTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'PushUpMethodTest class' category: #'BaseImageTests-Tools-Refactoring'!
+PushUpMethodTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #RemoveAllUnreferencedInstanceVariablesTest category: #'BaseImageTests-Tools-Refactoring'!
@@ -1093,6 +1196,16 @@ RefactoringTest subclass: #TemporaryToInstanceVariableTest
 TemporaryToInstanceVariableTest class
 	instanceVariableNames: ''!
 
+!classDefinition: #ChangesTest category: #'BaseImageTests-Tools-Changes'!
+DynamicallyCodeCreationTest subclass: #ChangesTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Changes'!
+!classDefinition: 'ChangesTest class' category: #'BaseImageTests-Tools-Changes'!
+ChangesTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #WriteStreamTest category: #'BaseImageTests-Collections-Streams'!
 TestCase subclass: #WriteStreamTest
 	instanceVariableNames: ''
@@ -1153,6 +1266,16 @@ TestCase subclass: #GrayFormTest
 GrayFormTest class
 	instanceVariableNames: ''!
 
+!classDefinition: #ObjectTest category: #'BaseImageTests-Kernel-Objects'!
+TestCase subclass: #ObjectTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Kernel-Objects'!
+!classDefinition: 'ObjectTest class' category: #'BaseImageTests-Kernel-Objects'!
+ObjectTest class
+	instanceVariableNames: ''!
+
 !classDefinition: #WeakMessageSendTest category: #'BaseImageTests-Kernel-Objects'!
 TestCase subclass: #WeakMessageSendTest
 	instanceVariableNames: ''
@@ -1161,6 +1284,26 @@ TestCase subclass: #WeakMessageSendTest
 	category: 'BaseImageTests-Kernel-Objects'!
 !classDefinition: 'WeakMessageSendTest class' category: #'BaseImageTests-Kernel-Objects'!
 WeakMessageSendTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #MethodReferenceTest category: #'BaseImageTests-Tools-Browser'!
+TestCase subclass: #MethodReferenceTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Browser'!
+!classDefinition: 'MethodReferenceTest class' category: #'BaseImageTests-Tools-Browser'!
+MethodReferenceTest class
+	instanceVariableNames: ''!
+
+!classDefinition: #SymbolTest category: #'BaseImageTests-Kernel-Text'!
+TestCase subclass: #SymbolTest
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Kernel-Text'!
+!classDefinition: 'SymbolTest class' category: #'BaseImageTests-Kernel-Text'!
+SymbolTest class
 	instanceVariableNames: ''!
 
 !classDefinition: #BecomeTestExperiment category: #'BaseImageTests-Kernel'!
@@ -1181,6 +1324,16 @@ Object subclass: #ExceptionTester
 	category: 'BaseImageTests-Exceptions'!
 !classDefinition: 'ExceptionTester class' category: #'BaseImageTests-Exceptions'!
 ExceptionTester class
+	instanceVariableNames: ''!
+
+!classDefinition: #RefactoringClassTestData category: #'BaseImageTests-Tools-Refactoring'!
+Object subclass: #RefactoringClassTestData
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'BaseImageTests-Tools-Refactoring'!
+!classDefinition: 'RefactoringClassTestData class' category: #'BaseImageTests-Tools-Refactoring'!
+RefactoringClassTestData class
 	instanceVariableNames: ''!
 
 
@@ -1204,9 +1357,6 @@ Tests that common uses of #become: and related methods don't crash the system wh
 
 !SpecialSelectorsTest commentStamp: '<historical>' prior: 0!
 Tests for proper behavior of Special Selectors, for example #@!
-
-!CompilerTest commentStamp: 'nice 12/3/2007 22:15' prior: 0!
-CompilerTest is a holder for SUnit test of Compiler!
 
 !DecompilerTests commentStamp: 'sd 9/26/2004 13:24' prior: 0!
 Apparently the decompiler does not really work totally.
@@ -1421,6 +1571,11 @@ Made at Cuis Sprint #1
 
 !BecomeTestExperiment commentStamp: '<historical>' prior: 0!
 To be used by BecomeTest!
+
+!RefactoringClassTestData class methodsFor: 'compiling' stamp: 'HAW 12/18/2019 19:55:32'!
+wantsChangeSetLogging 
+
+	^false! !
 
 !MyResumableTestError methodsFor: 'exceptionDescription' stamp: 'tfei 6/13/1999 00:46'!
 isResumable
@@ -2102,6 +2257,26 @@ testWithAllSuperclassesUpToIncludesReceiverClass
 	self assert: Integer equals: superclasses second.
 	self assert: Number equals: superclasses third ! !
 
+!BehaviorTest methodsFor: 'instance variables tests' stamp: 'HAW 4/9/2020 16:17:36'!
+testAllAccessToInstVarReturnsAccessInSiblingsToo
+
+	| references |
+	
+	"Just in case the hierarchy changes... not much of a chance but... - Hernan"
+	self deny: (IdentitySet includesBehavior: Dictionary).
+	self deny: (Dictionary includesBehavior: IdentitySet).
+	self assert: (IdentitySet includesBehavior: Set).
+	self assert: (Dictionary includesBehavior: Set).
+	
+	references := IdentitySet allAccessesTo: 'array'.
+	
+	self assert: (references anySatisfy: [ :aReference | aReference methodClass = Dictionary ])! !
+
+!BehaviorTest methodsFor: 'instance variables tests' stamp: 'HAW 4/9/2020 16:17:49'!
+testAllAccessToIsEmptyForVariableNotDefinedInClass
+
+	self assert: (Object allAccessesTo: 'iv1') isEmpty! !
+
 !BehaviorTest methodsFor: 'instance variables tests' stamp: 'HAW 8/2/2018 16:54:42'!
 testAllUnreferencedInstanceVariablesReturnsOnlyUnreferencedVariables
 
@@ -2145,6 +2320,41 @@ methodReferencingReferencedVariable
 isAbstract
 
 	^true! !
+
+!ClassTest methodsFor: 'definition tests' stamp: 'HAW 10/24/2019 09:34:44'!
+testDefinitionReplacingCategoryWithReplacesTheCategoryWithTheGivenOne
+
+	| classDefinition newCategory newCategoryDefinition |
+	
+	newCategory := 'NewCategory'.
+	newCategoryDefinition := 'category: ''', newCategory, ''''.
+	classDefinition := self class definitionReplacingCategoryWith: newCategory.
+	
+	self assert: (classDefinition includesSubString: newCategoryDefinition).
+	self deny: (classDefinition includesSubString: self class category)
+		
+
+! !
+
+!ClassTest methodsFor: 'definition tests' stamp: 'HAW 10/24/2019 09:42:54'!
+testDefinitionReplacingCategoryWithWorksWhenCategoryIsNil
+
+	| classDefinition newCategory newCategoryDefinition currentCategory |
+	
+	newCategory := 'NewCategory'.
+	newCategoryDefinition := 'category: ''', newCategory, ''''.
+	currentCategory := self class category.
+	[SystemOrganization removeElement: self class name.
+	classDefinition := self class definitionReplacingCategoryWith: newCategory.
+	
+	self assert: (classDefinition includesSubString: newCategoryDefinition).
+	self deny: (classDefinition includesSubString: self class category asString) ] 
+		ensure: [
+			SystemOrganization classify: self class name under: currentCategory ].
+
+		
+
+! !
 
 !AbstractNumberTest methodsFor: 'helpers' stamp: 'sqr 12/18/2018 16:27:22'!
 effectiveZeroExponentForTrigonometry
@@ -2293,7 +2503,7 @@ testSubtract
 	self assert: (1.0 - Float nan) isNaN.
 	self assert: (Float nan - 1.0) isNaN.! !
 
-!FloatTest methodsFor: 'tests - arithmetic' stamp: 'jmv 10/30/2016 17:12:55'!
+!FloatTest methodsFor: 'tests - arithmetic' stamp: 'jmv 10/15/2019 16:32:51'!
 testTimesTwoPowerGradualUnderflow
 	"Here is a vicious case where timesTwoPower is inexact because it underflows.
 	And two consecutive inexact operations lead to a different result than a single one.
@@ -2313,10 +2523,17 @@ testTimesTwoPowerGradualUnderflow
 	"scan the whole range of possible exponents for this significand"
 	Float fmin exponent + f exponent to: Float fmax exponent - f exponent
 		do:
-			[:exp |
+			[ :exp |
 				| g |
 				g := f timesTwoPower: exp.
-				self assert: (g timesTwoPower: Float fmin exponent - g exponent) = Float fmin]! !
+				(g timesTwoPower: Float fmin exponent - g exponent) = Float fmin ifFalse: [ exp print ].
+				"self assert: (g timesTwoPower: Float fmin exponent - g exponent) = Float fmin"
+				]
+
+"
+testTimesTwoPowerGradualUnderflow
+https://github.com/OpenSmalltalk/opensmalltalk-vm/issues/383
+"! !
 
 !FloatTest methodsFor: 'tests - arithmetic' stamp: 'jmv 3/26/2019 10:59:17'!
 testTimesTwoPowerOverflow
@@ -2632,10 +2849,10 @@ testComparisonWithFraction
 	self assert: 0.1 = (1/10).
 	self assert: (1/10) = 0.1! !
 
-!FloatTest methodsFor: 'tests - comparing' stamp: 'jmv 3/26/2019 16:10:52'!
+!FloatTest methodsFor: 'tests - comparing' stamp: 'jmv 8/29/2019 16:20:39'!
 testEqualityComparison
-				"In Cuis, it was decided to coerce operands to Float for comparison (if any of them was float),
-				in the classic ST-80 way"
+	"In Cuis, it was decided to coerce operands to Float for comparison (if any of them was float),
+	in the classic ST-80 way"
 	| a b c |
 	
 	"Test equality when Float conversion exact"
@@ -2670,7 +2887,22 @@ testEqualityComparison
 	"Test hash code"
 	self assert:
 		((Set new: 3) add: 3; add: 3.0; size) =
-		((Set new: 4) add: 3; add: 3.0; size).! !
+		((Set new: 4) add: 3; add: 3.0; size).
+
+
+	self assert: 9007199254740996 = 9007199254740996.0.
+	self assert: 9007199254740996001 / 1000 = 9007199254740996.0.
+	self assert: 90071992547409963 / 10 = 9007199254740996.0.
+	self assert: 90071992547409967 / 10 = 9007199254740996.0.
+	self assert: 9007199254740995 = 9007199254740996.0.
+	self deny: 9007199254740995 = 9007199254740994.0.
+
+	self assert: 9007199254740996.0 = 9007199254740996.
+	self assert: 9007199254740996.0 = (9007199254740996001 / 1000).
+	self assert: 9007199254740996.0 = (90071992547409963 / 10).
+	self assert: 9007199254740996.0 = (90071992547409967 / 10).
+	self assert: 9007199254740996.0 = 9007199254740995.
+	self deny: 9007199254740994.0 = 9007199254740995.! !
 
 !FloatTest methodsFor: 'tests - comparing' stamp: 'jmv 12/4/2018 12:05:21'!
 testEquals
@@ -4154,10 +4386,10 @@ assertIsPositiveZero: aFloat
 	"Assert that aFloat is Float zero (the positive one)"
 	self assert: aFloat hex = 0.0 hex! !
 
-!FloatTest methodsFor: 'helpers' stamp: 'mt 8/16/2016 09:42'!
+!FloatTest methodsFor: 'helpers' stamp: 'jmv 10/15/2019 16:41:28'!
 expectedFailures
-
-	^ Smalltalk platformName = 'Win32'
+	"See https://github.com/OpenSmalltalk/opensmalltalk-vm/issues/383"
+	^ (`{'Win32'.  'Mac OS' }` includes: Smalltalk platformName)
 		ifTrue: [#(testTimesTwoPowerGradualUnderflow)]
 		ifFalse: [#()]! !
 
@@ -4189,12 +4421,14 @@ testPrimArcTan
 	self verify: Float negativeInfinity primTestArcTan isTrigonometricallyEqualTo: Float pi / -2.
 	self assert: Float nan primTestArcTan isNaN! !
 
-!FloatTest methodsFor: 'tests - primitives' stamp: 'jmv 2/28/2019 15:31:14'!
+!FloatTest methodsFor: 'tests - primitives' stamp: 'jmv 10/11/2019 20:08:22'!
 testPrimDivideBy
 
 	self assert: (1.5 primTestDivideBy: 2.0) = 0.75.
 
-	self assert: (2.0 primTestDivideBy: 1) = 2.0.
+	Smalltalk doMixedArithmetic
+		ifTrue: [ self assert: (2.0 primTestDivideBy: 1) = 2.0 ]
+		ifFalse: [ self assert: (2.0 primTestDivideBy: 1) = #fail ].
 
 	self assert: (2.0 primTestDivideBy: 0) = #fail.
 	self assert: (2.0 primTestDivideBy: 0.0) = #fail.
@@ -8331,7 +8565,7 @@ testIncluding
 	self assert: (Year including: '12 May 2017 ' asDate start) yearNumber = 2017.
 	self assert: (Year including: (Week including: '12 May 2017 ' asDate start)) yearNumber = 2017! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:03:52'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:03:52'!
 test01withPropertiesDoIfSelectorEvaluatesFirstBlockWhenMethodHasProperties
 
 	| thisMethod propertyName methodProperties |
@@ -8347,7 +8581,7 @@ test01withPropertiesDoIfSelectorEvaluatesFirstBlockWhenMethodHasProperties
 	"I don't assert inside the block because if no block is evaluated the test passes - Hernan"	
 	self assert: (methodProperties at: propertyName)! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:04:31'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:04:31'!
 test02removePropertiesRestoresPenultimalLiteralToSelector
 
 	| thisMethod propertyName |
@@ -8360,7 +8594,7 @@ test02removePropertiesRestoresPenultimalLiteralToSelector
 	self assert: thisMethod penultimateLiteral equals: thisContext selector.
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:04:52'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:04:52'!
 test03removePropertiesKeepsSelectorIfMethodDoesNotHaveProperties
 
 	| thisMethod |
@@ -8373,7 +8607,7 @@ test03removePropertiesKeepsSelectorIfMethodDoesNotHaveProperties
 	self assert: thisMethod penultimateLiteral equals: thisContext selector.
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:05:22'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:05:22'!
 test04withPropertiesDoIfSelectorEvaluatesSecondBlockWhenMethodHasNoProperties
 
 	| thisMethod methodSelector |
@@ -8388,7 +8622,7 @@ test04withPropertiesDoIfSelectorEvaluatesSecondBlockWhenMethodHasNoProperties
 	"I don't assert inside the block because if no block is evaluated the test passes - Hernan"	
 	self assert: methodSelector equals: thisContext selector! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:05:40'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:05:40'!
 test05hasLiteralSuchThatTravelsListeralsWhenMethodHasProperties
 
 	| thisMethod |
@@ -8400,7 +8634,7 @@ test05hasLiteralSuchThatTravelsListeralsWhenMethodHasProperties
 	
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:05:54'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:05:54'!
 test06hasLiteralSuchThatTravelsListeralsWhenMethodHasNoProperties
 
 	| thisMethod |
@@ -8412,7 +8646,7 @@ test06hasLiteralSuchThatTravelsListeralsWhenMethodHasNoProperties
 	
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:06:51'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:06:51'!
 test0701withPropertiesDoReturnsNilIfMethodHasNoProperties
 
 	| thisMethod |
@@ -8422,7 +8656,7 @@ test0701withPropertiesDoReturnsNilIfMethodHasNoProperties
 
 	self assert: (thisMethod withPropertiesDo: [ :properties | self fail ]) isNil! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:07:21'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:07:21'!
 test07withPropertiesDoEvaluatesBlockOnlyWhenMethodHasProperties
 
 	| thisMethod propertyName methodProperties |
@@ -8436,7 +8670,7 @@ test07withPropertiesDoEvaluatesBlockOnlyWhenMethodHasProperties
 	"I don't assert inside the block because if no block is evaluated the test passes - Hernan"	
 	self assert: (methodProperties at: propertyName)! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:07:47'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:07:47'!
 test08hasLiteralThoroughReturnTrueWhenMethodHasPropertiesAndHasLiteral
 
 	| thisMethod |
@@ -8448,7 +8682,7 @@ test08hasLiteralThoroughReturnTrueWhenMethodHasPropertiesAndHasLiteral
 	
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:08:08'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:08:08'!
 test09hasLiteralThoroughReturnFalseWhenMethodHasPropertiesAndHasNoLiteral
 
 	| thisMethod |
@@ -8460,7 +8694,7 @@ test09hasLiteralThoroughReturnFalseWhenMethodHasPropertiesAndHasNoLiteral
 	
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:08:21'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:08:21'!
 test10hasLiteralThoroughReturnTrueWhenMethodHasNoPropertiesAndHasLiteral
 
 	| thisMethod |
@@ -8472,7 +8706,7 @@ test10hasLiteralThoroughReturnTrueWhenMethodHasNoPropertiesAndHasLiteral
 	
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:08:34'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:08:34'!
 test11hasLiteralThoroughReturnFalseWhenMethodHasNoPropertiesAndHasNoLiteral
 
 	| thisMethod |
@@ -8484,7 +8718,7 @@ test11hasLiteralThoroughReturnFalseWhenMethodHasNoPropertiesAndHasNoLiteral
 	
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:08:51'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:08:51'!
 test12pragmaAtReturnsPragmaIfExist
 
 	<test>
@@ -8495,7 +8729,7 @@ test12pragmaAtReturnsPragmaIfExist
 	
 	self assert: (thisMethod pragmaAt: #test) key equals: #test! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:09:07'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:09:07'!
 test13pragmaAtReturnsNilIfPragmaDoesNotExist
 
 	| thisMethod |
@@ -8504,7 +8738,7 @@ test13pragmaAtReturnsNilIfPragmaDoesNotExist
 	
 	self assert: (thisMethod pragmaAt: #test) isNil! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:09:26'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:09:26'!
 test14pragmasReturnsCollectionOfMethodPragmas
 
 	<test>
@@ -8517,7 +8751,7 @@ test14pragmasReturnsCollectionOfMethodPragmas
 	self assert: pragmas size equals: 1.
 	self assert: pragmas first key equals: #test! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:09:49'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:09:49'!
 test15pragmasReturnsEmptyCollectionWhenMethodHasNoProperties
 
 	| thisMethod pragmas |
@@ -8528,7 +8762,7 @@ test15pragmasReturnsEmptyCollectionWhenMethodHasNoProperties
 	
 	self assert: pragmas isEmpty ! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:14:18'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:14:18'!
 test16propertiesReturnsAnNewAdditionalMethodStateWhenNoPropertiesHasBeenSet
 
 	| thisMethod properties |
@@ -8542,7 +8776,7 @@ test16propertiesReturnsAnNewAdditionalMethodStateWhenNoPropertiesHasBeenSet
 	self assert: properties selector equals: thisContext selector.
 	self deny: properties == thisMethod properties ! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:14:35'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:14:35'!
 test17propertiesReturnsTheAlreadySetAdditionalMethodStateWhenHasProperties
 
 	| propertyName thisMethod properties |
@@ -8556,7 +8790,7 @@ test17propertiesReturnsTheAlreadySetAdditionalMethodStateWhenHasProperties
 	self assert: properties selector equals: thisContext selector.
 	! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:17:28'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:17:28'!
 test18propertyKeysAndValuesDoIteratesOverProperties
 
 	| propertyName thisMethod properties |
@@ -8571,7 +8805,7 @@ test18propertyKeysAndValuesDoIteratesOverProperties
 	self assert: properties size equals: 1.
 	self assert: properties first equals: propertyName -> true! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 07:20:11'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 07:20:11'!
 test19propertyKeysAndValuesDoDoesNotEvaluateBlockWhenMethodHasNoProperties
 
 	| thisMethod |
@@ -8581,7 +8815,7 @@ test19propertyKeysAndValuesDoDoesNotEvaluateBlockWhenMethodHasNoProperties
 	
 	thisMethod propertyKeysAndValuesDo: [ :key :value | self fail ]! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 16:58:44'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 16:58:44'!
 test20propertyValueAtReturnsPropertyValueWhenSetted
 
 	| propertyName propertyValue thisMethod |
@@ -8593,7 +8827,7 @@ test20propertyValueAtReturnsPropertyValueWhenSetted
 	
 	self assert: (thisMethod propertyValueAt: propertyName) equals: propertyValue ! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 16:56:20'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 16:56:20'!
 test21propertyValueAtReturnsNilWhenPropertyIsNotFound
 
 	| thisMethod |
@@ -8603,7 +8837,7 @@ test21propertyValueAtReturnsNilWhenPropertyIsNotFound
 	
 	self assert: (thisMethod propertyValueAt: #abc) isNil! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 16:55:00'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 16:55:00'!
 test22propertyValueAtReturnsNilWhenMethodHasNoProperties
 
 	| thisMethod |
@@ -8613,7 +8847,7 @@ test22propertyValueAtReturnsNilWhenMethodHasNoProperties
 	
 	self assert: (thisMethod propertyValueAt: #testProperty) isNil! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 16:58:18'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 16:58:18'!
 test23propertyValueAtIfAbsetReturnsPropertyValueWhenFound
 
 	| propertyName propertyValue thisMethod |
@@ -8625,7 +8859,7 @@ test23propertyValueAtIfAbsetReturnsPropertyValueWhenFound
 	
 	self assert: (thisMethod propertyValueAt: propertyName ifAbsent: [ self fail ]) equals: propertyValue ! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/3/2019 16:59:33'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/3/2019 16:59:33'!
 test24propertyValueAtIfAbsetEvaluatesIfAbsentBlockWhenNotFound
 
 	| propertyName propertyValue thisMethod |
@@ -8637,7 +8871,7 @@ test24propertyValueAtIfAbsetEvaluatesIfAbsentBlockWhenNotFound
 	
 	self assert: (thisMethod propertyValueAt: #abc ifAbsent: [ propertyValue + 1]) equals: propertyValue + 1 ! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:39:17'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:39:17'!
 test25propertyValueAtIfAbsetEvaluatesIfAbsentBlockWhenMethodHasNoProperties
 
 	| thisMethod |
@@ -8647,7 +8881,7 @@ test25propertyValueAtIfAbsetEvaluatesIfAbsentBlockWhenMethodHasNoProperties
 	
 	self assert: (thisMethod propertyValueAt: #testProperty ifAbsent: [ 1 ]) equals: 1! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:44:05'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:44:05'!
 test26propertyValueAtPutCreatesPropertiesWithNewOne
 
 	| thisMethod testProperty propertyValue |
@@ -8661,7 +8895,7 @@ test26propertyValueAtPutCreatesPropertiesWithNewOne
 	self assert: propertyValue equals: 1.
 	self assert: (thisMethod propertyValueAt: testProperty) equals: 1! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:44:40'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:44:40'!
 test27propertyValueAtPutReplacesPropertyIfAlreadyExisted
 
 	| thisMethod testProperty propertyValue |
@@ -8674,7 +8908,7 @@ test27propertyValueAtPutReplacesPropertyIfAlreadyExisted
 	self assert: propertyValue equals: 2.
 	self assert: (thisMethod propertyValueAt: testProperty) equals: 2! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:45:06'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:45:06'!
 test28propertyValueAtPutAddsNewPropertyIfPropertiesExisted
 
 	| thisMethod testProperty1 testProperty2 propertyValue |
@@ -8689,7 +8923,7 @@ test28propertyValueAtPutAddsNewPropertyIfPropertiesExisted
 	self assert: (thisMethod propertyValueAt: testProperty1) equals: 1.
 	self assert: (thisMethod propertyValueAt: testProperty2) equals: 2! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:47:40'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:47:40'!
 test29selectorReturnsMethodSelectorWhenNoProperties
 
 	| thisMethod |
@@ -8699,7 +8933,7 @@ test29selectorReturnsMethodSelectorWhenNoProperties
 	
 	self assert: thisMethod selector equals: thisContext selector! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:48:40'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:48:40'!
 test30selectorReturnsMethodSelectorWhenHasProperties
 
 	| thisMethod |
@@ -8709,7 +8943,7 @@ test30selectorReturnsMethodSelectorWhenHasProperties
 	
 	self assert: thisMethod selector equals: thisContext selector! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:54:03'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:54:03'!
 test31SettingSelectorWhenHasNoProperties
 
 	| currentSelector thisMethod |
@@ -8721,7 +8955,7 @@ test31SettingSelectorWhenHasNoProperties
 	[ thisMethod selector: #test.
 	self assert: thisMethod selector equals: #test ] ensure: [ thisMethod selector: currentSelector ]! !
 
-!CompiledMethodTest methodsFor: 'as yet unclassified' stamp: 'HAW 1/7/2019 15:54:47'!
+!CompiledMethodTest methodsFor: 'tests - properties' stamp: 'HAW 1/7/2019 15:54:47'!
 test32SettingSelectorWhenHasProperties
 
 	| currentSelector thisMethod |
@@ -8732,6 +8966,106 @@ test32SettingSelectorWhenHasProperties
 	
 	[ thisMethod selector: #test.
 	self assert: thisMethod selector equals: #test ] ensure: [ thisMethod selector: currentSelector ]! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:41:19'!
+indexOfIv1
+	
+	^self class indexOfInstanceVariable: 'iv1'! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:44:50'!
+indexOfIv2
+	
+	^self class indexOfInstanceVariable: 'iv2'! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:40:38'!
+iv1
+
+	^iv1! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:46:19'!
+iv1: anObject
+
+	iv1 := anObject ! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 16:00:45'!
+iv1ReadWrite
+
+	iv1 := iv1 yourself! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:41:59'!
+iv1_notGetter
+
+	^iv1! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:46:58'!
+iv1_notSetter: anObject
+
+	iv1 := anObject ! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:45:13'!
+iv2
+
+	^iv2 yourself! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:48:08'!
+iv2: anObject
+
+	iv2 := 1! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:40:33'!
+test01isGetterWhenSameSelectorAsInstanceVariableAndOnlyReturnsThatVariable
+
+	self assert: (self class>>#iv1 isGetterOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:42:29'!
+test02isNotGetterWhenDifferentSelectorAsInstanceVariable
+
+	self deny: (self class>>#iv1_notGetter isGetterOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:44:13'!
+test03isNotGetterWhenSameSelectorAsInstanceVariableButDoesOtherThingBesidesReturningVariable
+
+	self deny: (self class>>#iv2 isGetterOf: 'iv2' at: self indexOfIv2)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:46:04'!
+test04isSetterWhenSameKeywordSelectorAsInstanceVariableAndOnlySetsTheVariable
+
+	self assert: (self class>>#iv1: isSetterOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:46:52'!
+test05isNotSetterWhenDifferentKeywordSelectorAsInstanceVariable
+
+	self deny: (self class>>#iv1_notSetter: isSetterOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:47:57'!
+test06isNotSetterWhenSameKeywordSelectorAsInstanceVariableButDoesNotAssignParameter
+
+	self deny: (self class>>#iv2: isSetterOf: 'iv2' at: self indexOfIv2)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:58:54'!
+test07AccessorDescriptionIsGetterForAGetter
+
+	self assert: 'getter' equals: (self class>>#iv1 accessorDescriptionOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:59:05'!
+test08AccessorDescriptionIsSetterForASetter
+
+	self assert: 'setter' equals: (self class>>#iv1: accessorDescriptionOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 15:59:34'!
+test09AccessorDescriptionIsReadForMethodThatReadsInstanceVariable
+
+	self assert: 'read' equals: (self class>>#iv1_notGetter accessorDescriptionOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 16:00:19'!
+test10AccessorDescriptionIsWriteForMethodThatWritesInstanceVariable
+
+	self assert: 'write' equals: (self class>>#iv1_notSetter: accessorDescriptionOf: 'iv1' at: self indexOfIv1)! !
+
+!CompiledMethodTest methodsFor: 'tests - accessors' stamp: 'HAW 4/9/2020 16:01:06'!
+test11AccessorDescriptionIsWriteReadForMethodThatWritesAndReadInstanceVariable
+
+	self assert: 'write/read' equals: (self class>>#iv1ReadWrite accessorDescriptionOf: 'iv1' at: self indexOfIv1)! !
 
 !DelayTest methodsFor: 'testing-limits' stamp: 'laza 9/5/2009 08:49'!
 testBounds
@@ -9814,6 +10148,18 @@ testWithoutTrailingBlanks
 	self assert: '' withoutTrailingBlanks isEmpty
 ! !
 
+!StringTest methodsFor: 'tests - grammar' stamp: 'LC 4/25/2020 11:04:39'!
+testArticle
+	self
+		assert: 'euphemism' withArticle equals: 'a euphemism';
+		assert: 'European' withArticle equals: 'a European';
+		assert: 'Euclidean space' withArticle equals: 'a Euclidean space';
+		assert: 'university' withArticle equals: 'a university';
+		assert: 'anagram' withArticle equals: 'an anagram';
+		assert: 'apple' withArticle equals: 'an apple';
+		assert: 'Ukranian' withArticle equals: 'a Ukranian';
+		assert: 'Argentine' withArticle equals: 'an Argentine'! !
+
 !ArrayTest methodsFor: 'test - insert:ShiftingRight:' stamp: 'HAW 12/20/2018 14:41:00'!
 testCanNotInsertShiftingRightWhenInsertionPointIsBiggerThanSize
 
@@ -10629,23 +10975,19 @@ testUnwindFromForeignProcess
 	self shouldnt: [process terminate] raise: BlockCannotReturn.
 	self assert: sema isSignaled! !
 
-!ArrayLiteralTest methodsFor: 'running' stamp: 'avi 2/16/2004 21:09'!
-tearDown
-	self class removeSelector: #array! !
-
 !ArrayLiteralTest methodsFor: 'tests' stamp: 'jpb 8/2/2019 23:05:08'!
 testIsArray
 	self assert: ({1. 2. 'hello'. #Number} is: #Array).! !
 
-!ArrayLiteralTest methodsFor: 'tests' stamp: 'avi 2/16/2004 21:08'!
+!ArrayLiteralTest methodsFor: 'tests' stamp: 'HAW 10/26/2019 18:24:11'!
 testReservedIdentifiers
-	self class compile: 'array ^ #(nil true false)'.
-	self assert: self array = {nil. true. false}.! !
+	
+	self assert: #(nil true false) equals: {nil. true. false}.! !
 
-!ArrayLiteralTest methodsFor: 'tests' stamp: 'avi 2/16/2004 21:09'!
+!ArrayLiteralTest methodsFor: 'tests' stamp: 'HAW 10/26/2019 18:24:52'!
 testSymbols
-	self class compile: 'array ^ #(#nil #true #false #''nil'' #''true'' #''false'')'.
-	self assert: self array = {#nil. #true. #false. #nil. #true. #false}.! !
+
+	self assert: #(#nil #true #false #'nil' #'true' #'false') equals: {#nil. #true. #false. #nil. #true. #false}.! !
 
 !ClassDefinitionNodeAnalyzerTest methodsFor: 'testing' stamp: 'HAW 4/17/2019 21:07:13'!
 test01isAtSuperclassWhenIndexIsInSuperclass
@@ -10764,7 +11106,7 @@ test09isNotAtCategoryWhenIndexIsOutsideCategoryString
 	
 	! !
 
-!ClassDefinitionNodeAnalyzerTest methodsFor: 'testing' stamp: 'HAW 4/17/2019 21:06:49'!
+!ClassDefinitionNodeAnalyzerTest methodsFor: 'testing' stamp: 'HAW 10/11/2019 16:51:32'!
 test10InstanceVariablesIsTheSecondParameter
 
 	| subclassCreationSelectors |
@@ -10774,7 +11116,7 @@ test10InstanceVariablesIsTheSecondParameter
 	
 	subclassCreationSelectors do: [ :aSubclassCreationSelector |
 		self 
-			assert: (aSubclassCreationSelector keywords at: ClassDefinitionNodeAnalyzer instanceVariableNamesPosition) 
+			assert: (aSubclassCreationSelector keywords at: ClassDefinitionNodeAnalyzer instanceVariableNamesPositionForClassDefinition ) 
 			equals: 'instanceVariableNames:' ]! !
 
 !ClassDefinitionNodeAnalyzerTest methodsFor: 'testing' stamp: 'HAW 4/17/2019 21:06:49'!
@@ -11483,6 +11825,273 @@ methodWithVariousTemps
 		parse: (self class sourceCodeAt: #methodWithVariousTemps)
 		class: self class"! !
 
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample01
+	| blockClosure materialized |
+	blockClosure _ self bc01.
+	materialized _ blockClosure veryDeepCopy.
+	self assert: blockClosure value = materialized value.! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample02
+	| blockClosure materialized |
+	blockClosure _ self bc02.
+	materialized _ blockClosure veryDeepCopy.
+	self assert: blockClosure value = materialized value.! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample03
+	| blockClosure materialized |
+	blockClosure _ self bc03.
+	materialized _ blockClosure veryDeepCopy.
+	self assert: blockClosure value = materialized value.
+	self assert: blockClosure value = materialized value.
+	self assert: blockClosure value = materialized value.! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample04
+	| blockClosure materialized |
+	blockClosure _ self bc04.
+	materialized _ blockClosure veryDeepCopy.
+	self assert: blockClosure value = materialized value.! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample05
+	| blockClosure materialized |
+	blockClosure _ self bc05.
+	materialized _ blockClosure veryDeepCopy.
+	self assert: blockClosure value = materialized value.
+	self assert: blockClosure value = materialized value.
+	self assert: blockClosure value = materialized value.! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample06
+	| blockClosures materialized firstRun |
+
+	blockClosures _ self bc06.
+	firstRun _ blockClosures second value.
+	"If sibling closures are serialized separately, their relationship is lost in the copies."
+	materialized _ blockClosures collect: [ :each | each veryDeepCopy ].
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self assert: blockClosures third value = materialized third value.
+	self assert: blockClosures first value = materialized first value.
+	self assert: firstRun = materialized second value.
+	self deny: blockClosures second value = materialized second value.
+
+	blockClosures _ self bc06.
+	"If sibling closures are serialized together, their relationship is kept in the copies."
+	materialized _ blockClosures veryDeepCopy.
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self assert: blockClosures third value = materialized third value.
+	self assert: blockClosures first value = materialized first value.
+	self deny: firstRun = materialized second value.
+	self assert: blockClosures second value = materialized second value.! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample07
+	| blockClosures materialized |
+
+	blockClosures _ self bc07.
+	"If sibling closures are serialized separately, their relationship is lost in the copies."
+	materialized _ blockClosures collect: [ :each | each veryDeepCopy ].
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self deny: blockClosures third value = materialized third value.
+	self assert: blockClosures second value = materialized second value.
+	self deny: blockClosures first value = materialized first value.
+	self deny: blockClosures third value = materialized third value.
+	self deny: blockClosures first value = materialized first value.
+
+	blockClosures _ self bc07.
+	"If sibling closures are serialized together, their relationship is kept in the copies."
+	materialized _ blockClosures veryDeepCopy.
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self assert: blockClosures third value = materialized third value.
+	self assert: blockClosures second value = materialized second value.
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures third value = materialized third value.
+	self assert: blockClosures first value = materialized first value.! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample08
+	| blockClosures materialized |
+
+	blockClosures _ self bc08.
+	"If sibling closures are serialized separately, their relationship is lost in the copies."
+	materialized _ blockClosures collect: [ :each | each veryDeepCopy ].
+	self assert: blockClosures first value = materialized first value.
+	self assert: (blockClosures second value: 7) = (materialized second value: 7).
+	self assert: blockClosures third value = materialized third value.
+	self deny: (blockClosures second value: 7) = (materialized second value: 7).
+	self deny: (blockClosures fourth value: 2 value: 3) = (materialized fourth value: 2 value: 3).
+
+	blockClosures _ self bc08.
+	"If sibling closures are serialized together, their relationship is kept in the copies."
+	materialized _ blockClosures veryDeepCopy.
+	self assert: blockClosures first value = materialized first value.
+	self assert: (blockClosures second value: 7) = (materialized second value: 7).
+	self assert: blockClosures third value = materialized third value.
+	self assert: (blockClosures second value: 7) = (materialized second value: 7).
+	self assert: (blockClosures fourth value: 2 value: 3) = (materialized fourth value: 2 value: 3).! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample09
+	| blockClosures materialized |
+
+	blockClosures _ self bc09.
+	materialized _ blockClosures collect: [ :each | each veryDeepCopy ].
+
+	self assert: (blockClosures first value: $c) = (materialized first value: $c).
+	self assert: (blockClosures second value: $d value: #e) = (materialized second value: $d value: #e).
+	self assert: (blockClosures third value: $d value: $e) = (materialized third value: $d value: $e).! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample10
+	| blockClosure1 blockClosure2 blockClosure3 value materialized1 materialized2a materialized2b materialized3a materialized3b materialized3c |
+
+	blockClosure1 _ self bc10.
+	blockClosure2 _ blockClosure1 withFirstArg: 1.
+	blockClosure3 _ (blockClosure1 withFirstArg: 1) withFirstArg: 2.
+	value _ blockClosure1 value: 1 value: 2.
+	self assert: (blockClosure2 value: 2) = value.
+	self assert: blockClosure3 value = value.
+
+	materialized1 _ blockClosure1 veryDeepCopy.
+	materialized2a _ materialized1 withFirstArg: 1.
+	materialized2b _ blockClosure2 veryDeepCopy.
+	materialized3a _ (materialized1 withFirstArg: 1) withFirstArg: 2.
+	materialized3b _ materialized2b withFirstArg: 2.
+	materialized3c _ blockClosure3 veryDeepCopy.
+	self assert: (materialized1 value: 1 value: 2) = value.
+	self assert: (materialized2a value: 2) = value.
+	self assert: (materialized2b value: 2) = value.
+	self assert: materialized3a value = value.
+	self assert: materialized3b value = value.
+	self assert: materialized3c value = value.
+! !
+
+!ClosureSerializationTest methodsFor: 'testing' stamp: 'jmv 9/26/2019 23:19:41'!
+testSample11
+	| blockClosures materialized |
+
+	blockClosures _ self bc11.
+	"If sibling closures are serialized separately, their relationship is lost in the copies."
+	materialized _ blockClosures collect: [ :each | each veryDeepCopy ].
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self deny: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self deny: blockClosures first value = materialized first value.
+
+	blockClosures _ self bc11.
+	"If sibling closures are serialized together, their relationship is kept in the copies."
+	materialized _ blockClosures veryDeepCopy.
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self assert: blockClosures first value = materialized first value.
+	self assert: blockClosures second value = materialized second value.
+	self assert: blockClosures first value = materialized first value.! !
+
+!ClosureSerializationTest methodsFor: 'aux' stamp: 'jmv 9/26/2019 23:19:41'!
+gimme5
+	^1+4! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc01
+	^[ self gimme5 ]! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc02
+	^[ ivar + 4 ]! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc03
+	^[ ivar _ ivar + 3 ]! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc04
+	| t |
+	t _ self gimme5.
+	^[ t * 2 ]! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc05
+	| t |
+	t _ self gimme5.
+	^[ t _ t * 2 ]! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc06
+	| u t |
+	u _ self gimme5 + 2.
+	t _ self gimme5.
+	^{[ u * 2 ]. [ t * 2 ].[t _ t*3]}.! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc07
+	| a b c d e f g |
+	a _ self gimme5 + 1.
+	b _ self gimme5 + 2.
+	c _ self gimme5 + 3.
+	d _ self gimme5 + 4.
+	e _ self gimme5 + 5.
+	f _ self gimme5 + 6.
+	g _ self gimme5 + 7.
+	^{[ a * 10 + b * 10 + c * 10 + d * 10 + e + f + g ]. [ a _ 7. a * 2 ].[ c _ 9. d _ d*10. a * 10 + b * 10 + c + d]}.! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc08
+
+	| u t |
+	u _ self gimme5 + 2.
+	t _ self gimme5.
+	^{
+		[ | x y z | x _ t. y _ x*0+2. z _ x * t. {u * 2. x. y. z} ].
+		[ :a | t * 2 + a ].
+		[|x y | t _ t*3. y _ t*2. {x. t. y}].
+		[:a :b | a * b * t ]
+	}.! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc09
+
+	| clo1 clo2 closure |
+	closure := (
+			([ :a |
+				[ :b |
+					clo1 := [ :c | {c. b. a.}]. 
+					clo2 := [ :d :e | {a. b. e. d.}]
+				]
+			]) value: $a
+		) value: 'b'.
+	^{ clo1. clo2. closure }! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc10
+
+	^ [ :a :b | a + b ]! !
+
+!ClosureSerializationTest methodsFor: 'sample closures' stamp: 'jmv 9/26/2019 23:19:41'!
+bc11
+	| a b c d e f g |
+	a _ self gimme5 + 1.
+	b _ self gimme5 + 2.
+	c _ self gimme5 + 3.
+	d _ self gimme5 + 4.
+	e _ self gimme5 + 5.
+	f _ self gimme5 + 6.
+	g _ self gimme5 + 7.
+	{ b. d. e. f } print.
+	^{[ g + a * 10 + a + a + g + c ]. [ b _ 7. c _ c * 2 ]}.! !
+
+!ClosureSerializationTest methodsFor: 'setUp/tearDown' stamp: 'jmv 9/26/2019 23:19:41'!
+setUp
+	ivar _ 7.
+	^ivar! !
+
 !ClosureTests methodsFor: 'utilities' stamp: 'lr 3/9/2009 16:48'!
 assertValues: anArray
 	| values |
@@ -11698,63 +12307,6 @@ testWhileWithTempNotInlined
 		collection add: [ temp ] ].
 	[ index < 5 ] whileTrue: block.
 	self assertValues: #(1 2 3 4 5)! !
-
-!CompilerExceptionsTest methodsFor: 'as yet unclassified' stamp: 'cwp 8/25/2009 20:27'!
-griffle | goo |! !
-
-!CompilerExceptionsTest methodsFor: 'emulating' stamp: 'cwp 8/25/2009 20:23'!
-selectFrom: start to: end 
-	! !
-
-!CompilerExceptionsTest methodsFor: 'emulating' stamp: 'cwp 8/25/2009 20:22'!
-selectionInterval
-	^ 1 to: 0! !
-
-!CompilerExceptionsTest methodsFor: 'emulating' stamp: 'cwp 8/25/2009 20:26'!
-text
-	^ self unusedVariableSource! !
-
-!CompilerExceptionsTest methodsFor: 'tests' stamp: 'cwp 8/25/2009 20:22'!
-testUndeclaredVariable
-	self 
-		should: 
-			[self class 
-				compile: 'griffle ^ goo'
-				notifying: self]
-		raise: UndeclaredVariable! !
-
-!CompilerExceptionsTest methodsFor: 'tests' stamp: 'cwp 8/25/2009 20:24'!
-testUndefinedVariable
-	self 
-		should: 
-			[self class 
-				compile: 'griffle | goo | ^ goo'
-				notifying: self]
-		raise: UndefinedVariable! !
-
-!CompilerExceptionsTest methodsFor: 'tests' stamp: 'cwp 8/25/2009 20:25'!
-testUnknownSelector
-	self 
-		should: 
-			[self class 
-				compile: 'griffle self reallyHopeThisIsntImplementedAnywhere'
-				notifying: self]
-		raise: UnknownSelector! !
-
-!CompilerExceptionsTest methodsFor: 'tests' stamp: 'cwp 8/25/2009 20:27'!
-testUnusedVariable
-	self 
-		should: 
-			[self class 
-				compile: self unusedVariableSource
-				notifying: self]
-		raise: UnusedVariable! !
-
-!CompilerExceptionsTest methodsFor: 'private' stamp: 'cwp 8/25/2009 20:28'!
-unusedVariableSource
-	^ 'griffle 
-		| goo |
-		^ nil'! !
 
 !ContextCompilationTest methodsFor: 'tests' stamp: 'eem 6/19/2008 10:11'!
 testVariablesAndOffsetsDo
@@ -12176,6 +12728,63 @@ testMirrorSize
 	self assert: (thisContext objectSize: 1) = 0.
 	stackpAfter := thisContext stackPtr.
 	self assert: stackpBefore = stackpAfter. "Make sure primitives pop all their arguments"! !
+
+!ParserTest methodsFor: 'test' stamp: 'HAW 2/29/2020 18:09:57'!
+testRangesAreOkWhenReturningAVariableWithoutSpaceAfterThat
+
+	| methodNode ranges |
+	
+	"See Parser>>#variable"
+	
+	methodNode := self class methodNodeFor: 'm1 |v| ^v'.
+	
+	ranges := methodNode rangeForNode: methodNode tempNodes first ifAbsent: [ self fail ].
+	
+	self assert: 2 equals: ranges size.
+	self assert: ranges includes: (5 to: 5).
+	self assert: ranges includes: (9 to: 9).
+	
+	
+	
+	! !
+
+!ParserTest methodsFor: 'temporary variables tests' stamp: 'RNG 3/13/2020 00:39:16'!
+testItGeneratesATempDeclarationNodeForEachTempInABlock
+
+	| methodNode blockNode tempsDeclarationNode allTempDeclarationNodes |
+	methodNode := self class methodNodeFor: 'm1 [ | a b c | 42 ]'.
+	blockNode := methodNode block statements first.
+	tempsDeclarationNode := blockNode temporariesDeclaration.
+	allTempDeclarationNodes := tempsDeclarationNode temporaryDeclarationNodes.
+	
+	self
+		assert: allTempDeclarationNodes size equals: 3;
+		assert: allTempDeclarationNodes first variableName equals: 'a';
+		assert: allTempDeclarationNodes second variableName equals: 'b';
+		assert: allTempDeclarationNodes third variableName equals: 'c'.! !
+
+!ParserTest methodsFor: 'temporary variables tests' stamp: 'RNG 3/13/2020 00:38:08'!
+testItGeneratesATempDeclarationNodeForEachTempInAMethod
+
+	| methodNode tempsDeclarationNode allTempDeclarationNodes |
+	methodNode := self class methodNodeFor: 'm1 | a b c | ^a + b + c'.
+	tempsDeclarationNode := methodNode temporariesDeclaration.
+	allTempDeclarationNodes := tempsDeclarationNode temporaryDeclarationNodes.
+	
+	self
+		assert: allTempDeclarationNodes size equals: 3;
+		assert: allTempDeclarationNodes first variableName equals: 'a';
+		assert: allTempDeclarationNodes second variableName equals: 'b';
+		assert: allTempDeclarationNodes third variableName equals: 'c'.! !
+
+!ParserTest methodsFor: 'temporary variables tests' stamp: 'RNG 3/13/2020 00:34:19'!
+testItGeneratesAnEmptyTempsDeclarationNodeForAMethodWithoutTemps
+
+	| methodNode tempsDeclarationNode |
+	methodNode := self class methodNodeFor: 'm1 ^42'.
+	tempsDeclarationNode := methodNode temporariesDeclaration.
+	
+	self assert: tempsDeclarationNode allDeclaredVariableNodes isEmpty.! !
 
 !PrettyPrintingTest methodsFor: 'testing' stamp: 'jmv 4/19/2014 17:39'!
 test1
@@ -14124,7 +14733,7 @@ testInverseTransformation
 	self assert: ((inverse internalizeDelta: 3@4) - (forward externalizeDelta: 3@4)) r < 0.0001.
 	self assert: ((inverse internalizeScalar: 7) - (forward externalizeScalar: 7)) abs < 0.0001.! !
 
-!LayoutMorphTest methodsFor: 'tests' stamp: 'jmv 12/28/2017 16:11:29'!
+!LayoutMorphTest methodsFor: 'tests' stamp: 'jmv 3/9/2020 13:56:55'!
 testLayout1
 	"
 	self new testLayout1
@@ -14181,9 +14790,9 @@ testLayout1
 	self assert: r1c5 morphHeight = 20.
 
 	self assert: row2 morphWidth = (pane morphWidth - 10).
-	self assert: r2c1 morphWidth = 216.
-	self assert: r2c2 morphWidth = (r2c1 morphWidth / 0.8 * 0.4) rounded.
-	self assert: r2c3 morphWidth = (r2c1 morphWidth / 0.8 * 0.2) rounded.
+	self assert: r2c1 morphWidth = 215.
+	self assert: r2c2 morphWidth = 108.
+	self assert: r2c3 morphWidth = 55.
 	self assert: r2c1 morphHeight = (row2 morphHeight - 10).
 	self assert: r2c2 morphHeight = (row2 morphHeight - 10).
 	self assert: r2c3 morphHeight = (row2 morphHeight - 10).
@@ -14193,13 +14802,13 @@ testLayout1
 	self assert: r3c2 morphWidth = (row3 morphWidth - 10 - 20 - 10 - 30 * 0.5) rounded.
 	self assert: r3c3 morphWidth = 30.
 	self assert: row3 morphHeight = 60.
-	self assert: r3c1 morphHeight = (row3 morphHeight - 10 * 0.8) rounded.
+	self assert: r3c1 morphHeight = 41.
 	self assert: r3c2 morphHeight = 40.
-	self assert: r3c3 morphHeight = (row3 morphHeight - 10).
+	self assert: r3c3 morphHeight = 50.
 
 	pane delete! !
 
-!LayoutMorphTest methodsFor: 'tests' stamp: 'jmv 12/28/2017 16:11:24'!
+!LayoutMorphTest methodsFor: 'tests' stamp: 'jmv 3/9/2020 13:57:47'!
 testLayout2
 	"
 	self new testLayout2
@@ -14221,20 +14830,20 @@ testLayout2
 	UISupervisor ui doOneCycleNow.
 
 	self assert: row morphWidth = (pane morphWidth - 10).
-	self assert: row morphHeight = (pane morphHeight - 10 * 0.9) rounded.
+	self assert: row morphHeight = 266.
 	self assert: c1 morphBoundsInWorld bottom = (row morphBoundsInWorld bottom - 5) description: 'Should be at bottom'.
 	self assert: c1 morphWidth = 20.
-	self assert: c1 morphHeight = (row morphHeight - 10 * 0.8) rounded.
+	self assert: c1 morphHeight = 206.
 	self assert: c2 morphBoundsInWorld top = (row morphBoundsInWorld top + 5) description: 'Should be at top'.
 	self assert: c2 morphWidth = 256.
 	self assert: c2 morphHeight = 40.
 	self assert: ((c3 morphBoundsInWorld top - row morphBoundsInWorld top) - (row morphBoundsInWorld bottom - c3 morphBoundsInWorld bottom)) abs < 2 description: 'Should be centered'.
 	self assert: c3 morphWidth = 30.
-	self assert: c3 morphHeight = (c1 morphHeight / 0.8 * 0.7) rounded.
+	self assert: c3 morphHeight = 181.
 
 	pane delete! !
 
-!LayoutMorphTest methodsFor: 'tests' stamp: 'jmv 12/28/2017 16:11:18'!
+!LayoutMorphTest methodsFor: 'tests' stamp: 'jmv 3/9/2020 13:58:53'!
 testLayout3
 	"
 	self new testLayout3
@@ -14268,7 +14877,7 @@ testLayout3
 	self assert: row morphHeight = 200.
 	self assert: innerRow morphBoundsInWorld left = (row morphBoundsInWorld left + 5).
 	self assert: (innerRow morphBoundsInWorld top - row morphBoundsInWorld top) = (row morphBoundsInWorld bottom - innerRow morphBoundsInWorld bottom) description: 'Should be centered'.
-	self assert: innerRow morphWidth = (pane morphWidth - 10 - 10 - 30 - 10 * 0.5) rounded.
+	self assert: innerRow morphWidth = 190.
 	self assert: innerRow morphHeight = 30.
 
 	self assert: i1 morphBoundsInWorld left = (innerRow morphBoundsInWorld left + 5).
@@ -14285,7 +14894,7 @@ testLayout3
 	self assert: i3 morphHeight = 10.
 
 	self assert: c2 morphBoundsInWorld top = (row morphBoundsInWorld top + 5) description: 'Should be at top'.
-	self assert: c2 morphWidth = (pane morphWidth - 10 - 10 - 30 - 10 * 0.5) rounded.
+	self assert: c2 morphWidth = 150.
 	self assert: c2 morphHeight = 40.
 	self assert: (c3 morphBoundsInWorld top - row morphBoundsInWorld top) = (row morphBoundsInWorld bottom - c3 morphBoundsInWorld bottom) description: 'Should be centered'.
 	self assert: c3 morphWidth = 30.
@@ -14458,6 +15067,770 @@ testMessages
 		SmalltalkCompleter isThereAnImplementorOf: s].
 	self assert: fromSmalltalk = fromUCompleter asSet! !
 
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test000_AutocompletesMessagesFor_GlobalVariables_WithSelectorsFromTheirClasses
+	
+	self
+		assertEntriesWhenBrowsing: 'SmalltalkCompleterTest '
+		areSelectorsOf: SmalltalkCompleterTest class.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + SmalltalkCompleterTest '
+		areUnaryAndBinarySelectorsOf: SmalltalkCompleterTest class.
+	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test001_AutocompletesMessagesFor_Self_WithSelectorsFromTheBrowsedClass
+	
+	self
+		assertEntriesWhenBrowsing: 'self '
+		areSelectorsOf: SmalltalkCompleterTest.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + self '
+		areUnaryAndBinarySelectorsOf: SmalltalkCompleterTest.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test002_AutocompletesMessagesFor_Super_WithSelectorsFromTheBrowsedClass
+	
+	self
+		assertEntriesWhenBrowsing: 'super '
+		areSelectorsOf: TestCase.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + super '
+		areUnaryAndBinarySelectorsOf: TestCase.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:38:00'!
+test003_AutocompletesMessagesFor_Super_WithSelectorsForUnknownClassesWhenTheBrowsedClassDoesNotHaveASuperclass
+	
+	self browseClass: ProtoObject.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'super '.
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '1 + super '.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test004_AutocompletesMessagesFor_True_WithSelectorsFromTrue
+	
+	self
+		assertEntriesWhenBrowsing: 'true '
+		areSelectorsOf: True.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + true '
+		areUnaryAndBinarySelectorsOf: True.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test005_AutocompletesMessagesFor_False_WithSelectorsFromFalse
+	
+	self
+		assertEntriesWhenBrowsing: 'false '
+		areSelectorsOf: False.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + false '
+		areUnaryAndBinarySelectorsOf: False.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test006_AutocompletesMessagesFor_Nil_WithSelectorsFromUndefinedObject
+	
+	self
+		assertEntriesWhenBrowsing: 'nil '
+		areSelectorsOf: UndefinedObject.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + nil '
+		areUnaryAndBinarySelectorsOf: UndefinedObject.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:37:25'!
+test007_AutocompletesMessagesFor_Characters_WithSelectorsFromCharacter
+	
+	self
+		assertEntriesWhenBrowsing: '$a '
+		areSelectorsOf: Character.
+	
+	"Due to a (potential) parser bug, the binary message send range for this expression has type #$ instead of #binary,
+	 and thus it is not recognized as a binary message send. 
+	The following should've been self assertEntriesFor:areUnaryAndBinarySelectorsOf:.
+	NPM"
+	self
+		assertEntriesWhenBrowsing: '1 + $a '
+		areSelectorsOf: Character.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test008_AutocompletesMessagesFor_Numbers_WithSelectorsFromTheirClass
+	
+	self
+		assertEntriesWhenBrowsing: '1 '
+		areSelectorsOf: SmallInteger.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + 1 '
+		areUnaryAndBinarySelectorsOf: SmallInteger.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test009_AutocompletesMessagesFor_Strings_WithSelectorsFromString
+	
+	self
+		assertEntriesWhenBrowsing: '''a'' '
+		areSelectorsOf: String.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + ''a'' '
+		areUnaryAndBinarySelectorsOf: String.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:37:25'!
+test010_AutocompletesMessagesFor_Symbols_WithSelectorsFromSymbol
+	
+	self
+		assertEntriesWhenBrowsing: '#a '
+		areSelectorsOf: Symbol.
+		
+	"Due to a (potential) parser bug, the binary message send range for this expression has type #symbol instead of #binary,
+	 and thus it is not recognized as a binary message send. 
+	The following should've been self assertEntriesFor:areUnaryAndBinarySelectorsOf:.
+	NPM"
+	self
+		assertEntriesWhenBrowsing: '1 + #a '
+		areSelectorsOf: Symbol.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:37:25'!
+test011_AutocompletesMessagesFor_StringSymbol_WithSelectorsFromSymbol
+	
+	self
+		assertEntriesWhenBrowsing: '#''a'' '
+		areSelectorsOf: Symbol.
+	
+	"Due to a (potential) parser bug, the binary message send range for this expression has type #symbol instead of #binary,
+	 and thus it is not recognized as a binary message send. 
+	The following should've been self assertEntriesFor:areUnaryAndBinarySelectorsOf:.
+	NPM"
+	self
+		assertEntriesWhenBrowsing: '1 + #''a'' '
+		areSelectorsOf: Symbol.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:38:00'!
+test012_AutocompletesMessagesFor_InstanceVariables_WithSelectorsForUnknownClasses
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'instanceVariable1 '.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '1 + instanceVariable1 '.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 19:44:13'!
+test013_AutocompletesMessagesFor_MethodArguments_WithSelectorsForUnknownClasses
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsingMethodWith: 'm1: arg1 arg1 '.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsingMethodWith: 'm1: arg1 1 + arg1 '.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:38:00'!
+test014_AutocompletesMessagesFor_TemporaryVariables_WithSelectorsForUnknownClasses
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '|a| a '.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '|a| 1 + a '.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:38:00'!
+test015_AutocompletesMessagesFor_BlockArguments_WithSelectorsForUnknownClasses
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '[ :a | a '.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '[ :a | 1 + a '.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:38:00'!
+test016_AutocompletesMessagesFor_BlockTemporaryVariables_WithSelectorsForUnknownClasses
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '[ | a | a '.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '[ | a | 1 + a '.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:34:08'!
+test017_AutocompletesMessagesFor_NilWorkspaceVariables_WithSelectorsForUnknownClasses
+	
+	self
+		assertEntriesAreSelectorsForUnknownClassesForWorkspaceWith: 'x '
+		binding: 'x'
+		to: nil.
+	
+	self
+		assertEntriesAreSelectorsForUnknownClassesForWorkspaceWith: '1 + x '
+		binding: 'x'
+		to: nil.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:53:41'!
+test017_AutocompletesMessagesFor_NonNilWorkspaceVariables_WithSelectorsFromTheirClasses
+	
+	self
+		assertEntriesForWorkspaceWith: 'x '
+		binding: 'x'
+		to: 1
+		areSelectorsOf: SmallInteger.
+		
+	self
+		assertEntriesForWorkspaceWith: '1 + x '
+		binding: 'x'
+		to: 1
+		areUnaryAndBinarySelectorsOf: SmallInteger.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test018_AutocompletesMessagesFor_ThisContext_WithSelectorsFromMethodContext
+	
+	self
+		assertEntriesWhenBrowsing: 'thisContext '
+		areSelectorsOf: MethodContext.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + thisContext '
+		areUnaryAndBinarySelectorsOf: MethodContext.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test019_AutocompletesMessagesFor_ClassVariables_WithSelectorsFromTheirClasses
+	
+	ClassVariableForTesting _ 1.
+		
+	self
+		assertEntriesWhenBrowsing: 'ClassVariableForTesting '
+		areSelectorsOf: SmallInteger.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + ClassVariableForTesting '
+		areUnaryAndBinarySelectorsOf: SmallInteger.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:51:28'!
+test020_AutocompletesMessagesFor_PoolConstants_WithSelectorsFromTheirClasses
+	
+	poolDictionaryForTesting at: #X put: 1.
+	
+	self
+		assertEntriesWhenBrowsing: 'X '
+		areSelectorsOf: SmallInteger.
+	
+	self
+		assertEntriesWhenBrowsing: '1 + X '
+		areUnaryAndBinarySelectorsOf: SmallInteger.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:37:25'!
+test021_AutocompletesMessagesFor_BlockEndings_WithSelectorsFromBlockClosure
+	
+	self
+		assertEntriesWhenBrowsing: '[] '
+		areSelectorsOf: BlockClosure.
+		
+	"Due to a (potential) parser bug, the binary message send range for this expression has type #blockStart instead of #binary,
+	 and thus it is not recognized as a binary message send. 
+	The following should've been self assertEntriesFor:areUnaryAndBinarySelectorsOf:.
+	NPM"
+	self
+		assertEntriesWhenBrowsing: '1 + [] '
+		areSelectorsOf: BlockClosure.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:37:25'!
+test022_AutocompletesMessagesFor_ArrayEnds_WithSelectorsFromArray
+	
+	self
+		assertEntriesWhenBrowsing: '#() '
+		areSelectorsOf: Array.
+		
+	"Due to a (potential) parser bug, the binary message send range for this expression has type #arrayStart instead of #binary,
+	 and thus it is not recognized as a binary message send. 
+	The following should've been self assertEntriesFor:areUnaryAndBinarySelectorsOf:.
+	NPM"
+	self
+		assertEntriesWhenBrowsing: '1 + #() '
+		areSelectorsOf: Array.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:37:25'!
+test023_AutocompletesMessagesFor_RightBraces_WithSelectorsFromArray
+	
+	self
+		assertEntriesWhenBrowsing: '{} '
+		areSelectorsOf: Array.
+		
+	"Due to a (potential) parser bug, the binary message send range for this expression has type #leftBrace instead of #binary,
+	 and thus it is not recognized as a binary message send. 
+	The following should've been self assertEntriesFor:areUnaryAndBinarySelectorsOf:.
+	NPM"
+	self
+		assertEntriesWhenBrowsing: '1 + {} '
+		areSelectorsOf: Array.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:18'!
+test023_DoesNotSupportAutocompletingMessagesFor_UnaryMessages
+	
+	self denyComputingEntriesIsSupportedWhenBrowsing: 'self class '.
+		
+	self denyComputingEntriesIsSupportedWhenBrowsing: '1 + self class '.	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:18'!
+test024_DoesNotSupportAutocompletingMessagesFor_RightParenthesis
+	
+	self denyComputingEntriesIsSupportedWhenBrowsing: '(1) '.
+		
+	self denyComputingEntriesIsSupportedWhenBrowsing: '1 + (1) '.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:38:00'!
+test025_AutocompletesMessagesFor_UnknownIdentifiers_WithSelectorsForUnknownClasses
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'Foo1234 '.
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'foo1234 '.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:18'!
+test026_DoesNotSupportAutocompletingMessagesFor_CascadeSeparators
+	
+	self denyComputingEntriesIsSupportedWhenBrowsing: 'self class; '.
+	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:54'!
+test027_AutocompletesEntriesFor_GlobalVariables_WithIdentifiersBegginingWithThem
+	
+	self
+		assertEntriesWhenBrowsing: 'SmalltalkCompleterTest'
+		areIdentifiersBeginningWith: 'SmalltalkCompleterTest'.
+	! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:54'!
+test028_AutocompletesEntriesFor_PoolConstants_WithIdentifiersBegginingWithThem
+	
+	poolDictionaryForTesting at: #X put: 1.
+	
+	self
+		assertEntriesWhenBrowsing: 'X'
+		areIdentifiersBeginningWith: 'X'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 19:56:46'!
+test029_AutocompletesEntriesFor_WorkspaceVariables_WithIdentifiersBegginingWithThem
+	
+	| completer |
+	completer := self
+		autocompleteEntriesForWorkspaceWith: 'x'
+		binding: 'x'
+		to: 1. 
+		
+	self
+		assertEntriesOf: completer
+		areIdentifiersBeginningWith: 'x'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:54'!
+test030_AutocompletesEntriesFor_ClassVariables_WithIdentifiersBegginingWithThem
+	
+	ClassVariableForTesting _ 1.
+	
+	self
+		assertEntriesWhenBrowsing: 'ClassVariableForTesting'
+		areIdentifiersBeginningWith: 'ClassVariableForTesting'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:54'!
+test031_AutocompletesEntriesFor_InstanceVariables_WithIdentifiersBegginingWithThem
+	
+	self
+		assertEntriesWhenBrowsing: 'instanceVariable1'
+		areIdentifiersBeginningWith: 'instanceVariable1'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 20:25:15'!
+test032_AutocompletesEntriesFor_MethodArguments_WithIdentifiersBegginingWithThem
+	
+	| completer |
+	completer := self autocompleteEntriesBrowsingMethodWith: 'm1: arg1 arg1'.
+	
+	self
+		assert: completer
+		analizedSelectorsFrom: nil
+		canShowDocumentation: false
+		detectedPossibleInvalidSelector: #()
+		suggested: (completer computeIdentifierEntriesBeginningWith: 'arg1').! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:54'!
+test033_AutocompletesEntriesFor_TemporaryVariables_WithIdentifiersBegginingWithThem
+	
+	self
+		assertEntriesWhenBrowsing: '|x| x'
+		areIdentifiersBeginningWith: 'x'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:47:05'!
+test034_AutocompletesEntriesFor_BlockArguments_WithIdentifiersBegginingWithThem
+	
+	self
+		assertEntriesWhenBrowsing: '[ :x| x'
+		areIdentifiersBeginningWith: 'x'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:46:57'!
+test035_AutocompletesEntriesFor_BlockTemporaryVariables_WithIdentifiersBegginingWithThem
+	
+	self
+		assertEntriesWhenBrowsing: '[ | x | x'
+		areIdentifiersBeginningWith: 'x'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:46:46'!
+test036_AutocompletesEntriesFor_IncompleteIdentifiers_WithIdentifiersBegginingWithThem
+
+	self
+		assertEntriesWhenBrowsing: 'Obj'
+		areIdentifiersBeginningWith: 'Obj'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:39:54'!
+test037_AutocompletesEntriesFor_ReservedNames_WithIdentifiersBegginingWithThem
+
+	self assertEntriesWhenBrowsing: 'self' areIdentifiersBeginningWith: 'self'.
+	self assertEntriesWhenBrowsing: 'super' areIdentifiersBeginningWith: 'super'.
+	self assertEntriesWhenBrowsing: 'true' areIdentifiersBeginningWith: 'true'.
+	self assertEntriesWhenBrowsing: 'false' areIdentifiersBeginningWith: 'false'.
+	self assertEntriesWhenBrowsing: 'nil' areIdentifiersBeginningWith: 'nil'.
+	self assertEntriesWhenBrowsing: 'thisContext' areIdentifiersBeginningWith: 'thisContext'.! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 19:15:44'!
+test038_DoesNotAutocompleteEntriesFor_UndefinedIdentifiers
+
+	| completer |
+	completer := self createCompleterForBrowsing: 'a'.
+	
+	completer computeEntries.
+	
+	self denyHasEntries: completer ! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:55:09'!
+test039_AutocompletesEntriesFor_BinaryMessages_WithIdentifiersBegginingWithThem
+
+	self
+		assertEntriesWhenBrowsing: '1 ~='
+		areSelectorsOf: SmallInteger
+		beginningWith: '~='! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:55:09'!
+test040_AutocompletesEntriesFor_IncompleteBinaryMessages_WithIdentifiersBegginingWithThem
+
+	self
+		assertEntriesWhenBrowsing: '1 ~'
+		areSelectorsOf: SmallInteger
+		beginningWith: '~'! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:55:09'!
+test041_AutocompletesEntriesFor_UnaryMessages_WithIdentifiersBegginingWithThem
+
+	self
+		assertEntriesWhenBrowsing: '1 not'
+		areSelectorsOf: SmallInteger
+		beginningWith: 'not'! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:55:09'!
+test042_AutocompletesEntriesFor_IncompleteUnaryMessages_WithIdentifiersBegginingWithThem
+
+	self
+		assertEntriesWhenBrowsing: '1 no'
+		areSelectorsOf: SmallInteger
+		beginningWith: 'no'! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 18:55:09'!
+test043_AutocompletesEntriesFor_KeywordMessages_WithIdentifiersBegginingWithThem
+
+	self
+		assertEntriesWhenBrowsing: '1 at:'
+		areSelectorsOf: SmallInteger
+		beginningWith: 'at:'! !
+
+!SmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 20:01:33'!
+test044_AutocompletesEntriesFor_IncompleteKeywordMessages_WithIdentifiersBegginingWithThem
+
+	self class compile: 'firstKeyword: a secondKeyword: b'.
+	
+	self
+		assertEntriesWhenBrowsing: 'self firstKeyword:'
+		areSelectorsOf: SmalltalkCompleterTest
+		beginningWith: 'firstKeyword:'.! !
+
+!SmalltalkCompleterTest methodsFor: 'test objects' stamp: 'NPM 3/18/2020 20:37:11'!
+completerClass
+
+	^ SmalltalkCompleter! !
+
+!SmalltalkCompleterTest methodsFor: 'test objects' stamp: 'NPM 3/18/2020 19:17:52'!
+createCompleterForBrowsing: sourceCode 
+	
+	| browser model |
+	browser := Browser new.
+	browser systemCategoryListIndex: (browser systemCategoryList indexOf: (classToBrowse category)).
+	browser classListIndex: (browser classList indexOf: classToBrowse name).
+	
+	model := (PluggableTextModel on: browser) actualContents: sourceCode.
+
+	^ self createCompleterWith: model.! !
+
+!SmalltalkCompleterTest methodsFor: 'test objects' stamp: 'NPM 3/18/2020 19:17:59'!
+createCompleterForWorkspaceWith: sourceCode binding: aVariableName to: aValue
+	
+	| model |
+	model := Workspace withText: sourceCode.
+	(model bindingOf: aVariableName) value: aValue.
+	
+	^ self createCompleterWith: model! !
+
+!SmalltalkCompleterTest methodsFor: 'test objects' stamp: 'NPM 3/18/2020 20:37:18'!
+createCompleterWith: aModel
+	
+	^ self completerClass new
+		setModel: aModel;
+		changePositionTo: aModel actualContents size! !
+
+!SmalltalkCompleterTest methodsFor: 'test objects' stamp: 'RunningTest-SmalltalkCompleterTest>>#test044_AutocompletesEntriesFor_IncompleteKeywordMessages_WithIdentifiersBegginingWithThem 4/17/2020 23:16:28'!
+firstKeyword: a secondKeyword: b! !
+
+!SmalltalkCompleterTest methodsFor: 'test objects' stamp: 'RunningTest-SmalltalkCompleterTest>>#test032_AutocompletesEntriesFor_MethodArguments_WithIdentifiersBegginingWithThem 4/17/2020 23:16:28'!
+m1: arg1 arg1! !
+
+!SmalltalkCompleterTest methodsFor: 'test support' stamp: 'NPM 3/18/2020 19:13:43'!
+autocompleteEntriesBrowsing: sourceCode
+	
+	| completer |
+	completer := self createCompleterForBrowsing: sourceCode.
+	
+	completer computeEntries.
+	
+	^ completer! !
+
+!SmalltalkCompleterTest methodsFor: 'test support' stamp: 'NPM 3/18/2020 19:39:19'!
+autocompleteEntriesBrowsingMethodWith: sourceCode 
+	
+	| completer selector |
+	selector := self class compile: sourceCode.
+	completer := self createCompleterForBrowsing: sourceCode.
+	completer textProviderOrModel selectedMessageName: selector.
+	
+	completer computeEntries.
+	
+	^ completer! !
+
+!SmalltalkCompleterTest methodsFor: 'test support' stamp: 'NPM 3/18/2020 19:07:19'!
+autocompleteEntriesForWorkspaceWith: sourceCode binding: aVariableName to: aValue 
+	
+	| completer |
+	completer := self
+		createCompleterForWorkspaceWith: sourceCode
+		binding: aVariableName
+		to: aValue.
+		
+	completer computeEntries.
+	
+	^ completer! !
+
+!SmalltalkCompleterTest methodsFor: 'test support' stamp: 'NPM 3/18/2020 18:32:34'!
+browseClass: aClass 
+	
+	classToBrowse _ aClass.! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 20:25:15'!
+assert: aCompleter analizedSelectorsFrom: classes canShowDocumentation: aBoolean detectedPossibleInvalidSelector: selectors suggested: entries 
+	
+	self assert: aCompleter selectorsClasses equals: classes.
+	self assert: aCompleter canShowSelectorDocumentation equals: aBoolean.
+	self assert: aCompleter possibleInvalidSelectors equals: selectors.
+	entries 
+		ifNil: [ self assert: aCompleter entries isNil ]
+		ifNotNil: [ self assert: (aCompleter entries hasEqualElements: entries) ]! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 20:25:15'!
+assertEntriesAreSelectorsForUnknownClasses: aCompleter 
+	
+	| expectedEntries expectedPossibleInvalidSelectors |
+	expectedPossibleInvalidSelectors _ Set new.
+	expectedEntries _ aCompleter computeMessageEntriesForUnknowClassAddingPossibleInvalidSelectorsTo: expectedPossibleInvalidSelectors.
+	
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: #()
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: expectedPossibleInvalidSelectors
+		suggested: expectedEntries! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 19:06:02'!
+assertEntriesAreSelectorsForUnknownClassesForWorkspaceWith: sourceCode binding: aVariableName to: aValue
+	
+	| completer |
+	completer := self
+		autocompleteEntriesForWorkspaceWith: sourceCode
+		binding: aVariableName
+		to: aValue.
+	
+	self assertEntriesAreSelectorsForUnknownClasses: completer.! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 19:07:53'!
+assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: sourceCode 
+	
+	| completer |
+	completer := self autocompleteEntriesBrowsing: sourceCode.
+	
+	self assertEntriesAreSelectorsForUnknownClasses: completer.! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 19:40:15'!
+assertEntriesAreSelectorsOfUnknownClassesWhenBrowsingMethodWith: sourceCode 
+	
+	| completer |
+	completer := self autocompleteEntriesBrowsingMethodWith: sourceCode.
+	
+	self assertEntriesAreSelectorsForUnknownClasses: completer.
+	
+	! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 19:08:09'!
+assertEntriesForWorkspaceWith: sourceCode binding: aVariableName to: aValue areSelectorsOf: aClass
+	
+	| completer |
+	completer := self
+		autocompleteEntriesForWorkspaceWith: sourceCode
+		binding: aVariableName
+		to: aValue.
+	
+	self
+		assertEntriesOf: completer
+		areAllSelectorsOf: aClass.! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 19:19:49'!
+assertEntriesForWorkspaceWith: sourceCode binding: aVariableName to: aValue areUnaryAndBinarySelectorsOf: aClass 
+	
+	| completer |
+	completer := self
+		autocompleteEntriesForWorkspaceWith: sourceCode
+		binding: aVariableName
+		to: aValue.
+	
+	self
+		assertEntriesOf: completer
+		areUnaryAndBinarySelectorsOf: aClass.! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/17/2020 18:27:01'!
+assertEntriesOf: aCompleter areAllSelectorsOf: aClass
+
+	self
+		assertEntriesOf: aCompleter
+		areAllSelectorsOf: aClass
+		beginningWith: ''! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 20:25:15'!
+assertEntriesOf: aCompleter areAllSelectorsOf: aClass beginningWith: aPrefix
+
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: {aClass}
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: #()
+		suggested: (aCompleter selectorsOf: aClass beginningWith: aPrefix).! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 20:25:15'!
+assertEntriesOf: aCompleter areIdentifiersBeginningWith: aPrefix
+
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: nil
+		canShowDocumentation: false
+		detectedPossibleInvalidSelector: #()
+		suggested: (aCompleter computeIdentifierEntriesBeginningWith: aPrefix)! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 20:25:15'!
+assertEntriesOf: aCompleter areUnaryAndBinarySelectorsOf: aClass
+
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: {aClass}
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: #()
+		suggested: (aCompleter unaryAndBinarySelectorsOf: aClass beginningWith: '').
+	! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 19:58:16'!
+assertEntriesWhenBrowsing: sourceCode areIdentifiersBeginningWith: aPrefix
+	
+	| completer |
+	completer := self autocompleteEntriesBrowsing: sourceCode.
+	
+	self
+		assertEntriesOf: completer
+		areIdentifiersBeginningWith: aPrefix.! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 18:55:09'!
+assertEntriesWhenBrowsing: sourceCode areSelectorsOf: aClass
+	
+	self
+		assertEntriesWhenBrowsing: sourceCode
+		areSelectorsOf: aClass
+		beginningWith: ''! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 18:58:41'!
+assertEntriesWhenBrowsing: sourceCode areSelectorsOf: aClass beginningWith: aPrefix
+	
+	self
+		assertEntriesOf: (self autocompleteEntriesBrowsing: sourceCode)
+		areAllSelectorsOf: aClass
+		beginningWith: aPrefix 
+	! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 18:59:22'!
+assertEntriesWhenBrowsing: sourceCode areUnaryAndBinarySelectorsOf: aClass
+	
+	self
+		assertEntriesOf: (self autocompleteEntriesBrowsing: sourceCode)
+		areUnaryAndBinarySelectorsOf: aClass.
+	
+	! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 20:25:15'!
+denyComputingEntriesIsSupportedWhenBrowsing: sourceCode 
+	
+	| completer |
+	completer := self createCompleterForBrowsing: sourceCode.
+	
+	self
+		should: [ completer computeEntries ]
+		raise: Error.
+	self
+		assert: completer
+		analizedSelectorsFrom: nil
+		canShowDocumentation: true
+		detectedPossibleInvalidSelector: #()
+		suggested: nil.! !
+
+!SmalltalkCompleterTest methodsFor: 'assertions' stamp: 'NPM 3/18/2020 20:25:15'!
+denyHasEntries: aCompleter  
+
+	self
+		assert: aCompleter
+		analizedSelectorsFrom: nil
+		canShowDocumentation: nil
+		detectedPossibleInvalidSelector: #()
+		suggested: #()! !
+
+!SmalltalkCompleterTest methodsFor: 'setUp/tearDown' stamp: 'NPM 3/18/2020 18:32:49'!
+setUp
+
+	super setUp.
+	
+	self browseClass: SmalltalkCompleterTest.
+	
+! !
+
+!DynamicTypingSmalltalkCompleterTest methodsFor: 'test objects' stamp: 'NPM 3/18/2020 20:37:33'!
+completerClass
+	
+	^ DynamicTypingSmalltalkCompleter! !
+
+!DynamicTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 20:35:21'!
+test023_DoesNotSupportAutocompletingMessagesFor_UnaryMessages
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'self class '.
+		
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '1 + self class '.	! !
+
+!DynamicTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 20:36:22'!
+test024_DoesNotSupportAutocompletingMessagesFor_RightParenthesis
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '(1) '.
+		
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: '1 + (1) '.! !
+
+!DynamicTypingSmalltalkCompleterTest methodsFor: 'tests' stamp: 'NPM 3/18/2020 20:36:25'!
+test026_DoesNotSupportAutocompletingMessagesFor_CascadeSeparators
+	
+	self assertEntriesAreSelectorsOfUnknownClassesWhenBrowsing: 'self class; '.
+	! !
+
 !TaskbarTest methodsFor: 'Running' stamp: 'jmv 12/28/2017 16:13:47'!
 setUp
 
@@ -14492,6 +15865,10 @@ testVerticalAlignment
 testWidth
 	
 	self should: [ taskbar morphWidth = UISupervisor ui morphWidth ]! !
+
+!TestCaseTest methodsFor: 'testing' stamp: 'jpb 8/2/2019 23:47:26'!
+testIsTestCase
+	self assert: (TestCase new is: #TestCase).! !
 
 !TestCaseTest methodsFor: 'exception testing tests' stamp: 'HAW 3/17/2019 07:31:39'!
 testShouldFailErrorsWhenNoErrorIsSignaled
@@ -14744,10 +16121,6 @@ testShouldNotTakeMoreThanPassesWhenClosureTakesLessThanTheLimit
 	self shouldntFail: [ self should: [] notTakeMoreThan: 1 milliSeconds ]
 		! !
 
-!TestCaseTest methodsFor: 'testing' stamp: 'jpb 8/2/2019 23:47:26'!
-testIsTestCase
-	self assert: (TestCase new is: #TestCase).! !
-
 !TestSuiteTest methodsFor: 'assertions' stamp: 'HAW 2/10/2017 15:11:43'!
 assert: expectedTestSuite hasSameTestsAs: resultTestSuite
 
@@ -14773,6 +16146,11 @@ is: expectedTest equalTo: resultTest
 
 	^expectedTest class = resultTest class and: [ expectedTest selector =  resultTest selector ]! !
 
+!TestSuiteTest methodsFor: 'test support' stamp: 'HAW 10/29/2019 11:13:21'!
+hardCodedReferenceToSelfClass
+
+	^TestSuiteTest ! !
+
 !TestSuiteTest methodsFor: 'test support' stamp: 'HAW 3/3/2017 16:37:00'!
 quickMethodTest
 
@@ -14788,16 +16166,16 @@ test02SuiteForNoTestCaseClassUsesTestClassWithSameNameEndingWithTest
 
 	self assert: self class buildSuite hasSameTestsAs: (TestSuite forClass: TestSuite)! !
 
-!TestSuiteTest methodsFor: 'tests - instance creation' stamp: 'HAW 2/10/2017 15:37:01'!
+!TestSuiteTest methodsFor: 'tests - instance creation' stamp: 'HAW 10/29/2019 11:12:11'!
 test03SuiteForNoTestCaseClassAndNoTestClassLooksForReferencesInTests
 
 	| objectTestSuite referencesToObject testCaseClasses |
 	
 	"I need to be sure that Object has no test class for the test to make sense - Hernan"
-	self assert: Object testCaseClass isNil.
+	self assert: self class testCaseClass isNil.
 	
-	objectTestSuite _ TestSuite forClass: Object.
-	referencesToObject _ Object allCallsOn collect: [:aMethodReference | aMethodReference actualClass ]. 
+	objectTestSuite _ TestSuite forClass: self class.
+	referencesToObject _ self class allCallsOn collect: [:aMethodReference | aMethodReference actualClass ]. 
 	testCaseClasses _ (objectTestSuite tests collect: [:aTestCase | aTestCase class ]) asSet.
 
 	self assert: objectTestSuite tests notEmpty.
@@ -15154,7 +16532,7 @@ testValueWithinTimingBasic
 	] durationToRun.
 	self assert: time < 150 milliSeconds.! !
 
-!TestValueWithinFix methodsFor: 'tests' stamp: 'ar 12/4/2012 20:35'!
+!TestValueWithinFix methodsFor: 'tests' stamp: 'jmv 11/7/2019 18:18:10'!
 testValueWithinTimingNestedInner
 	"Test nested timing of valueWithin:onTimeout:"
 	| time |
@@ -15164,8 +16542,7 @@ testValueWithinTimingNestedInner
 				valueWithin: 100 milliSeconds onTimeout: []
 		] valueWithin: 500 milliSeconds onTimeout: []
 	] durationToRun.
-	self assert: time < 150 milliSeconds.
-! !
+	self assert: time < 200 milliSeconds.! !
 
 !TestValueWithinFix methodsFor: 'tests' stamp: 'ar 12/4/2012 20:35'!
 testValueWithinTimingNestedOuter
@@ -15200,48 +16577,48 @@ valueWithinNonLocalReturn
 	[^self] valueWithin: 20 milliSeconds onTimeout:[].
 ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 3/4/2019 14:52:37'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/17/2019 10:31:27'!
 allClassCategoriesOfTestData
 
 	^Array with: self classCategoryOfTestData ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 22:48:04'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/17/2019 10:31:31'!
 classCategoryOfTestData
 	
 	"I can not call it testDataClassCategory becuase it will be taken as test!! - Hernan"
 	
-	^'__Refactoring-TestData__'! !
+	^self class classCategoryOfTestData! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 8/9/2018 14:14:21'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/18/2019 19:55:52'!
 createClassNamed: aName 
 
 	^self 
 		createClassNamed: aName asSymbol "Just in case it is a string... - Hernan"
-		subclassOf: Object 
+		subclassOf: RefactoringClassTestData 
 		instanceVariableNames: '' 
 		classVariableNames: ''
 		poolDictionaries: ''
 		category: self classCategoryOfTestData.
 ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 22:13:15'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/18/2019 19:55:56'!
 createClassNamed: aName category: aCategory
 
 	^self 
 		createClassNamed: aName
-		subclassOf: Object 
+		subclassOf: RefactoringClassTestData 
 		instanceVariableNames: '' 
 		classVariableNames: ''
 		poolDictionaries: ''
 		category: aCategory 
 ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 22:48:27'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/18/2019 19:56:00'!
 createClassNamed: aName instanceVariableNames: instanceVariables
 
 	^self 
 		createClassNamed: aName
-		subclassOf: Object 
+		subclassOf: RefactoringClassTestData 
 		instanceVariableNames: instanceVariables 
 		classVariableNames: ''
 		poolDictionaries: ''
@@ -15249,7 +16626,7 @@ createClassNamed: aName instanceVariableNames: instanceVariables
 
 ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 22:48:30'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/17/2019 10:31:49'!
 createClassNamed: aName subclassOf: superclass 
 
 	^self 
@@ -15261,7 +16638,7 @@ createClassNamed: aName subclassOf: superclass
 		category: self classCategoryOfTestData.
 ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 21:50:32'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/17/2019 10:31:53'!
 createClassNamed: aName subclassOf: superclass category: aCategory
 
 	^self 
@@ -15273,7 +16650,7 @@ createClassNamed: aName subclassOf: superclass category: aCategory
 		category: aCategory 
 ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 22:48:34'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/17/2019 10:31:58'!
 createClassNamed: aName subclassOf: superclass instanceVariableNames: instanceVariables
 
 	^self 
@@ -15285,7 +16662,7 @@ createClassNamed: aName subclassOf: superclass instanceVariableNames: instanceVa
 		category: self classCategoryOfTestData.
 ! !
 
-!RefactoringTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 21:29:11'!
+!DynamicallyCodeCreationTest methodsFor: 'class factory' stamp: 'HAW 12/17/2019 10:32:28'!
 createClassNamed: aName subclassOf: superclass instanceVariableNames: instanceVariables classVariableNames: classVariables poolDictionaries: poolDictionaries category: category
 
 	self assert: (Smalltalk classNamed: aName) isNil description: 'Class ', aName, ' already exists'.
@@ -15300,7 +16677,7 @@ createClassNamed: aName subclassOf: superclass instanceVariableNames: instanceVa
 		category: category 
 ! !
 
-!RefactoringTest methodsFor: 'assertions' stamp: 'HAW 5/28/2017 23:26:31'!
+!DynamicallyCodeCreationTest methodsFor: 'assertions' stamp: 'HAW 12/17/2019 10:32:57'!
 assertAllClassCategoriesAreExpectedToBeRemoved
 
 	"I'm using a halt instead of assert or error becuase I want the programmer to see what class category 
@@ -15308,10 +16685,376 @@ assertAllClassCategoriesAreExpectedToBeRemoved
 	(classCategories difference: self allClassCategoriesOfTestData) notEmpty ifTrue: [ self halt: #allClassCategoriesOfTestData asString, ' is not implemented correctly' ]
 	! !
 
-!RefactoringTest methodsFor: 'assertions' stamp: 'HAW 5/28/2017 22:57:42'!
+!DynamicallyCodeCreationTest methodsFor: 'assertions' stamp: 'HAW 12/17/2019 10:33:05'!
 assertCanRunTest
 	
 	self assertNoTestDataClassCategoryExist.
+	! !
+
+!DynamicallyCodeCreationTest methodsFor: 'assertions' stamp: 'HAW 12/17/2019 10:33:17'!
+assertNoTestDataClassCategoryExist
+
+	self allClassCategoriesOfTestData do: [ :aClassCategory | self denyExistsClassCategory: aClassCategory ]
+		! !
+
+!DynamicallyCodeCreationTest methodsFor: 'assertions' stamp: 'HAW 12/17/2019 10:33:26'!
+denyExistsClassCategory: aClassCategory
+		
+	self deny: (SystemOrganization hasCategory: aClassCategory) description: 'Can not run test because class category ', aClassCategory, ' already exists'! !
+
+!DynamicallyCodeCreationTest methodsFor: 'setup/teardown' stamp: 'HAW 12/17/2019 10:33:36'!
+setUp
+
+	"If the authorInitials are not set, they will be asked - Hernan"
+	UISupervisor whenUIinSafeState: [ Utilities authorInitials ].
+	"Because I'm using the same system to create classes and removed them with its category at tearDown, I want to be sure 
+	I will not remove something I don't have too - Hernan"
+	setUpAssertionsPassed := false.
+	self assertCanRunTest.
+	setUpAssertionsPassed := true.
+	
+	classCategories := Set new.! !
+
+!DynamicallyCodeCreationTest methodsFor: 'setup/teardown' stamp: 'HAW 12/17/2019 10:33:41'!
+tearDown
+
+	setUpAssertionsPassed ifTrue: [
+		self assertAllClassCategoriesAreExpectedToBeRemoved.
+		SystemOrganization removeSystemCategories: classCategories.
+		"I commented this becuase it took too much time and the only ones runing these tests 
+		are the ones developing refactorings that know about creating/removing test data category - Hernan
+		Browser allInstancesDo: [:aBrowser | aBrowser changed: #systemCategoryList ]"]! !
+
+!DynamicallyCodeCreationTest class methodsFor: 'class factory' stamp: 'HAW 12/17/2019 10:34:07'!
+classCategoryOfTestData
+	
+	^ '__Refactoring-TestData__'! !
+
+!CompilerExceptionsTest methodsFor: 'emulating' stamp: 'HAW 12/17/2019 11:00:59'!
+correctFrom: start to: end with: aReplacement
+ 
+	| newSourceCode |
+	
+	newSourceCode := sourceCode first: start - 1.
+	newSourceCode := newSourceCode, aReplacement.
+	newSourceCode := newSourceCode, (sourceCode copyFrom: end + 1 to: sourceCode size).
+	
+	sourceCode := newSourceCode ! !
+
+!CompilerExceptionsTest methodsFor: 'emulating' stamp: 'cwp 8/25/2009 20:23'!
+selectFrom: start to: end 
+	! !
+
+!CompilerExceptionsTest methodsFor: 'emulating' stamp: 'cwp 8/25/2009 20:22'!
+selectionInterval
+	^ 1 to: 0! !
+
+!CompilerExceptionsTest methodsFor: 'emulating' stamp: 'HAW 12/17/2019 10:53:27'!
+text
+
+	^ sourceCode ! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'EB 12/20/2019 20:54:26'!
+testAddsMoreThanOneUndeclaredVariableCorrectlyInBlock
+	
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [ var1 := 1. goo := 1. ^goo + var1 ]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle [ | goo var1 | var1 := 1. goo := 1. ^goo + var1 ]' equals: sourceCode
+! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 17:15:47'!
+testAddsUndeclaredVariableCorrectlyInBlockWhenNoSpaceBetweenLastOneAndPipe
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [|var1| var1 := 1.goo := 1.^ goo + var1]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle [|var1 goo | var1 := 1.goo := 1.^ goo + var1]' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'EB 1/27/2020 00:10:26'!
+testAddsUndeclaredVariableCorrectlyInBlockWhenTheresAnArgumentAlready
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [ :var1 | goo := 1.^ goo + var1]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle [ :var1 | | goo | goo := 1.^ goo + var1]' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'EB 1/27/2020 02:46:02'!
+testAddsUndeclaredVariableCorrectlyInBlockWhenTheresArgumentsAndTempDeclarationPipesWithNoTemps
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [ :var1 | | | goo := 1.^ goo + var1]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle [ :var1 | | goo | goo := 1.^ goo + var1]' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'EB 12/20/2019 20:55:29'!
+testAddsUndeclaredVariableCorrectlyInMethodAndInBlock
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle var1 := 1. [ goo := 1. ^goo + var1 ]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle | var1 |', String newLineString, 'var1 := 1. [ | goo | goo := 1. ^goo + var1 ]' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 17:15:27'!
+testAddsUndeclaredVariableCorrectlyInMethodWhenNoSpaceBetweenLastOneAndPipe
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle |var1| var1 := 1.goo := 1.^ goo + var1'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle |var1 goo | var1 := 1.goo := 1.^ goo + var1' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 17:18:11'!
+testAddsUndeclaredVariableInRightBlock
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [|goo| goo := 1. ^goo ]. [goo1:=1.^ goo1]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle [|goo| goo := 1. ^goo ]. [ | goo1 |goo1:=1.^ goo1]' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'EB 1/27/2020 00:31:46'!
+testAddsUndeclaredVariableWithAnArgumentAndTempAlreadyInBlock
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [ :var1 | | foo | foo := 2. goo := 1.^ goo + var1 + foo ]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle [ :var1 | | foo goo | foo := 2. goo := 1.^ goo + var1 + foo ]' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:06:40'!
+testDoesNotConfusesVariablesWithSameNameOfDifferentBlocksWhenRemoving
+
+	| testClass counter |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [ | goo | ]. [ | goo | ]'.
+	counter := 0.
+	[testClass compile: sourceCode notifying: self]
+		on: UnusedVariable
+		do: [ :unusedVariable |
+			self assert: 'goo' equals: unusedVariable name.
+			counter := counter + 1.
+			unusedVariable resume: counter = 1 ].
+		
+	self assert: 'griffle [  ]. [ | goo | ]' equals: sourceCode.! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:07:39'!
+testDoesNotRemoveUnusedVariableIfSaidSo
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle | goo |'.
+	
+	[testClass compile: sourceCode notifying: self]
+		on: UnusedVariable
+		do: [ :unusedVariable |
+			self assert: 'goo' equals: unusedVariable name.
+			unusedVariable resume: false ].
+		
+	self assert: 'griffle | goo |' equals: sourceCode.! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:12:44'!
+testKeepsVariableDefinitionWhenThereAreUsedTemporaries
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle | goo a | a := 1. ^a'.
+	
+	[testClass compile: sourceCode notifying: self]
+		on: UnusedVariable
+		do: [ :unusedVariable |
+			self assert: 'goo' equals: unusedVariable name.
+			unusedVariable resume: true ].
+		
+	self assert: 'griffle | a | a := 1. ^a' equals: sourceCode.! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:03:46'!
+testRemovesUnusedVariablesFromBlocks
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [ | goo | ]'.
+	
+	[testClass compile: sourceCode notifying: self]
+		on: UnusedVariable
+		do: [ :unusedVariable |
+			self assert: 'goo' equals: unusedVariable name.
+			unusedVariable resume: true ].
+		
+	self assert: 'griffle [  ]' equals: sourceCode.! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:01:28'!
+testRemovesVariableDefinitionWhenNoMoreUnusedTemporaries
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle | goo |'.
+	
+	[testClass compile: sourceCode notifying: self]
+		on: UnusedVariable
+		do: [ :unusedVariable |
+			self assert: 'goo' equals: unusedVariable name.
+			unusedVariable resume: true ].
+		
+	self assert: 'griffle ' equals: sourceCode.! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 17:13:33'!
+testReusesBlockTempDeclarationWhenEmptyForUndeclaredVariable
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle [ || goo := 1.^ goo ]'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareBlockTempAction ].
+		
+	self assert: 'griffle [ | goo | goo := 1.^ goo ]' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 17:12:52'!
+testReusesMethodTempDeclarationWhenEmptyForUndeclaredVariable
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle || goo := 1.^ goo'.
+	
+	[ testClass compile: sourceCode notifying: self ]
+		on: UndeclaredVariable
+		do: [ :anUndeclaredVariable |
+			anUndeclaredVariable resume: anUndeclaredVariable declareMethodTempAction ].
+		
+	self assert: 'griffle | goo | goo := 1.^ goo' equals: sourceCode! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 17:12:34'!
+testUndeclaredVariableIsSignaledForUndeclaredVariables
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	
+	self 
+		should:  [ testClass compile: 'griffle ^ goo' notifying: self ]
+		raise: UndeclaredVariable
+		withExceptionDo: [ :anUndeclaredVariable |
+			self assert: 'goo' equals: anUndeclaredVariable name ]! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:09:35'!
+testUndefinedVariableIsSignaledForVariablesDefinedButNotInitialized
+
+	| testClass |
+	
+	testClass := self createTestClass.
+
+	self 
+		should: [testClass compile: 'griffle | goo | ^ goo' notifying: self]
+		raise: UndefinedVariable
+		withExceptionDo: [ :anUndefinedVariable |
+			self assert: 'goo' equals: anUndefinedVariable name ]! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:10:53'!
+testUnknownSelectorIsSignalForMessagesSendNotImplemented
+
+	| testClass unknowSelector |
+	
+	testClass := self createTestClass.
+	unknowSelector := 'reallyHopeThisIsntImplementedAnywhere'.
+	
+	self 
+		should: [ testClass
+				compile: 'griffle self ', unknowSelector
+				notifying: self]
+		raise: UnknownSelector
+		withExceptionDo: [ :anUnknowSelector |
+			self assert: unknowSelector equals: anUnknowSelector name ]! !
+
+!CompilerExceptionsTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 11:11:49'!
+testUnusedVariableIsSignaledForUnusedVariables
+
+	| testClass |
+	
+	testClass := self createTestClass.
+	sourceCode := 'griffle | goo |'.
+	
+	self 
+		should: [testClass compile: sourceCode notifying: self]
+		raise: UnusedVariable
+		withExceptionDo: [ :unusedVariable |
+			self assert: 'goo' equals: unusedVariable name ]
+! !
+
+!CompilerExceptionsTest methodsFor: 'private' stamp: 'HAW 12/17/2019 10:38:10'!
+createTestClass
+	
+	^self createClassNamed: #CompilerTestDataClass__! !
+
+!CompilerExceptionsTest methodsFor: 'private' stamp: 'cwp 8/25/2009 20:28'!
+unusedVariableSource
+	^ 'griffle 
+		| goo |
+		^ nil'! !
+
+!CompilerExceptionsTest methodsFor: 'as yet unclassified' stamp: 'HAW 12/17/2019 12:11:30'!
+selectInvisiblyFrom: start to: stop 
 	! !
 
 !RefactoringTest methodsFor: 'assertions' stamp: 'HAW 6/1/2017 19:01:00'!
@@ -15330,17 +17073,6 @@ assertCreation: aCreationBlock warnsWith: aMessageTextCreator
 		raise: self refactoringWarning
 		withMessageText: aMessageTextCreator ! !
 
-!RefactoringTest methodsFor: 'assertions' stamp: 'HAW 5/28/2017 23:07:36'!
-assertNoTestDataClassCategoryExist
-
-	self allClassCategoriesOfTestData do: [ :aClassCategory | self denyExistsClassCategory: aClassCategory ]
-		! !
-
-!RefactoringTest methodsFor: 'assertions' stamp: 'HAW 5/28/2017 23:09:29'!
-denyExistsClassCategory: aClassCategory
-		
-	self deny: (SystemOrganization hasCategory: aClassCategory) description: 'Can not run test because class category ', aClassCategory, ' already exists'! !
-
 !RefactoringTest methodsFor: 'exceptions' stamp: 'HAW 8/17/2018 16:38:44'!
 canNotRefactorDueToReferencesRefactoringError
 	
@@ -15356,28 +17088,10 @@ refactoringWarning
 
 	^ Refactoring refactoringWarningClass - MessageNotUnderstood.! !
 
-!RefactoringTest methodsFor: 'setup/teardown' stamp: 'HAW 3/6/2019 15:35:30'!
-setUp
+!RefactoringTest methodsFor: 'exceptions' stamp: 'HAW 12/18/2019 16:02:50'!
+referencesRefactoringWarning
 
-	"If the authorInitials are not set, they will be asked - Hernan"
-	UISupervisor whenUIinSafeState: [ Utilities authorInitials ].
-	"Because I'm using the same system to create classes and removed them with its category at tearDown, I want to be sure 
-	I will not remove something I don't have too - Hernan"
-	setUpAssertionsPassed := false.
-	self assertCanRunTest.
-	setUpAssertionsPassed := true.
-	
-	classCategories := Set new.! !
-
-!RefactoringTest methodsFor: 'setup/teardown' stamp: 'HAW 3/4/2019 11:37:29'!
-tearDown
-
-	setUpAssertionsPassed ifTrue: [
-		self assertAllClassCategoriesAreExpectedToBeRemoved.
-		SystemOrganization removeSystemCategories: classCategories.
-		"I commented this becuase it took too much time and the only ones runing these tests 
-		are the ones developing refactorings that know about creating/removing test data category - Hernan
-		Browser allInstancesDo: [:aBrowser | aBrowser changed: #systemCategoryList ]"]! !
+	^ Refactoring referencesWarningClass - MessageNotUnderstood.! !
 
 !AddInstanceVariableTest methodsFor: 'class factory' stamp: 'HAW 6/11/2017 18:12:55'!
 classToRefactorName
@@ -15567,7 +17281,7 @@ test14NewVariableNameCanNotBeAReservedName
 			failsWith: [NewInstanceVariablePrecondition errorMessageForNewInstanceVariableCanNotBeAReservedName: aReservedName ]]
 		! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 11/8/2018 15:28:03'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test01AddingParameterToUnaryMessageAddsColonAndParameter
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod |
@@ -15591,7 +17305,7 @@ test01AddingParameterToUnaryMessageAddsColonAndParameter
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self deny: (senderMethod sendsOrRefersTo: oldSelector).
@@ -15602,7 +17316,7 @@ test01AddingParameterToUnaryMessageAddsColonAndParameter
 
 ! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 1/7/2019 13:33:13'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test02AddingParameterToKeywordMessageAddsNewKeywordAndParameter
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod newSelectorAddedKeyword |
@@ -15627,7 +17341,7 @@ test02AddingParameterToKeywordMessageAddsNewKeywordAndParameter
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self deny: (senderMethod sendsOrRefersTo: oldSelector).
@@ -15638,7 +17352,7 @@ test02AddingParameterToKeywordMessageAddsNewKeywordAndParameter
 
 ! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 1/7/2019 13:33:25'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test03AddingParameterToKeywordMessageMultipleSendsInSameMethodSameLiteral
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod newSelectorAddedKeyword collaboration |
@@ -15664,7 +17378,7 @@ test03AddingParameterToKeywordMessageMultipleSendsInSameMethodSameLiteral
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self deny: (senderMethod sendsOrRefersTo: oldSelector).
@@ -15675,7 +17389,7 @@ test03AddingParameterToKeywordMessageMultipleSendsInSameMethodSameLiteral
 
 ! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 1/7/2019 13:33:34'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test04AddingParameterToKeywordMessageWithMessageSendAsLastFormalParameter
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod newSelectorAddedKeyword collaboration |
@@ -15701,7 +17415,7 @@ test04AddingParameterToKeywordMessageWithMessageSendAsLastFormalParameter
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self deny: (senderMethod sendsOrRefersTo: oldSelector).
@@ -15712,7 +17426,7 @@ test04AddingParameterToKeywordMessageWithMessageSendAsLastFormalParameter
 
 ! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 1/7/2019 13:33:50'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test05AddingParameterToKeywordMessageWithBinaryMessageSendAsLastFormalParameter
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod newSelectorAddedKeyword collaboration |
@@ -15738,7 +17452,7 @@ test05AddingParameterToKeywordMessageWithBinaryMessageSendAsLastFormalParameter
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self deny: (senderMethod sendsOrRefersTo: oldSelector).
@@ -15749,7 +17463,7 @@ test05AddingParameterToKeywordMessageWithBinaryMessageSendAsLastFormalParameter
 
 ! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 1/7/2019 13:33:59'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test06AddingParameterToKeywordMessageWithKeywordMessageSendAsLastFormalParameter
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod newSelectorAddedKeyword collaboration |
@@ -15775,7 +17489,7 @@ test06AddingParameterToKeywordMessageWithKeywordMessageSendAsLastFormalParameter
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self deny: (senderMethod sendsOrRefersTo: oldSelector).
@@ -15786,7 +17500,7 @@ test06AddingParameterToKeywordMessageWithKeywordMessageSendAsLastFormalParameter
 
 ! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 8/16/2018 18:53:57'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test07AddingParameterToUnaryMessageChangesReferencesToSelector
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod |
@@ -15810,7 +17524,7 @@ test07AddingParameterToUnaryMessageChangesReferencesToSelector
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self assert: 0 equals: (senderMethod indexOfLiteral: oldSelector).
@@ -15819,7 +17533,7 @@ test07AddingParameterToUnaryMessageChangesReferencesToSelector
 	
 ! !
 
-!AddParameterTest methodsFor: 'tests' stamp: 'HAW 1/7/2019 13:34:17'!
+!AddParameterTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test08AddingParameterToKeywordMessageChangesReferencesToSelector
 
 	| refactoring classToRefactor oldSelector newSelector newImplementorMethodNode newParameter newParameterValue senderSelector senderMethod newSelectorAddedKeyword collaboration |
@@ -15845,7 +17559,7 @@ test08AddingParameterToKeywordMessageChangesReferencesToSelector
 	self assert: (classToRefactor includesSelector: newSelector).
 	
 	newImplementorMethodNode :=  (classToRefactor>>newSelector) methodNode.
-	self assert: (newImplementorMethodNode hasArgumentOrTemporary: newParameter).
+	self assert: (newImplementorMethodNode hasArgumentOrTemporaryNamed: newParameter).
 	
 	senderMethod := classToRefactor compiledMethodAt: senderSelector.
 	self assert: 0 equals: (senderMethod indexOfLiteral: oldSelector).
@@ -16472,372 +18186,893 @@ selectorAndParametersFor: aKeywordSelector
 			separatedBy: [  stream space ]]
 				! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/19/2017 05:41:39'!
-assertIsAssigment: aParseNode of: newVariable toLiteralValueOf: aValue
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 9/28/2019 00:49:10'!
+assertClassHasDefined: aSelector withBody: newSourceCode
 
-	self assert: aParseNode isAssignmentNode.
-	self assert: aParseNode variable name equals: newVariable.
-	self assert: aParseNode value isLiteralNode.
-	self assert: aParseNode value literalValue equals: aValue! !
+	self
+		assert: newSourceCode
+		equals: (classToRefactor >> aSelector) sourceCode! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/19/2017 05:45:03'!
-assertIsReturnSelf: aParseNode
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 6/23/2019 18:30:02'!
+assertClassHasDefined: aSelector withBody: newSourceCode inCategory: aCategory
 
-	self assert: aParseNode isReturnSelf ! !
+	self assertClassHasDefined: aSelector withBody: newSourceCode.
+	self assert: aCategory equals: (classToRefactor >> aSelector) category! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 6/26/2017 16:33:08'!
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 1/12/2020 21:08:55'!
+assertExtracting: codeToExtract from: originalCode named: newMessage defines: newCode andUpdates: updatedCode
+
+	| originalSelector category |
+	category _ #category.
+	originalSelector _ classToRefactor compile: originalCode classified: category.
+
+	(ExtractMethod
+		fromInterval: (self intervalOf: codeToExtract locatedIn: originalCode)
+		of: classToRefactor >> originalSelector
+		to: newMessage
+		categorizedAs: category) apply.
+
+	self
+		assertClassHasDefined: originalSelector withBody: updatedCode inCategory: category;
+		assertClassHasDefined: newMessage selector withBody: newCode inCategory: category! !
+
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 4/5/2020 22:55:03'!
+creationWithMessage: aMessage onInterval: anIntervalToExtract ofMethod: methodToExtractCodeFrom failsWith: aRefactoringErrorMessage
+
+	self
+		should: [
+			ExtractMethod
+				fromInterval: anIntervalToExtract
+				of: methodToExtractCodeFrom
+				to: aMessage
+				categorizedAs: Categorizer default ]
+		raise: Error - MessageNotUnderstood
+		withMessageText: aRefactoringErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 4/5/2020 22:56:14'!
+creationWithSelectorNamed: aSelectorName onInterval: anIntervalToExtract ofMethod: aMethodToRefactor failsWith: aRefactoringErrorMessage
+
+	self
+		creationWithMessage: (Message selector: aSelectorName)
+		onInterval: anIntervalToExtract
+		ofMethod: aMethodToRefactor
+		failsWith: aRefactoringErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 9/28/2019 01:10:34'!
+tryingToExtract: someCode from: anExistingSourceCode failsWith: aRefactoringErrorMessage
+
+	| existingSelector |
+	existingSelector _ classToRefactor compile: anExistingSourceCode.
+
+	self
+		creationWithSelectorNamed: #aValidSelector
+		onInterval: (self intervalOf: someCode locatedIn: anExistingSourceCode)
+		ofMethod: classToRefactor >> existingSelector
+		failsWith: aRefactoringErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 4/5/2020 22:56:48'!
+tryingToExtract: someCode from: anExistingSourceCode using: aMessage failsWith: aRefactoringErrorMessage
+
+	| existingSelector |
+	existingSelector _ classToRefactor compile: anExistingSourceCode.
+
+	self
+		creationWithMessage: aMessage
+		onInterval: (self intervalOf: someCode locatedIn: anExistingSourceCode)
+		ofMethod: classToRefactor >> existingSelector
+		failsWith: aRefactoringErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 9/22/2019 22:30:00'!
+tryingToExtractOnInterval: anIntervalToExtract failsWith: aRefactoringErrorMessage
+
+	self
+		creationWithSelectorNamed: #aValidSelector
+		onInterval: anIntervalToExtract
+		ofMethod: self methodToExtractCodeFrom
+		failsWith: aRefactoringErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'assertions' stamp: 'RNG 9/28/2019 01:05:46'!
+tryingToExtractWithSelectorNamed: aSelectorName failsWith: aRefactoringErrorMessage
+
+	| originalSource |
+	originalSource _ 'm1 ^ 8'.
+	classToRefactor compile: originalSource.
+
+	self
+		creationWithSelectorNamed: aSelectorName
+		onInterval: (self intervalOf: '8' locatedIn: originalSource)
+		ofMethod: classToRefactor >> #m1
+		failsWith: aRefactoringErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:29:34'!
+test01NewSelectorShouldNotBeEmpty
+
+	self
+		tryingToExtractWithSelectorNamed: #''
+		failsWith: ExtractMethodNewSelectorPrecondition newSelectorCanNotBeEmptyErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:29:34'!
+test02NewSelectorShouldNotContainSeparators
+
+	self
+		tryingToExtractWithSelectorNamed: #'my selector'
+		failsWith: ExtractMethodNewSelectorPrecondition newSelectorCanNotContainSeparatorsErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:29:34'!
+test03NewSelectorShouldNotBeAlreadyDefinedInTheClass
+
+	self
+		tryingToExtractWithSelectorNamed: self selectorOfMethodToExtractCodeFrom
+		failsWith: ExtractMethodNewSelectorPrecondition newSelectorAlreadyDefinedOnTheClassErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:29:34'!
+test04NewSelectorShouldNotStartWithANumber
+
+	self
+		tryingToExtractWithSelectorNamed: #'2selector'
+		failsWith: ExtractMethodNewSelectorPrecondition invalidStartingCharacterOfNewSelectorErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:29:34'!
+test05NewUnarySelectorShouldNotStartWithASymbol
+
+	self
+		tryingToExtractWithSelectorNamed: #-
+		failsWith: ExtractMethodNewSelectorPrecondition invalidStartingCharacterOfNewSelectorErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:30:00'!
+test06IntervalToExtractIsNotBeforeMethodSourceCodeBoundaries
+
+	self
+		tryingToExtractOnInterval: (-1 to: 2)
+		failsWith: ExtractMethod outOfBoundsSelectionErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:30:00'!
+test07IntervalToExtractIsNotAfterMethodSourceCodeBoundaries
+
+	self
+		tryingToExtractOnInterval: (1 to: self sourceCodeOfMethodToExtractCodeFrom size + 2)
+		failsWith: ExtractMethod outOfBoundsSelectionErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:10:40'!
+test08IntervalToExtractShouldNotContainAReturnExpression
+
+	self
+		tryingToExtract: '^ localVar + ((4))'
+		from: 'm1 ^ localVar + ((4))'
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:11:35'!
+test10IntervalToExtractDoesNotContainsPartOfTheOriginalSelector
+
+	self
+		tryingToExtract: 'm1 ^ 8'
+		from: 'm1 ^ 8'
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:11:58'!
+test11IntervalToExtractDoesNotContainsPartOfLocalVariablesDefinition
+
+	self
+		tryingToExtract: '| localVar |'
+		from: 'm1 | localVar | ^ localVar + 3'
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:12:17'!
+test12IntervalToExtractDoesNotContainsPartOfPragmasDefinition
+
+	self
+		tryingToExtract: '<annoyingPragma>'
+		from: 'm1 <annoyingPragma>'
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:12:32'!
+test13IntervalToExtractShouldBeAValidSmalltalkExpression
+
+	self
+		tryingToExtract: '+ ((4))'
+		from: 'm1 ^ 3 + ((4))'
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:13:00'!
+test14ItIsNotPossibleToExtractTheLeftSideOfAnAssignment
+
+	| firstOccurrence secondOccurrence intervalToExtract |
+	firstOccurrence _ self sourceCodeOfMethodToExtractCodeFrom
+		indexOfSubCollection: 'localVar' startingAt: 1.
+	secondOccurrence _ self sourceCodeOfMethodToExtractCodeFrom
+		indexOfSubCollection: 'localVar' startingAt: firstOccurrence + 1.
+	intervalToExtract _ secondOccurrence toSelfPlus: 'localVar' size.
+	self
+		tryingToExtractOnInterval: intervalToExtract
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:13:13'!
+test16CanNotExtractPartOfALiteral
+
+	self
+		tryingToExtract: 'true'
+		from: 'm1 ^ ''hey true'''
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:30:00'!
+test23CanNotExtractWithAnInvalidInterval
+
+	self
+		tryingToExtractOnInterval: (10 to: 9)
+		failsWith: ExtractMethod noSelectionErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:13:36'!
+test24ItIsNotPossibleToExtractAnIntervalIncludingATemporaryAssignmentExpression
+
+	self
+		tryingToExtract: 'localVar _ 8'
+		from: 'm1 | localVar | localVar _ 8'
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/22/2019 22:29:34'!
+test25NewUnarySelectorShouldNotContainInvalidCharacters
+
+	self
+		tryingToExtractWithSelectorNamed: 'hola)' asSymbol
+		failsWith: ExtractMethodNewSelectorPrecondition invalidCharacterInsideNewSelectorErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 9/28/2019 01:20:52'!
+test28ItIsNotPossibleToExtractALocalVariableInsideOfItsDeclaration
+
+	self
+		tryingToExtract: 'localVar'
+		from: 'm1 | localVar | ^ #foo'
+		failsWith: ExtractMethod selectedCodeInvalidForExtractErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 4/5/2020 22:58:03'!
+test34TryingToExtractAMethodWithLessArgumentsThanNeededFails
+
+	self
+		tryingToExtract: 'localVar1 + localVar2 + 2'
+		from: 'm1 | localVar1 localVar2 | ^ localVar1 + localVar2 + 2'
+		using: (Message selector: #m1: arguments: #('localVar1'))
+		failsWith: ExtractMethod wrongNumberOrArgumentsGivenErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - validations' stamp: 'RNG 4/5/2020 23:24:08'!
+test35TryingToExtractAMethodWithMoreArgumentsThanNeededFails
+
+	self
+		tryingToExtract: 'localVar1 + localVar2 + 2'
+		from: 'm1 | localVar1 localVar2 | ^ localVar1 + localVar2 + 2'
+		using: (Message selector: #m1:m2:m3: arguments: #('localVar1' 'localVar2' 'localVar3'))
+		failsWith: ExtractMethod wrongNumberOrArgumentsGivenErrorMessage! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test09ExtractingALiteralCreatesANewMethodAndChangesExistingCodeToCallThatNewMethod
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '4'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test15ExtractingAListOfStatementsCreatesANewMethodWithoutReturn
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ 'self m3.
+	self m4: 5'.
+	originalCode _ 'm1 ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	', codeToExtract.
+	updatedCode _ 'm1 self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test17AStringContainingTheReturnCharacterCanBeExtracted
+	"this is to make sure the return is found using AST logic, not by text"
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '''^ 3'' size'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test18ExtractingAListOfStatementsIncludingDotsRemovesThemAndContinuesWithMethodExtraction
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '
+	self m3.
+	self m4: 5.'.
+	originalCode _ 'm1
+	' , codeToExtract.
+	newMethodCode _ 'm2
+
+	self m3.
+	self m4: 5'.
+	updatedCode _ 'm1
+	
+	self m2.'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test19ASelectionContainingAdditionalParenthesesAtTheBeginningAndOrEndCanBeExtracted
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '((42))'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ 42'.
+	updatedCode _ 'm1 ^ ((self m2))'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test20ASelectionContainingALocalVariableIsParameterizedOnTheExtractedMessage
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ 'local + 3'.
+	originalCode _ 'm1 | local | ^ ' , codeToExtract.
+	newMethodCode _ 'm2: local
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 | local | ^ self m2: local'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2: arguments: #('local'))
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test21ASelectionContainingAdditionalParenthesesOnOneSideCanBeExtractedAndItIsNotTrimmed
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '(9) * 3'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test22ItIsPossibleToExtractTheLastExpressionOfAMethod
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ 'localVar + ((4))'.
+	originalCode _ 'm1 | localVar | ^ ' , codeToExtract.
+	newMethodCode _ 'm2: localVar
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 | localVar | ^ self m2: localVar'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2: arguments: #('localVar'))
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test26ItIsPossibleToExtractAnEntireBlockIncludingALocalAssignment
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '[ |something| something _ 3 ]'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test27ItIsPossibleToExtractExpressionsWithOptimizedSelectors
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '2 ifNil: [ #boo ] ifNotNil: [ #yay ]'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:08:55'!
+test29ExtractingABinaryExpressionToAKeywordMessageIntroducesParenthesesToNotBreakOriginalPrecedence
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '2 + arg'.
+	originalCode _ 'm1: arg ^ ' , codeToExtract , ' * 3'.
+	newMethodCode _ 'm2: arg
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1: arg ^ (self m2: arg) * 3'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2: arguments: #('arg'))
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 1/12/2020 21:11:36'!
+test30ItIsPossibleToExtractAQuotedExpression
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '`3 + 4`'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'HAW 3/30/2020 16:16:37'!
+test31ItIsPossibleToExtractExpressionsWithOptimizedSelectorsWhereTheReceiverIsNotASimpleLiteral
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '2 factorial ifNotNil: [ #boo ]'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 4/5/2020 23:19:13'!
+test32ItIsPossibleToExtractATemporaryDeclarationOfABlockIfItIsNotUsedOutsideOfSelectionInterval
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '| a | a _ 3 factorial'.
+	originalCode _ 'm1 ^ [ ' , codeToExtract , ' ]'.
+	newMethodCode _ 'm2
+
+	' , codeToExtract.
+	updatedCode _ 'm1 ^ [ self m2 ]'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 4/5/2020 23:19:23'!
+test33ItIsPossibleToExtractATemporaryDeclarationIfItIsNotUsedOutsideOfSelectionInterval
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '| a | a _ 3 factorial'.
+	originalCode _ 'm1 ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	' , codeToExtract.
+	updatedCode _ 'm1 self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'tests - successful' stamp: 'RNG 4/14/2020 20:52:00'!
+test36ItIsPossibleToExtractACascadeExpression
+
+	| codeToExtract newMethodCode originalCode updatedCode |
+	codeToExtract _ '(3 + 2) factorial; yourself'.
+	originalCode _ 'm1 ^ ' , codeToExtract.
+	newMethodCode _ 'm2
+
+	^ ' , codeToExtract.
+	updatedCode _ 'm1 ^ self m2'.
+
+	self
+		assertExtracting: codeToExtract from: originalCode named: (Message selector: #m2)
+		defines: newMethodCode andUpdates: updatedCode! !
+
+!ExtractMethodTest methodsFor: 'method and source code helpers' stamp: 'RNG 5/12/2019 23:21:30'!
+compileMethodToExtractCodeFrom
+
+	classToRefactor compile: self sourceCodeOfMethodToExtractCodeFrom! !
+
+!ExtractMethodTest methodsFor: 'method and source code helpers' stamp: 'RNG 5/12/2019 23:22:01'!
+methodToExtractCodeFrom
+
+	^ classToRefactor >> self selectorOfMethodToExtractCodeFrom! !
+
+!ExtractMethodTest methodsFor: 'method and source code helpers' stamp: 'RNG 5/12/2019 23:25:05'!
+selectorOfMethodToExtractCodeFrom
+
+	^ #mExtractMethodExample:! !
+
+!ExtractMethodTest methodsFor: 'method and source code helpers' stamp: 'RNG 9/8/2019 18:40:40'!
+sourceCodeOfMethodToExtractCodeFrom
+
+	^ self selectorOfMethodToExtractCodeFrom, ' anArgument
+
+	<anAnnoyingPragma>
+	| localVar |
+	<anotherAnnoyingPragma>
+	self m1.
+	self m2: ''hey true''.
+	self m3: anArgument , ''^ 21''.
+	localVar _ Set with: ''hello''.
+	localVar := #($x $y $z) size and: [ (9) * 3 ].
+	^ localVar + ((4))'! !
+
+!ExtractMethodTest methodsFor: 'refactoring helpers' stamp: 'RNG 9/27/2019 23:24:08'!
+intervalOf: aPieceOfSourceCode locatedIn: sourceCode
+
+	| interval |
+	interval _ sourceCode intervalOfSubCollection: aPieceOfSourceCode.
+	^ interval first to: interval last - 1! !
+
+!ExtractMethodTest methodsFor: 'set up' stamp: 'RNG 9/28/2019 01:16:48'!
+setUp
+
+	super setUp.
+	classToRefactor _ self createClassNamed: self classToRefactorName.
+	self compileMethodToExtractCodeFrom.! !
+
+!ExtractMethodTest methodsFor: 'class factory' stamp: 'RNG 4/20/2019 21:31:05'!
 classToRefactorName
 
-	^#ClassToExtractTemp! !
+	^ #ClassToExtractMethod! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/4/2017 18:42:13'!
-m1
+!ExtractToTemporaryTest methodsFor: 'test helpers' stamp: 'RNG 3/24/2020 22:42:02'!
+assertExtracting: codeToExtract from: sourceCodeOfMethodToRefactor toVariableNamed: newVariable updatesTo: sourceCodeAfterRefactoring
 
-	| t1 |
-	
-	t1 := 1.
-	t1! !
+	self
+		assertExtracting: codeToExtract
+		from: sourceCodeOfMethodToRefactor
+		toVariableNamed: newVariable
+		updatesTo: sourceCodeAfterRefactoring
+		usingLeftArrowAssignment: true! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 6/26/2017 16:08:54'!
-methodNodeOf: aSourceCode
+!ExtractToTemporaryTest methodsFor: 'test helpers' stamp: 'RNG 3/24/2020 22:41:37'!
+assertExtracting: codeToExtract from: sourceCodeOfMethodToRefactor toVariableNamed: newVariable updatesTo: sourceCodeAfterRefactoring usingLeftArrowAssignment: leftArrowAssignmentPreference
 
-	^self methodNodeOf: aSourceCode in: self class! !
+	| intervalToExtract methodToRefactor |
+	classToRefactor compile: sourceCodeOfMethodToRefactor.
+	intervalToExtract _ self intervalOf: codeToExtract locatedIn: sourceCodeOfMethodToRefactor.
+	methodToRefactor _ classToRefactor >> #m1.
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/11/2018 16:11:45'!
-methodNodeOf: aSourceCode in: aClass
+	Preferences
+		withTemporaryValue: leftArrowAssignmentPreference
+		of: #leftArrowAssignmentsInGeneratedCode
+		do: [ (ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor) apply ].
 
-	^aClass methodNodeFor: aSourceCode ! !
+	self assert: sourceCodeAfterRefactoring equals: (classToRefactor >> #m1) sourceCode! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/11/2018 16:22:23'!
+!ExtractToTemporaryTest methodsFor: 'test helpers' stamp: 'RNG 2/24/2020 16:28:11'!
+intervalOf: aPieceOfSourceCode locatedIn: sourceCode
+
+	| interval |
+	interval _ sourceCode intervalOfSubCollection: aPieceOfSourceCode.
+	^ interval first to: interval last - 1! !
+
+!ExtractToTemporaryTest methodsFor: 'set up' stamp: 'RNG 3/24/2020 22:30:57'!
+setUp
+
+	super setUp.
+	classToRefactor _ self createClassNamed: self classToRefactorName! !
+
+!ExtractToTemporaryTest methodsFor: 'class factory' stamp: 'RNG 2/22/2020 21:20:46'!
+classToRefactorName
+
+	^ #ClassToDoExtractTemporary! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - successful' stamp: 'RNG 2/25/2020 16:28:15'!
+test12ItIsPossibleToExtractASingleLiteralFromAMethodWithoutAnyTempsOrArguments
+
+	| sourceCode sourceCodeAfterRefactoring |
+	sourceCode _ 'm1
+
+	^ 42'.
+	sourceCodeAfterRefactoring _ 'm1
+
+	| new |
+	new _ 42.
+	^ new'.
+
+	self assertExtracting: '42' from: sourceCode toVariableNamed: 'new' updatesTo: sourceCodeAfterRefactoring! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - successful' stamp: 'RNG 2/25/2020 16:32:52'!
+test13ItIsPossibleToExtractASingleExpressionFromAMethodThatHasAlreadyOtherTemporary
+
+	| sourceCode sourceCodeAfterRefactoring |
+	sourceCode _ 'm1
+
+	| four |
+	four _ 4.
+	^ four + 2'.
+	sourceCodeAfterRefactoring _ 'm1
+
+	| four two |
+	four _ 4.
+	two _ 2.
+	^ four + two'.
+
+	self assertExtracting: '2' from: sourceCode toVariableNamed: 'two' updatesTo: sourceCodeAfterRefactoring! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - successful' stamp: 'RNG 3/24/2020 18:04:28'!
+test14ItIsPossibleToExtractASingleExpressionFromAMethodThatHasAnEmptyTemporariesDeclaration
+
+	| sourceCode sourceCodeAfterRefactoring |
+	sourceCode _ 'm1
+
+	| |
+	^ 3 factorial'.
+	sourceCodeAfterRefactoring _ 'm1
+
+	| f |
+	f _ 3 factorial.
+	^ f'.
+
+	self assertExtracting: '3 factorial' from: sourceCode toVariableNamed: 'f' updatesTo: sourceCodeAfterRefactoring! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - successful' stamp: 'RNG 3/24/2020 22:43:08'!
+test15ItIsPossibleToExtractCodeAndGenerateAssignmentUsingAnsiAssignmentStyle
+
+	| sourceCode sourceCodeAfterRefactoring |
+	sourceCode _ 'm1
+
+	^ 42'.
+	sourceCodeAfterRefactoring _ 'm1
+
+	| new |
+	new := 42.
+	^ new'.
+
+	self assertExtracting: '42' from: sourceCode toVariableNamed: 'new' updatesTo: sourceCodeAfterRefactoring usingLeftArrowAssignment: false! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - successful' stamp: 'RNG 3/24/2020 23:30:01'!
+test16ItIsPossibleToExtractASingleLiteralFromABlockWithoutAnyTempsOrArguments
+
+	| sourceCode sourceCodeAfterRefactoring |
+	sourceCode _ 'm1
+
+	^ [ self m2 ]'.
+	sourceCodeAfterRefactoring _ 'm1
+
+	^ [ | new |
+	new _ self m2.
+	new ]'.
+
+	self assertExtracting: 'self m2' from: sourceCode toVariableNamed: 'new' updatesTo: sourceCodeAfterRefactoring! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - successful' stamp: 'RNG 4/12/2020 23:32:37'!
+test19ItIsPossibleToExtractAnIntervalWithSomeExtraSpaces
+
+	| sourceCode sourceCodeAfterRefactoring |
+	sourceCode _ 'm1
+
+	^ 42'.
+	sourceCodeAfterRefactoring _ 'm1
+
+	| new |
+	new _ 42.
+	^ new'.
+
+	self assertExtracting: ' 42' from: sourceCode toVariableNamed: 'new' updatesTo: sourceCodeAfterRefactoring! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:13:05'!
 test01NewVariableCanNotBeEmpty
 
 	| newVariable sourceCodeToExtract sourceCode intervalToExtract |
-	
-	newVariable := ''.
-	sourceCodeToExtract := '2'.
-	sourceCode := 'm1 | ', newVariable, ' | ', sourceCodeToExtract.
-	intervalToExtract := sourceCode intervalOfSubCollection: sourceCodeToExtract.
+	newVariable _ ''.
+	sourceCodeToExtract _ '2'.
+	sourceCode _ 'm1 ^ 2'.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: sourceCode in: self class ]
-		failsWith: [ ExtractToTemporary newVariableCanNotBeEmptyErrorMessage ]
-		! !
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: (classToRefactor >> #m1) ]
+		failsWith: [ NewTemporaryPrecondition errorMessageForEmptyTemporaryVariable ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 9/11/2018 16:27:16'!
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:13:01'!
 test02NewVariableHasToBeValid
 
 	| newVariable sourceCodeToExtract sourceCode intervalToExtract |
-	
-	newVariable := 'a b'.
-	sourceCodeToExtract := '2'.
-	sourceCode := 'm1 | ', newVariable, ' | ', sourceCodeToExtract.
-	intervalToExtract := sourceCode intervalOfSubCollection: sourceCodeToExtract.
+	newVariable _ 'a b'.
+	sourceCodeToExtract _ '2'.
+	sourceCode _ 'm1 ^ ', sourceCodeToExtract.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: sourceCode in: self class ]
-		failsWith: [ ExtractToTemporary errorMessageForInvalidTemporaryVariable: newVariable ]
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: (classToRefactor >> #m1) ]
+		failsWith: [ NewTemporaryPrecondition errorMessageForInvalidTemporaryVariable: newVariable ]
 	! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/11/2018 14:10:22'!
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:12:58'!
 test03NewVariableNameCanNotBeDefinedInMethod
 
-	self shouldFail: [
-	| newVariable sourceCodeToExtract sourceCode intervalToExtract |
-	
-	newVariable := 'new'.
-	sourceCodeToExtract := '2'.
-	sourceCode := 'm1 | ', newVariable, ' | ', sourceCodeToExtract.
-	intervalToExtract := sourceCode intervalOfSubCollection: sourceCodeToExtract.
+	| newVariable sourceCodeToExtract sourceCode intervalToExtract methodToRefactor |
+	newVariable _ 'new'.
+	sourceCodeToExtract _ '2'.
+	sourceCode _ 'm1 | ', newVariable, ' | ^ ', sourceCodeToExtract.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: sourceCode in: self class ]
-		failsWith: [ ExtractToTemporary errorMessageForNewTemporaryVariable: newVariable isAlreadyDefinedIn: 1 ]
-	]	! !
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ NewTemporaryPrecondition errorMessageForNewTemporaryVariable: newVariable isAlreadyDefinedIn: methodToRefactor methodNode ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 3/7/2019 22:55:38'!
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 4/12/2020 20:20:41'!
 test04FailsIfNewTemporaryIsEqualToInstanceVariableInClass
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor classToRefactor |
-	
-	newVariable := 'new'.
-	classToRefactor := self createClassNamed: self classToRefactorName instanceVariableNames: newVariable.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1' in: classToRefactor.
+	| newVariable sourceCode sourceCodeToExtract methodToRefactor intervalToExtract |
+	newVariable _ 'new'.
+	classToRefactor addInstVarName: newVariable.
+	sourceCodeToExtract _ '78'.
+	sourceCode _ 'm1 ^ ', sourceCodeToExtract.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor ]
-		failsWith: [ ExtractToTemporary errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: classToRefactor ]! !
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ NewTemporaryPrecondition errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: classToRefactor ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 3/7/2019 22:55:58'!
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 4/12/2020 20:20:50'!
 test05FailsIfNewTemporaryIsEqualToInstanceVariableInAnySuperclass
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor classToRefactor superclassToRefactor |
-	
-	newVariable := 'new'.
-	superclassToRefactor := self createClassNamed: #ClassToRefactorSuperclass instanceVariableNames: newVariable.
-	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: superclassToRefactor.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1' in: classToRefactor.
-	
-	self 
-		assertCreation: [ ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor ]
-		failsWith: [ ExtractToTemporary errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: superclassToRefactor ]! !
-
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 6/30/2017 06:40:11'!
-test06SourceCodeToExtractMustBePartOfMethodNodeToRefactor
-
-	| newVariable sourceCodeToExtract methodNodeToRefactor |
-	
-	newVariable := 'new'.
-	sourceCodeToExtract := '3'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1'.
+	| newVariable sourceCode sourceCodeToExtract methodToRefactor superclassToRefactor intervalToExtract |
+	newVariable _ 'new'.
+	superclassToRefactor _ self createClassNamed: #ClassToRefactorSuperclass instanceVariableNames: newVariable.
+	classToRefactor superclass: superclassToRefactor.
+	sourceCodeToExtract _ '78'.
+	sourceCode _ 'm1 ^ ', sourceCodeToExtract.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor ]
-		failsWith: [ ExtractToTemporary errorMessageMethodNodeToRefactorDoesNotInclude: sourceCodeToExtract ]! !
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ NewTemporaryPrecondition errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: superclassToRefactor ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 6/30/2017 06:40:23'!
-test07SourceCodeToExtractCanNotIncludeReturn
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:12:47'!
+test06SourceCodeToExtractCanNotIncludeReturn
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor |
-	
-	newVariable := 'new'.
-	sourceCodeToExtract := '^1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 ^1'.
-	
-	self 
-		assertCreation: [ ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor ]
-		failsWith: [ ExtractToTemporary sourceCodeToExtractCanNotIncludeReturnErrorMessage ]! !
-
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 6/30/2017 06:40:33'!
-test08SourceCodeToExtractCanNotBeEmpty
-
-	| newVariable sourceCodeToExtract methodNodeToRefactor |
-	
-	newVariable := 'new'.
-	sourceCodeToExtract := ' '.
-	methodNodeToRefactor := self methodNodeOf: 'm1 ^1'.
+	| newVariable sourceCode sourceCodeToExtract  intervalToExtract methodToRefactor |
+	newVariable _ 'new'.
+	sourceCodeToExtract _ '^ 1'.
+	sourceCode _ 'm1 ', sourceCodeToExtract.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor ]
-		failsWith: [ ExtractToTemporary sourceCodeToExtractCanNotBeEmptyErrorMessage]! !
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ ExtractToTemporary errorMessageForSourceCodeToExtractCanNotIncludeReturn ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/18/2017 17:29:54'!
-test09SourceCodeToExtractCanNotHaveSyntaxErrors
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:12:44'!
+test07SourceCodeToExtractCanNotBeEmpty
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor expectedSyntaxErrorMessage |
+	| newVariable sourceCode sourceCodeToExtract intervalToExtract methodToRefactor |
+	newVariable _ 'new'.
+	sourceCodeToExtract _ ' '.
+	sourceCode _ 'm1 ^ 1'.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 	
-	newVariable := 'new'.
-	sourceCodeToExtract := '1+'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1+2'.
+	self 
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ ExtractToTemporary errorMessageForSourceCodeToExtractCanNotBeEmpty]! !
+
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:13:55'!
+test08SourceCodeToExtractCanNotHaveSyntaxErrors
+
+	| newVariable sourceCode sourceCodeToExtract intervalToExtract methodToRefactor expectedSyntaxErrorMessage |
+	newVariable _ 'new'.
+	sourceCodeToExtract _ '1 +'.
+	sourceCode _ 'm1 ^ 1 + 3'.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 	 
-	[ Parser parse: sourceCodeToExtract class: self class noPattern: true.
+	[ Parser parse: sourceCodeToExtract class: classToRefactor noPattern: true.
 		self fail. ]
 		on: SyntaxErrorNotification 
-		do: [ :anError | expectedSyntaxErrorMessage :=  anError messageText].
+		do: [ :anError | expectedSyntaxErrorMessage _ anError messageText].
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor ]
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
 		failsWith: [ ExtractToTemporary errorMessageForSourceCodeToExtractHasSyntaxError: expectedSyntaxErrorMessage ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 6/30/2017 06:40:51'!
-test10SourceCodeToExtractHasToBeOneStatement
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:12:40'!
+test09SourceCodeToExtractHasToBeOneStatement
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor |
-	
-	newVariable := 'new'.
-	sourceCodeToExtract := '1+2. 3+4'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 ', sourceCodeToExtract.
+	| newVariable sourceCode sourceCodeToExtract intervalToExtract methodToRefactor |
+	newVariable _ 'new'.
+	sourceCodeToExtract _ '1+2. 3+4'.
+	sourceCode _ 'm1 ', sourceCodeToExtract.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 	
 	self 
-		assertCreation: [ ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor ]
-		failsWith: [ ExtractToTemporary sourceCodeToExtractHasToBeOneStatementErrorMessage ]! !
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ ExtractToTemporary errorMessageForSourceCodeToExtractHasToBeOneStatement ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 3/6/2018 15:37:49'!
-test11WhenThereAreNoTemporariesExtractCreatesTemporariesAndAddsTemporaryNamedAsDefined
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:12:27'!
+test10FailsIfIntervalToExtractIsBeforeMethodSourceCodeBoundaries
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	self assert: (newMethodNode hasArgumentOrTemporary: newVariable)
-	! !
+	| newVariable sourceCode methodToRefactor |	
+	newVariable _ 'new'.
+	sourceCode _ 'm1 ^ 1'.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/4/2017 18:02:21'!
-test12WhenThereAreTemporariesExtractAddsTemporaryNamedAsDefined
+	self 
+		assertCreation: [ ExtractToTemporary named: newVariable at: (-1 to: 2) from: methodToRefactor ]
+		failsWith: [ ExtractToTemporary errorMessageForSourceCodeSelectionOutOfBounds ]! !
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 | t2 | 1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	self assert: (newMethodNode hasArgumentOrTemporary: newVariable)
-	! !
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 2/25/2020 15:22:19'!
+test11FailsIfIntervalToExtractIsAfterMethodSourceCodeBoundaries
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 3/6/2018 15:38:19'!
-test13CodeToExtractIsAssignedToNewTemporaryBeforeCodeToExtract
+	| newVariable sourceCode methodToRefactor |	
+	newVariable _ 'new'.
+	sourceCode _ 'm1 ^ 1'.
+	classToRefactor compile: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	self assert: newMethodNode block statements size > 1.
-	self assertIsAssigment: newMethodNode block statements first of: newVariable toLiteralValueOf: sourceCodeToExtract asNumber. 
-! !
+	self 
+		assertCreation: [ ExtractToTemporary named: newVariable at: (sourceCode size - 1 to: sourceCode size + 2) from: methodToRefactor ]
+		failsWith: [ ExtractToTemporary errorMessageForSourceCodeSelectionOutOfBounds ]! !
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/19/2017 05:52:10'!
-test14ExtractOfLiteralAtTopBlockWorksAsExpected
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 4/12/2020 20:14:29'!
+test17CannotExtractPartOfMethodDefinition
 
-	"WorksAsExpected means: 1) extracted code is assign to new temporary 2) extracted code is replaced by temporary - Hernan"
-	
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode newMethodNodeStatements |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	newMethodNodeStatements := newMethodNode block statements.
-	self assert: newMethodNodeStatements size equals: 3.
-	self assertIsAssigment: newMethodNodeStatements first of: newVariable toLiteralValueOf: sourceCodeToExtract asNumber. 
-	self assert: newMethodNodeStatements second equals: extract newTemporary.
-	self assert: newMethodNodeStatements third isReturnSelf! !
+	| newVariable sourceCode methodToRefactor intervalToExtract sourceCodeToExtract |	
+	newVariable _ 'new'.
+	sourceCode _ 'm1 ^ 1'.
+	classToRefactor compile: sourceCode.
+	sourceCodeToExtract _ 'm1'.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/11/2018 14:11:02'!
-test15
+	self 
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ ExtractToTemporary errorMessageForSourceCodeIncludingAnInvalidExpression ]! !
 
-	self shouldFail: [
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 ^1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	self deny: (newMethodNode block statements includes: extract parseNodeToExtract).
-	self assert: newMethodNode block statements second equals: extract newTemporary ]! !
+!ExtractToTemporaryTest methodsFor: 'tests - validations' stamp: 'RNG 4/12/2020 23:23:09'!
+test18CannotExtractPartOfMessageSend
 
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/19/2017 05:52:19'!
-test15ExtractOfMoreThanOneLiteralAtTopBlockWorksAsExpected
+	| newVariable sourceCode methodToRefactor intervalToExtract sourceCodeToExtract |	
+	newVariable _ 'new'.
+	sourceCode _ 'm1 ^ self m2'.
+	classToRefactor compile: sourceCode.
+	sourceCodeToExtract _ 'm2'.
+	intervalToExtract _ self intervalOf: sourceCodeToExtract locatedIn: sourceCode.
+	methodToRefactor _ classToRefactor >> #m1.
 
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode newMethodNodeStatements |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 1. 1.'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	newMethodNodeStatements := newMethodNode block statements.
-	self assert: newMethodNodeStatements size equals: 4.
-	self assertIsAssigment: newMethodNodeStatements first of: newVariable toLiteralValueOf: sourceCodeToExtract asNumber. 
-	self assert: newMethodNodeStatements second equals: extract newTemporary.
-	self assert: newMethodNodeStatements third equals: extract newTemporary.
-	self assert: newMethodNodeStatements fourth isReturnSelf! !
-
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/19/2017 06:08:02'!
-test16ExtractOfLiteralAtReturnAtTopBlockExpressionWorksAsExpected
-
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode newMethodNodeStatements |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 ^1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	newMethodNodeStatements := newMethodNode block statements.
-	self assert: newMethodNodeStatements size equals: 2.
-	self assertIsAssigment: newMethodNodeStatements first of: newVariable toLiteralValueOf: sourceCodeToExtract asNumber. 
-	self assert: newMethodNodeStatements second isReturn.
-	self assert: newMethodNodeStatements second isVariableReference.
-	self assert: newMethodNodeStatements second expr name equals: newVariable.
-	! !
-
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 10/19/2017 06:17:38'!
-test17ExtractOfLiteralAtMessageSendAtTopBlockExpressionWorksAsExpected
-
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode newMethodNodeStatements |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 2+1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	newMethodNodeStatements := newMethodNode block statements.
-	self assert: newMethodNodeStatements size equals: 3.
-	self assertIsAssigment: newMethodNodeStatements first of: newVariable toLiteralValueOf: sourceCodeToExtract asNumber. 
-	self assert: (newMethodNodeStatements second 
-		isMessage: #+ 
-		receiver: [ :receiver | receiver isLiteralNode and: [ receiver literalValue = 2 ]]
-		arguments: [ :collaborator | collaborator = extract newTemporary ]).
-	self assert: newMethodNodeStatements third isReturnSelf ! !
-
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/11/2018 14:10:36'!
-test18
-
-	self shouldFail: [
-		| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode newMethodNodeStatements |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '2+1'.
-	methodNodeToRefactor := self methodNodeOf: 'm1 2+1'.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	newMethodNodeStatements := newMethodNode block statements.
-	self assert: newMethodNodeStatements size equals: 3.
-	self assertIsAssigment: newMethodNodeStatements first of: newVariable toLiteralValueOf: sourceCodeToExtract asNumber. 
-	self assert: (newMethodNodeStatements second 
-		isMessage: #+ 
-		receiver: [ :receiver | receiver isLiteralNode and: [ receiver literalValue = 2 ]]
-		arguments: [ :collaborator | collaborator = extract newTemporary ]).
-	self assert: newMethodNodeStatements third isReturnSelf ]! !
-
-!ExtractToTemporaryTest methodsFor: 'as yet unclassified' stamp: 'HAW 11/11/2018 14:10:50'!
-test19
-
-	self shouldFail: [
-	| newVariable sourceCodeToExtract methodNodeToRefactor extract newMethodNode newMethodNodeStatements |
-	
-	newVariable := 't1'.
-	sourceCodeToExtract := '''hola'''.
-	methodNodeToRefactor := self methodNodeOf: 'm1 ''hola'''.
-	
-	extract := ExtractToTemporary named: newVariable with: sourceCodeToExtract  in: methodNodeToRefactor.
-	newMethodNode := extract apply.
-	
-	newMethodNodeStatements := newMethodNode block statements.
-	self assert: newMethodNodeStatements size equals: 3.
-	self assertIsAssigment: newMethodNodeStatements first of: newVariable toLiteralValueOf: sourceCodeToExtract asNumber. 
-	self assert: (newMethodNodeStatements second 
-		isMessage: #+ 
-		receiver: [ :receiver | receiver isLiteralNode and: [ receiver literalValue = 2 ]]
-		arguments: [ :collaborator | collaborator = extract newTemporary ]).
-	self assert: newMethodNodeStatements third isReturnSelf ]! !
+	self 
+		assertCreation: [ ExtractToTemporary named: newVariable at: intervalToExtract from: methodToRefactor ]
+		failsWith: [ ExtractToTemporary errorMessageForSourceCodeIncludingAnInvalidExpression ]! !
 
 !InsertSuperclassTest methodsFor: 'tests' stamp: 'HAW 8/13/2018 18:01:00'!
 test01ChangesTheSuperclassOfTheClassToRefactor
@@ -16854,7 +19089,7 @@ test01ChangesTheSuperclassOfTheClassToRefactor
 	self assert: (newSuperclass subclasses includes: classToRefactor).
 	self assert: oldSuperclass equals: newSuperclass superclass.! !
 
-!InsertSuperclassTest methodsFor: 'tests' stamp: 'HAW 8/13/2018 18:29:50'!
+!InsertSuperclassTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:02:51'!
 test02ClassToRefactorStructureIsMaintained
 
 	| classToRefactor refactoring instanceVariables category classVariables poolDictionaries |
@@ -16867,7 +19102,7 @@ test02ClassToRefactorStructureIsMaintained
 	[ Smalltalk at: poolDictionaries asSymbol put: Dictionary new.
 	classToRefactor := self 
 		createClassNamed: #ClassToAddSuperclass
-		subclassOf: Object
+		subclassOf: RefactoringClassTestData 
 		instanceVariableNames: instanceVariables
 		classVariableNames: classVariables
 		poolDictionaries: poolDictionaries
@@ -16961,6 +19196,520 @@ test10NewSuperclassNameCanNotHaveSpaces
 	self
 		assertCreation: [ InsertSuperclass to: self class named: 'With spaces' asSymbol ]
 		failsWith: [ NewClassPrecondition newClassNameCanNotHaveSeparatorsErrorMessage ].! !
+
+!MoveToInstanceOrClassMethodTest methodsFor: 'tests' stamp: 'LMY 12/8/2019 18:08:54'!
+test01CannotMoveWhenReferencingInstanceVariables
+	
+	| classToRefactor selector referencedVariable |
+
+	selector := #newMethod.
+	referencedVariable := 'a'.
+
+	classToRefactor := self createClassNamed: self classToRefactorName instanceVariableNames: referencedVariable.
+	classToRefactor compile: selector asString,' ^', referencedVariable.
+	
+	self 
+		assertCreation: [ MoveToInstanceOrClassMethod for: classToRefactor >> selector ]
+		failsWith: [ MoveToInstanceOrClassMethod referencingInstanceVariablesErrorMessage ]
+! !
+
+!MoveToInstanceOrClassMethodTest methodsFor: 'tests' stamp: 'LMY 12/8/2019 18:43:15'!
+test02CannotMoveToClassWhenLocalVariableIsTheSameAsClassInstanceVariable
+	
+	| classToRefactor selector referencedVariable |
+
+	selector := #newMethod.
+	referencedVariable := 'a'.
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor class addInstVarName: referencedVariable.
+	classToRefactor compile: selector asString, '|', referencedVariable, '|'.
+	
+	self 
+		assertCreation: [ MoveToInstanceOrClassMethod for: classToRefactor >> selector ]
+		failsWith: [ MoveToInstanceOrClassMethod localVariableConflictsWithInstanceVariableErrorMessage ]
+! !
+
+!MoveToInstanceOrClassMethodTest methodsFor: 'tests' stamp: 'LMY 12/8/2019 23:35:40'!
+test03CannotMoveToInstanceWhenLocalVariableIsTheSameAsClassInstanceVariable
+	
+	| classToRefactor selector referencedVariable |
+
+	selector := #newMethod.
+	referencedVariable := 'a'.
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor addInstVarName: referencedVariable.
+	classToRefactor class compile: selector asString, '|', referencedVariable, '|'.
+	
+	self 
+		assertCreation: [ MoveToInstanceOrClassMethod for: classToRefactor class >> selector ]
+		failsWith: [ MoveToInstanceOrClassMethod localVariableConflictsWithInstanceVariableErrorMessage ]
+! !
+
+!MoveToInstanceOrClassMethodTest methodsFor: 'tests' stamp: 'LMY 12/8/2019 23:44:00'!
+test04InstanceMethodIsMovedToClassMethod
+	
+	| classToRefactor selector moveMethod |
+
+	selector := #newMethod.
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor compile: selector asString.
+	
+	moveMethod := MoveToInstanceOrClassMethod for: classToRefactor >> selector.
+	moveMethod apply.
+	
+	self assert: (classToRefactor class includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).
+! !
+
+!MoveToInstanceOrClassMethodTest methodsFor: 'tests' stamp: 'LMY 12/8/2019 23:51:21'!
+test05ClassMethodIsMovedToInstanceMethod
+	
+	| classToRefactor selector moveMethod |
+
+	selector := #newMethod.
+
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactor class compile: selector asString.
+	
+	moveMethod := MoveToInstanceOrClassMethod for: classToRefactor class >> selector.
+	moveMethod apply.
+	
+	self assert: (classToRefactor includesSelector: selector).
+	self deny: (classToRefactor class includesSelector: selector).
+! !
+
+!MoveToInstanceOrClassMethodTest methodsFor: 'class factory' stamp: 'LMY 12/8/2019 17:35:59'!
+classToRefactorName
+
+	^#ClassToMoveMethod! !
+
+!PushDownInstanceVariableTest methodsFor: 'class factory' stamp: 'MSC 12/21/2019 09:49:48'!
+classToRefactorName
+	^#ClassToPushInstanceVariableDown.! !
+
+!PushDownInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/26/2019 20:13:23'!
+test01AnInstanceVariableDoesNotExistOnClassToFactorCannotBePushedDownToSubclasses
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	
+	self assertPushDownCreationFailsWith: PushDownInstanceVariable instanceVariableDoesNotExistOnClassToRefactor .
+	
+	self deny: (classToRefactor definesInstanceVariableNamed: instanceVariableToPushDown).
+	classToRefactor subclassesDo: [ :subClass |
+		self deny: (subClass definesInstanceVariableNamed: instanceVariableToPushDown).
+	].! !
+
+!PushDownInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/26/2019 20:10:51'!
+test02AnInstanceVariableThatIsAccessedOnClassToRefactorCannotBePushedDownToAllSubclasses
+
+	|  selector |
+	
+	selector := #newMethod.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName instanceVariableNames: instanceVariableToPushDown.
+	classToRefactor compile: selector, '^ ', instanceVariableToPushDown.
+	
+	self createClassNamed: #SubclassWithoutInstVarOne subclassOf: classToRefactor.
+	self createClassNamed: #SubclassWithoutInstVarTwo subclassOf: classToRefactor.
+	
+	self assertPushDownCreationFailsWith: (PushDownInstanceVariable 
+		errorMessageForInstanceVariable: instanceVariableToPushDown 
+		isAccessedInMethodsOf: classToRefactor).
+	
+	self assert: (classToRefactor definesInstanceVariableNamed: instanceVariableToPushDown).
+	classToRefactor subclassesDo: [ :subClass |
+		self deny: (subClass definesInstanceVariableNamed: instanceVariableToPushDown)].! !
+
+!PushDownInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/26/2019 20:49:31'!
+test03AnInstanceVariableThatIsNotAccessedOnClassToRefactorShouldBePushedDownToAllSubclasses
+
+	|  pushDown |
+	
+	classToRefactor := self createClassNamed: self classToRefactorName instanceVariableNames: instanceVariableToPushDown.
+	self createClassNamed: #SubclassWithoutInstVarOne subclassOf: classToRefactor.
+	self createClassNamed: #SubclassWithoutInstVarTwo subclassOf: classToRefactor.
+	
+	pushDown := PushDownInstanceVariable named: instanceVariableToPushDown from: classToRefactor.
+	pushDown apply.
+	
+	self deny: (classToRefactor definesInstanceVariableNamed: instanceVariableToPushDown).
+	classToRefactor subclassesDo: [ :subClass |
+		self assert: (subClass definesInstanceVariableNamed: instanceVariableToPushDown).
+	].! !
+
+!PushDownInstanceVariableTest methodsFor: 'setup' stamp: 'MSC 12/21/2019 22:01:42'!
+setUp
+
+	super setUp.
+	
+	instanceVariableToPushDown := 'a'.! !
+
+!PushDownInstanceVariableTest methodsFor: 'assertions' stamp: 'HAW 12/26/2019 19:41:11'!
+assertPushDownCreationFailsWith: aMessageTextCreator
+
+	self
+		assertCreation: [ PushDownInstanceVariable named: instanceVariableToPushDown from: classToRefactor. ]
+		failsWith: aMessageTextCreator ! !
+
+!PushDownMethodTest methodsFor: 'tests' stamp: 'fz 12/4/2019 14:09:00'!
+test01AnEmptyMethodOnClassToRefactorShouldBePushedDownToSubclasses
+
+	| classToRefactorSubclass1 classToRefactorSubclass2 classToRefactor selector push |
+
+	selector := #newMethod.
+   
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactorSubclass1 := self createClassNamed: #Subclass1 subclassOf: classToRefactor.
+	classToRefactorSubclass2 := self createClassNamed: #Subclass2 subclassOf: classToRefactor.
+	
+	classToRefactor compile: selector asString.
+           
+	push := PushDownMethod for: classToRefactor >> selector.
+	push apply.
+   
+	self assert: (classToRefactorSubclass1 includesSelector: selector).
+	self assert: (classToRefactorSubclass2 includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).
+	
+	! !
+
+!PushDownMethodTest methodsFor: 'tests' stamp: 'HAW 12/14/2019 11:23:35'!
+test02AMethodTemporaryVarDeclaredAsInstVarOnASubclassCanNotBePushedDownToSubclasses
+	| classToRefactorSubclass1 classToRefactorSubclass2 classToRefactor selector newVariable |
+	
+	selector := #newMethod.
+	newVariable := 'a'.
+   
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactorSubclass1 := self createClassNamed: #Subclass1 subclassOf: classToRefactor.
+	classToRefactorSubclass2 := self createClassNamed: #Subclass2 subclassOf: classToRefactor instanceVariableNames: newVariable.
+	
+	classToRefactor compile: selector, '|', newVariable, '|'.
+           
+	self
+		assertCreation: [ PushDownMethod for: classToRefactor >> selector ]
+		 failsWith: [ PushDownMethod errorMessageCanNotPushDownWithShadowedInstVarsOf:
+			{classToRefactorSubclass2 -> {newVariable }} asDictionary ].
+	   
+	self deny: (classToRefactorSubclass1 includesSelector: selector).
+	self deny: (classToRefactorSubclass2 includesSelector: selector).
+	self assert: (classToRefactor includesSelector: selector).! !
+
+!PushDownMethodTest methodsFor: 'tests' stamp: 'HAW 12/14/2019 11:24:14'!
+test03AMethodArgumentDeclaredAsInstVarOnASubclassCanNotBePushedDownToSubclasses
+	| classToRefactorSubclass1 classToRefactorSubclass2 classToRefactor selector newVariable |
+	
+	selector := #newMethod:.
+	newVariable := 'a'.
+   
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	classToRefactorSubclass1 := self createClassNamed: #Subclass1 subclassOf: classToRefactor.
+	classToRefactorSubclass2 := self createClassNamed: #Subclass2 subclassOf: classToRefactor instanceVariableNames: newVariable.
+	
+	classToRefactor compile: selector, newVariable.
+           
+	self
+		assertCreation: [ PushDownMethod for: classToRefactor >> selector ]
+		 failsWith: [ PushDownMethod errorMessageCanNotPushDownWithShadowedInstVarsOf:
+			{classToRefactorSubclass2 -> {newVariable }} asDictionary].
+	   
+	self deny: (classToRefactorSubclass1 includesSelector: selector).
+	self deny: (classToRefactorSubclass2 includesSelector: selector).
+	self assert: (classToRefactor includesSelector: selector).! !
+
+!PushDownMethodTest methodsFor: 'tests' stamp: 'fz 12/4/2019 14:58:23'!
+test04AMethodAccessesClassToRefactorInstVarShouldBePushedDownToSubclasses
+	| classToRefactorSubclass1 classToRefactorSubclass2 classToRefactor newVariable selector push |
+
+	selector := #newMethod.
+	newVariable := 'a'.
+   
+	classToRefactor := self createClassNamed: self classToRefactorName instanceVariableNames: newVariable.
+	classToRefactorSubclass1 := self createClassNamed: #Subclass1 subclassOf: classToRefactor.
+	classToRefactorSubclass2 := self createClassNamed: #Subclass2 subclassOf: classToRefactor.
+	
+	classToRefactor compile: selector, '^ 1 + ', newVariable.
+           
+	push := PushDownMethod for: classToRefactor >> selector.
+	push apply.
+   
+	self assert: (classToRefactorSubclass1 includesSelector: selector).
+	self assert: (classToRefactorSubclass2 includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).! !
+
+!PushDownMethodTest methodsFor: 'tests' stamp: 'fz 12/4/2019 14:58:27'!
+test05AMethodWritesClassToRefactorInstVarShouldBePushedDownToSubclasses
+	| classToRefactorSubclass1 classToRefactorSubclass2 classToRefactor newVariable selector push |
+
+	selector := #newMethod.
+	newVariable := 'a'.
+   
+	classToRefactor := self createClassNamed: self classToRefactorName instanceVariableNames: newVariable.
+	classToRefactorSubclass1 := self createClassNamed: #Subclass1 subclassOf: classToRefactor.
+	classToRefactorSubclass2 := self createClassNamed: #Subclass2 subclassOf: classToRefactor.
+	
+	classToRefactor compile: selector, ' a = 1'.
+           
+	push := PushDownMethod for: classToRefactor >> selector.
+	push apply.
+   
+	self assert: (classToRefactorSubclass1 includesSelector: selector).
+	self assert: (classToRefactorSubclass2 includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).! !
+
+!PushDownMethodTest methodsFor: 'tests' stamp: 'HAW 12/14/2019 11:24:59'!
+test06AMethodInClassToRefactorExistsInSubClassesShouldOverrideTheExistingSubClassesMethod
+	
+	| classToRefactor classToRefactorSubclass newVariable selector subclassMethodContent |
+	
+	newVariable := 'a'.	
+	selector := #newMethod.
+	subclassMethodContent := selector, '
+	^ 2 + ', newVariable, '.'.
+
+	classToRefactor := self createClassNamed: self classToRefactorName instanceVariableNames: newVariable.
+	classToRefactor compile: subclassMethodContent.
+	 
+	classToRefactorSubclass := self createClassNamed: #Subclass subclassOf: classToRefactor.
+	classToRefactorSubclass compile: selector, '^ 1 + ', newVariable.
+
+	self 
+		assertCreation: [ PushDownMethod for: classToRefactor >> selector ]
+		warnsWith: [ PushDownMethod warningMesssageForMessageAlreadyImplementedIn: { classToRefactorSubclass } ].
+		
+	self assert: (classToRefactorSubclass includesSelector: selector).
+	self assert: (classToRefactor includesSelector: selector).! !
+
+!PushDownMethodTest methodsFor: 'class factory' stamp: 'fz 12/4/2019 14:05:35'!
+classToRefactorName	
+
+	^#ClassToPushMethodDown! !
+
+!PushUpInstanceVariableTest methodsFor: 'class factory' stamp: 'MSC 12/15/2019 12:44:48'!
+classToRefactorName
+	^#ClassToPushInstanceVariableUp.! !
+
+!PushUpInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/26/2019 20:18:51'!
+test01AnInstanceVariableThatIsNotUsedOnClassToRefactorShouldBePushedUpToSuperclass
+
+	|  pushUp |
+	
+	classToRefactorSuperClass := self createClassNamed: #SuperclassWithoutInstVar.
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperClass instanceVariableNames: instanceVariableToPushUp.
+
+	pushUp := PushUpInstanceVariable named: instanceVariableToPushUp from: classToRefactor.
+	pushUp apply.
+	
+	self assert: (classToRefactorSuperClass definesInstanceVariableNamed: instanceVariableToPushUp).
+	classToRefactorSuperClass subclassesDo: [ :subClass |
+		self deny: (subClass definesInstanceVariableNamed: instanceVariableToPushUp)
+	].! !
+
+!PushUpInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/26/2019 20:18:52'!
+test02AnInstanceVariableOnMultipleSubclassesShouldBeRemovedFromAllSubclassesAndPushedUpToSuperClass
+
+	|  pushUp  |
+	
+	classToRefactorSuperClass := self createClassNamed: #SuperclassWithoutInstVar.
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperClass  instanceVariableNames: instanceVariableToPushUp.
+	self createClassNamed: #AnoterSubClassWithInstVar subclassOf: classToRefactorSuperClass instanceVariableNames: instanceVariableToPushUp.
+	
+	pushUp := PushUpInstanceVariable named: instanceVariableToPushUp from: classToRefactor.
+	pushUp apply.
+	
+	self assert: (classToRefactorSuperClass definesInstanceVariableNamed: instanceVariableToPushUp).
+	classToRefactorSuperClass subclassesDo: [ :subClass |
+		self deny: (subClass definesInstanceVariableNamed: instanceVariableToPushUp)
+	].! !
+
+!PushUpInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/26/2019 20:13:23'!
+test03AnInstanceVariableDoesNotExistOnClassToRefactorCannotBePushedUp
+	
+	classToRefactor := self createClassNamed: self classToRefactorName.
+	
+	self assertPushUpCreationFailsWith: PushUpInstanceVariable instanceVariableDoesNotExistOnClassToRefactor.
+	
+	self deny: (classToRefactor definesInstanceVariableNamed: instanceVariableToPushUp).! !
+
+!PushUpInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/26/2019 20:34:42'!
+test04AnInstanceVariableThatIsUsedOnSuperClassAsTemporaryVariableCannotBePushedUp
+
+	| selector |
+	
+	selector := #newMethod.
+	
+	classToRefactorSuperClass := self createClassNamed: #SuperclassWithVariableAsTemporaryVariable.
+	classToRefactorSuperClass compile: selector, '| ' , instanceVariableToPushUp , ' |'.
+	
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperClass  instanceVariableNames: instanceVariableToPushUp.
+	
+	self assertPushUpCreationFailsWith: (PushUpInstanceVariable 
+		errorMessageForInstanceVariable: instanceVariableToPushUp 
+		isDefinedInMethodsOf: classToRefactorSuperClass).
+	
+	self deny: (classToRefactorSuperClass definesInstanceVariableNamed: instanceVariableToPushUp).
+	self assert: (classToRefactor definesInstanceVariableNamed: instanceVariableToPushUp).! !
+
+!PushUpInstanceVariableTest methodsFor: 'setup' stamp: 'MSC 12/21/2019 22:12:16'!
+setUp
+
+	super setUp.
+	
+	instanceVariableToPushUp := 'a'.! !
+
+!PushUpInstanceVariableTest methodsFor: 'assertions' stamp: 'HAW 12/26/2019 20:18:51'!
+assertPushUpCreationFailsWith: aMessageTextCreator
+
+	self
+		assertCreation: [ PushUpInstanceVariable named: instanceVariableToPushUp from: classToRefactor. ]
+		failsWith: aMessageTextCreator.! !
+
+!PushUpMethodTest methodsFor: 'tests' stamp: 'MSC 11/12/2019 11:47:47'!
+test01AnEmptyMethodOnClassToRefactorShouldBePushedUpToSuperclass
+
+	| classToRefactorSuperclass classToRefactor selector push |
+
+	selector := #newMethod.
+   
+	classToRefactorSuperclass := self createClassNamed: #Superclass.
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperclass.
+	classToRefactor compile: selector asString.
+           
+	push := PushUpMethod for: classToRefactor >> selector.
+	push apply.
+   
+	self assert: (classToRefactorSuperclass includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).
+	
+	! !
+
+!PushUpMethodTest methodsFor: 'tests' stamp: 'MSC 11/12/2019 11:47:51'!
+test02AMethodAccessesClassToRefactorInstVarCanNotBePushedUpToSuperclass
+
+	| classToRefactorSuperclass classToRefactor selector newVariable |
+
+	newVariable := 'a'.	
+	selector := #newMethod.
+	 
+	classToRefactorSuperclass := self createClassNamed: #Superclass.
+
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperclass instanceVariableNames: newVariable.
+	classToRefactor compile: selector, '^ 1 + ', newVariable.
+
+	self
+		assertCreation: [ PushUpMethod for: classToRefactor >> selector ]
+		 failsWith: [ PushUpMethod errorMessageForMethodCannotAccessInstanceVariable ].
+	   
+	self deny: (classToRefactorSuperclass includesSelector: selector).
+	self assert: (classToRefactor includesSelector: selector).! !
+
+!PushUpMethodTest methodsFor: 'tests' stamp: 'MSC 11/12/2019 11:47:54'!
+test03AMethodWritesClassToRefactorInstVarCanNotBePushedUpToSuperclass
+
+	| classToRefactorSuperclass classToRefactor selector newVariable |
+
+	newVariable := 'a'.	
+	selector := #newMethod.
+	 
+	classToRefactorSuperclass := self createClassNamed: #Superclass.
+
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperclass instanceVariableNames: newVariable.
+	classToRefactor compile: selector, ' a = 1'.
+
+	self
+		assertCreation: [ PushUpMethod for: classToRefactor >> selector ]
+		 failsWith: [ PushUpMethod errorMessageForMethodCannotAccessInstanceVariable ].
+	   
+	self deny: (classToRefactorSuperclass includesSelector: selector).
+	self assert: (classToRefactor includesSelector: selector).! !
+
+!PushUpMethodTest methodsFor: 'tests' stamp: 'MSC 11/12/2019 11:47:57'!
+test04AMethodWritesSuperClassInstVarShouldBePushedUpToSuperclass
+
+	| classToRefactorSuperclass classToRefactor selector newVariable push |
+
+	newVariable := 'a'.	
+	selector := #newMethod.
+	 
+	classToRefactorSuperclass := self createClassNamed: #Superclass instanceVariableNames: newVariable.
+
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperclass.
+	classToRefactor compile: selector, ' a = 1'.	
+
+	push := PushUpMethod for: classToRefactor >> selector.
+	push apply.
+   
+	self assert: (classToRefactorSuperclass includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).! !
+
+!PushUpMethodTest methodsFor: 'tests' stamp: 'MSC 11/12/2019 11:48:00'!
+test05AMethodAccessesSuperClassClassToRefactorInstVarShouldBePushedUpToSuperclass
+
+	| classToRefactorSuperclass classToRefactor selector newVariable push |
+
+	newVariable := 'a'.	
+	selector := #newMethod.
+	 
+	classToRefactorSuperclass := self createClassNamed: #Superclass instanceVariableNames: newVariable.
+
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperclass.
+	classToRefactor compile: selector, '^ 1 + ', newVariable.
+
+	push := PushUpMethod for: classToRefactor >> selector.
+	push apply.
+	   
+	self assert: (classToRefactorSuperclass includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).! !
+
+!PushUpMethodTest methodsFor: 'tests' stamp: 'MSC 11/12/2019 11:48:03'!
+test06AMethodAccessesSuperClassClassToRefactorInstVarShouldBePushedUpToSuperclass
+
+	| classToRefactorSuperclass classToRefactor selector newVariable push |
+
+	newVariable := 'a'.	
+	selector := #newMethod.
+	 
+	classToRefactorSuperclass := self createClassNamed: #Superclass instanceVariableNames: newVariable.
+
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperclass.
+	classToRefactor compile: selector, '^ 1 + ', newVariable.
+
+	push := PushUpMethod for: classToRefactor >> selector.
+	push apply.
+	   
+	self assert: (classToRefactorSuperclass includesSelector: selector).
+	self deny: (classToRefactor includesSelector: selector).! !
+
+!PushUpMethodTest methodsFor: 'tests' stamp: 'HAW 12/14/2019 11:25:39'!
+test07AMethodInClassToRefactorExistsInSuperClassShouldOverrideTheExistingSuperClassMethod
+	
+	| classToRefactor classToRefactorSuperclass newVariable selector superclassMethodContent |
+	
+	newVariable := 'a'.	
+	selector := #newMethod.
+	superclassMethodContent := selector, '
+	^ 2 + ', newVariable, '.'.
+	 
+	classToRefactorSuperclass := self createClassNamed: #Superclass instanceVariableNames: newVariable.
+	classToRefactorSuperclass compile: selector, '^ 1 + ', newVariable.
+
+	classToRefactor := self createClassNamed: self classToRefactorName subclassOf: classToRefactorSuperclass.
+	classToRefactor compile: superclassMethodContent.
+
+	self 
+		assertCreation: [ PushUpMethod for: classToRefactor >> selector ]
+		warnsWith: [ PushUpMethod methodToPushUpExistOnSuperclassWarningMessage ].
+		
+	self assert: (classToRefactorSuperclass includesSelector: selector).
+	self assert: (classToRefactor includesSelector: selector).! !
+
+!PushUpMethodTest methodsFor: 'class factory' stamp: 'MSC 11/12/2019 11:48:09'!
+classToRefactorName	
+
+	^#ClassToPushMethodUp! !
 
 !RemoveAllUnreferencedInstanceVariablesTest methodsFor: 'tests' stamp: 'HAW 8/2/2018 16:15:11'!
 test01NoVariableIsRemovedWhenClassHasNoInstanceVariable
@@ -17074,26 +19823,28 @@ test03WhenAppliedRemovesInstanceVariable
 	
 	! !
 
-!RemoveParameterTest methodsFor: 'tests' stamp: 'HAW 9/2/2018 19:46:28'!
+!RemoveParameterTest methodsFor: 'tests' stamp: 'HAW 1/2/2020 06:58:49'!
 test01CanNotRemoveParameterFromUnaryMessages
 
 	self 
 		assertCreation: [ RemoveParameter 
+			atIndex: 1
 			named: 'aParameter' 
-			from: thisContext method 
-			implementors: {thisContext method} 
+			from: #m1
+			implementors: {} 
 			senders: {} ]
 		failsWith: [ RemoveParameter canNotRemoveParameterFromUnaryMessagesErrorMessage ]
 ! !
 
-!RemoveParameterTest methodsFor: 'tests' stamp: 'HAW 9/2/2018 19:46:43'!
+!RemoveParameterTest methodsFor: 'tests' stamp: 'HAW 1/2/2020 06:59:13'!
 test02CanNotRemoveParameterFromBinaryMessages
 
 	self 
 		assertCreation: [ RemoveParameter 
+			atIndex: 1
 			named: '+' asSymbol 
-			from: Number>>#+ 
-			implementors: {Number>>#+} 
+			from: #+ 
+			implementors: {} 
 			senders: {} ]
 		failsWith: [ RemoveParameter canNotRemoveParameterFromBinaryMessagesErrorMessage ]
 ! !
@@ -17366,6 +20117,57 @@ test13ParameterIsRemovedCorrecltyFromSendersWithMoreThanOneSend
 		self ', keywordToKeep, ' 4.')
 	
 	! !
+
+!RemoveParameterTest methodsFor: 'tests' stamp: 'HAW 1/1/2020 23:33:19'!
+test14CanNotRemoveParameterIndexLessThanOne
+
+	| parameterNotInMessage |
+	
+	parameterNotInMessage := 'otherParameter'.
+
+	self 
+		assertCreation: [ RemoveParameter 
+			atIndex: 0
+			named: parameterNotInMessage 
+			from: #m1:  
+			implementors: {} 
+			senders: {} ]
+		failsWith: [ RemoveParameter invalidParameterIndexErrorMessage ]
+! !
+
+!RemoveParameterTest methodsFor: 'tests' stamp: 'HAW 1/1/2020 23:36:16'!
+test15CanNotRemoveParameterIndexBiggerThanOldSelectorNumberOfKeywords
+
+	| parameterNotInMessage |
+	
+	parameterNotInMessage := 'otherParameter'.
+
+	self 
+		assertCreation: [ RemoveParameter 
+			atIndex: 2
+			named: parameterNotInMessage 
+			from: #m1:  
+			implementors: {} 
+			senders: {} ]
+		failsWith: [ RemoveParameter invalidParameterIndexErrorMessage ]
+! !
+
+!RemoveParameterTest methodsFor: 'tests' stamp: 'HAW 1/1/2020 23:38:57'!
+test16ParameterIndexMustBeInteger
+
+	| parameterNotInMessage |
+	
+	parameterNotInMessage := 'otherParameter'.
+
+	self 
+		assertCreation: [ RemoveParameter 
+			atIndex: 1.5
+			named: parameterNotInMessage 
+			from: #m1:m2: 
+			implementors: {} 
+			senders: {} ]
+		failsWith: [ RemoveParameter invalidParameterIndexErrorMessage ]
+! !
 
 !RemoveParameterTest methodsFor: 'class factory' stamp: 'HAW 9/1/2018 12:24:23'!
 classToRefactorName
@@ -18182,6 +20984,38 @@ test19FailsWhenNewVariableIsHiddenInAnyMethodOfAnySubclass
 		failsWith: [ NewInstanceVariablePrecondition errorMessageForNewVariable: newVariable willBeHiddenAtAll: (Array with: (subclass>>selector)) ].
 	! !
 
+!RenameInstanceVariableTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:55:59'!
+test20ClassChangeIsAddedWhenRenamingAnInstanceVariable
+
+	| rename classChanges refactorClassChangeSet refactorClassChangeSets |
+
+	"I have to do this because on this case I want to keep track of the changes - Hernan"
+	[ classToRefactor := self 
+		createClassNamed: self classToRefactorName 
+		subclassOf: Object 
+		instanceVariableNames: oldVariable 
+		classVariableNames: ''
+		poolDictionaries: ''
+		category: self classCategoryOfTestData.
+
+	refactorClassChangeSets := ChangeSet allChangeSetsWithClass: classToRefactor.
+	self assert: 1 = refactorClassChangeSets size description: 'Can not run the test because the class is in more than one changeset (or in none)'.
+	refactorClassChangeSet := refactorClassChangeSets anyOne.
+	refactorClassChangeSet removeClassChanges: classToRefactor.
+	
+	rename := RenameInstanceVariable from: oldVariable to: newVariable in: classToRefactor .
+	rename apply.
+	
+	classChanges := refactorClassChangeSet classChangeAt: classToRefactor name.
+	self assert: (classChanges includes: #change). ]
+		ensure: [ | package | 
+			classToRefactor class compile: 'wantsChangeSetLogging ^false'.
+			ChangeSet allChangeSets remove: refactorClassChangeSet.
+			package := CodePackage packageOfClass: classToRefactor ifNone: nil.
+			self assert: package notNil.
+			package hasUnsavedChanges: false ].
+	! !
+
 !RenameSelectorTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 23:26:45'!
 allClassCategoriesOfTestData
 
@@ -18205,10 +21039,10 @@ classToRefactorName
 
 	^#ClassToRenameSelector! !
 
-!RenameSelectorTest methodsFor: 'class factory' stamp: 'HAW 5/28/2017 22:48:43'!
+!RenameSelectorTest methodsFor: 'class factory' stamp: 'HAW 12/18/2019 20:32:41'!
 createClassToRefactor
 
-	classToRefactor := self createClassWithImplementorAndSenderNamed: self classToRefactorName subclassOf: Object categorizedAd: self classCategoryOfTestData.
+	classToRefactor := self createClassWithImplementorAndSenderNamed: self classToRefactorName subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
 ! !
 
 !RenameSelectorTest methodsFor: 'class factory' stamp: 'HAW 5/25/2017 23:14:02'!
@@ -18244,8 +21078,8 @@ assertWasNotRenamedInClass: aClass
 	self deny: (senderMethod sendsOrRefersTo: newSelector).
 	self assert: (senderMethod sendsOrRefersTo: oldSelector)! !
 
-!RenameSelectorTest methodsFor: 'assertions' stamp: 'HAW 3/7/2019 17:10:28'!
-assertWasRenamedInClassAndMeta: aClass
+!RenameSelectorTest methodsFor: 'assertions' stamp: 'HAW 3/7/2020 18:44:08'!
+assertWasRenamedInClass: aClass
 	
 	| senderMethod |
 	
@@ -18254,13 +21088,14 @@ assertWasRenamedInClassAndMeta: aClass
 	senderMethod := aClass compiledMethodAt: senderOfOldSelector.
 	self deny: (senderMethod sendsOrRefersTo: oldSelector).
 	self assert: (senderMethod sendsOrRefersTo: newSelector).
-	
-	self assert: (aClass class includesSelector: newSelector).
-	self deny: (aClass class includesSelector: oldSelector).
-	senderMethod := aClass class compiledMethodAt: senderOfOldSelector.
-	self deny: (senderMethod sendsOrRefersTo: oldSelector).
-	self assert: (senderMethod sendsOrRefersTo: newSelector).
 ! !
+
+!RenameSelectorTest methodsFor: 'assertions' stamp: 'HAW 3/7/2020 18:44:59'!
+assertWasRenamedInClassAndMeta: aClass
+	
+	self
+		assertWasRenamedInClass: aClass;
+		assertWasRenamedInClass: aClass class! !
 
 !RenameSelectorTest methodsFor: 'setup' stamp: 'HAW 5/28/2017 21:46:55'!
 setUp
@@ -18333,13 +21168,11 @@ test05NewSelectorCanNotBeEmpty
 		failsWith: [ RenameSelector newSelectorCanNotBeEmptyErrorMessage ]
 ! !
 
-!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/15/2018 11:52:37'!
-test06ThereMustBeImplementorsToRename
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 12/30/2019 18:01:00'!
+test06CanRenameWithoutImplementors
 
-	self 
-		assertCreation: [ RenameSelector from: oldSelector to: newSelector implementors: #() senders: #() ]
-		failsWith: [ RenameSelector implementorsCanNotBeEmptyErrorMessage ]
-! !
+	self shouldntFail: [ RenameSelector from: oldSelector to: newSelector implementors: #() senders: #() ]
+		! !
 
 !RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/18/2018 15:48:43'!
 test07AllImplementorsMustImplementOldSelector
@@ -18455,12 +21288,12 @@ test14RenamesSymbolsEqualToOldSelector
 	self assert: (senderMethod sendsOrRefersTo: newSelector) 
 ! !
 
-!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/15/2018 12:03:55'!
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:34:01'!
 test15ScopeToRenameCanBeClassOnly
 	
 	| rename anotherClassSendingMessage |
 	
-	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: Object categorizedAd: self classCategoryOfTestData.
+	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
 	
 	anotherClassSendingMessage := self createClassNamed: #ClassToAvoidRenameSelector.
 	anotherClassSendingMessage compile: senderOfOldSelector asString , ' self ' , oldSelector asString.
@@ -18471,12 +21304,12 @@ test15ScopeToRenameCanBeClassOnly
 	self assertWasRenamedInClassAndMeta: classToRefactor.
 	self assertWasNotRenamedInClass: anotherClassSendingMessage ! !
 
-!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/15/2018 12:04:14'!
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:07:15'!
 test16ScopeToRenameCanBeHierarchyOnly
 	
 	| rename anotherClassSendingMessage superclassToRefactor subclassToRefactor |
 	
-	superclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SuperclassToRenameSelector subclassOf: Object categorizedAd: self classCategoryOfTestData.
+	superclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SuperclassToRenameSelector subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
 	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: superclassToRefactor categorizedAd: self classCategoryOfTestData.
 	subclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SubclassToRenameSelector subclassOf: classToRefactor categorizedAd: self classCategoryOfTestData.
 
@@ -18491,13 +21324,13 @@ test16ScopeToRenameCanBeHierarchyOnly
 	self assertWasRenamedInClassAndMeta: subclassToRefactor.
 	self assertWasNotRenamedInClass: anotherClassSendingMessage ! !
 
-!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/15/2018 12:04:25'!
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:07:32'!
 test17ScopeToRenameCanBeCategoryOnly
 	
 	| rename anotherClassSendingMessage  anotherClassToRefactor |
 	
-	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: Object categorizedAd: self classCategoryOfTestData.
-	anotherClassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #AnotherclassToRenameSelector subclassOf: Object categorizedAd: self classCategoryOfTestData.
+	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
+	anotherClassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #AnotherclassToRenameSelector subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
 	
 	anotherClassSendingMessage := self createClassNamed: #ClassToAvoidRenameSelector category: self classCategoryOfTestDataToAvoid.
 	anotherClassSendingMessage compile: senderOfOldSelector asString , ' self ' , oldSelector asString.
@@ -18510,17 +21343,17 @@ test17ScopeToRenameCanBeCategoryOnly
 	self assertWasNotRenamedInClass: anotherClassSendingMessage
 		! !
 
-!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/15/2018 12:04:47'!
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:07:49'!
 test18ScopeToRenameCanBeCategoriesAndHierarchyOnly
 	
 	| rename anotherClassSendingMessage superclassToRefactor subclassToRefactor anotherClassToRefactor classInOtherCategoryToRefactor |
 	
-	superclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SuperclassToRenameSelector subclassOf: Object categorizedAd: self anotherClassCategoryOfTestData.
+	superclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SuperclassToRenameSelector subclassOf: RefactoringClassTestData categorizedAd: self anotherClassCategoryOfTestData.
 	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: superclassToRefactor categorizedAd: self classCategoryOfTestData.
 	subclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SubclassToRenameSelector subclassOf: classToRefactor categorizedAd: self classCategoryOfTestData.
-	anotherClassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #AnotheclassToRenameSelector subclassOf: Object categorizedAd: self classCategoryOfTestData.
+	anotherClassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #AnotheclassToRenameSelector subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
 	classInOtherCategoryToRefactor := self 
-		createClassWithImplementorAndSenderInMetaTooNamed: #OtherCatClassToRenameSelector subclassOf: Object categorizedAd: self anotherClassCategoryOfTestData.
+		createClassWithImplementorAndSenderInMetaTooNamed: #OtherCatClassToRenameSelector subclassOf: RefactoringClassTestData categorizedAd: self anotherClassCategoryOfTestData.
 	
 	anotherClassSendingMessage := self createClassNamed: #ClassToAvoidRenameSelector category: self classCategoryOfTestDataToAvoid.
 	anotherClassSendingMessage compile: senderOfOldSelector asString , ' self ' , oldSelector asString.
@@ -18535,13 +21368,13 @@ test18ScopeToRenameCanBeCategoriesAndHierarchyOnly
 	self assertWasRenamedInClassAndMeta: classInOtherCategoryToRefactor.
 	self assertWasNotRenamedInClass: anotherClassSendingMessage ! !
 
-!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/15/2018 12:10:33'!
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:08:00'!
 test19ScopeToRenameCanBeTheCompleteSystem
 	
 	| rename anotherClassToRefactor |
 	
-	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: Object categorizedAd: self classCategoryOfTestData.
-	anotherClassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #AnotherclassToRenameSelector subclassOf: Object categorizedAd: self classCategoryOfTestData.
+	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
+	anotherClassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #AnotherclassToRenameSelector subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
 
 	rename := RenameSelector from: oldSelector to: newSelector inSystem: Smalltalk.
 	"This is just to be sure that no more than the expected methods will be renamed because I'm using Smalltalk as system.
@@ -18753,12 +21586,12 @@ test31CanNotRenameFromKeywordOfOneParameterToBinary
 		raise: Error
 		withMessageText: (RenameSelector errorMessageForNewSelector: newSelector isNotOfSameTypeAs: oldSelector)! !
 
-!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 8/3/2019 09:02:58'!
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 20:08:36'!
 test32HierarchyScopeRenamesSelectorsFromSuperclassDefiningSelector
 	
 	| rename superclassToRefactor subclassToRefactor |
 	
-	superclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SuperclassToRenameSelector subclassOf: Object categorizedAd: self classCategoryOfTestData.
+	superclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SuperclassToRenameSelector subclassOf: RefactoringClassTestData categorizedAd: self classCategoryOfTestData.
 	classToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName subclassOf: superclassToRefactor categorizedAd: self classCategoryOfTestData.
 	subclassToRefactor := self createClassWithImplementorAndSenderInMetaTooNamed: #SubclassToRenameSelector subclassOf: superclassToRefactor categorizedAd: self classCategoryOfTestData.
 
@@ -18768,6 +21601,37 @@ test32HierarchyScopeRenamesSelectorsFromSuperclassDefiningSelector
 	self assertWasRenamedInClassAndMeta: superclassToRefactor.
 	self assertWasRenamedInClassAndMeta: classToRefactor.
 	self assertWasRenamedInClassAndMeta: subclassToRefactor.
+	! !
+
+!RenameSelectorTest methodsFor: 'tests' stamp: 'HAW 3/7/2020 18:48:46'!
+test33DoNotRenameSendersAndImplementorsWhoseCompilerClassIsDifferentToCompiler
+	
+	"Requested by Phil B. to avoid refactoring OMeta2 classes - Hernan"
+	
+	| rename anotherClassSendingMessage  |
+	
+	classToRefactor := self 
+		createClassWithImplementorAndSenderInMetaTooNamed: self classToRefactorName 
+		subclassOf: RefactoringClassTestData 
+		categorizedAd: self classCategoryOfTestData.
+	
+	anotherClassSendingMessage := self 
+		createClassWithImplementorAndSenderInMetaTooNamed: #ClassToAvoidRenameSelector 
+		subclassOf: RefactoringClassTestData 
+		categorizedAd: self classCategoryOfTestData.
+	
+	anotherClassSendingMessage class compile: 'compilerClass ^nil'.
+
+	rename := RenameSelector 
+		from: oldSelector 
+		to: newSelector 
+		inCategoryOf: classToRefactor 
+		organizedBy: SystemOrganization.
+	rename apply.
+
+	self assertWasRenamedInClassAndMeta: classToRefactor.
+	self assertWasNotRenamedInClass: anotherClassSendingMessage.
+	self assertWasRenamedInClass: anotherClassSendingMessage class.
 	! !
 
 !RenameTemporaryTest methodsFor: 'class factory' stamp: 'HAW 6/25/2017 21:53:44'!
@@ -18799,7 +21663,7 @@ test01VariableToRenameHasToBeDefined
 		assertCreation: [ RenameTemporary from: oldVariable to: newVariable in: methodNode ]
 		failsWith: [ RenameTemporary errorMessageForTemporaryVariable: oldVariable notDefinedIn: methodNode ]! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 6/25/2017 21:55:08'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'RNG 2/25/2020 00:02:32'!
 test02NewVariableNameCanNotBeEmpty
 
 	| methodNode newVariable oldVariable |
@@ -18811,9 +21675,9 @@ test02NewVariableNameCanNotBeEmpty
 	
 	self 
 		assertCreation: [ RenameTemporary from: oldVariable to: newVariable in: methodNode ]
-		failsWith: [ RenameTemporary newVariableCanNotBeEmptyErrorMessage ]! !
+		failsWith: [ NewTemporaryPrecondition errorMessageForEmptyTemporaryVariable ]! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 6/25/2017 21:55:17'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'RNG 2/25/2020 00:06:33'!
 test03NewVariableHasToBeValid
 
 	| methodNode newVariable oldVariable |
@@ -18825,10 +21689,10 @@ test03NewVariableHasToBeValid
 	
 	self 
 		assertCreation: [ RenameTemporary from: oldVariable to: newVariable in: methodNode ]
-		failsWith: [ RenameTemporary errorMessageForInvalidTemporaryVariable: newVariable ]
+		failsWith: [ NewTemporaryPrecondition errorMessageForInvalidTemporaryVariable: newVariable ]
 	! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 6/25/2017 21:55:22'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'RNG 2/25/2020 00:07:12'!
 test04NewVariableNameCanNotBeDefinedInMethod
 
 	| methodNode oldVariable |
@@ -18839,9 +21703,9 @@ test04NewVariableNameCanNotBeDefinedInMethod
 	
 	self 
 		assertCreation: [RenameTemporary from: oldVariable to: oldVariable in: methodNode ]
-		failsWith: [RenameTemporary  errorMessageForNewTemporaryVariable: oldVariable isAlreadyDefinedIn: methodNode ]! !
+		failsWith: [ NewTemporaryPrecondition errorMessageForNewTemporaryVariable: oldVariable isAlreadyDefinedIn: methodNode ]! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 3/7/2019 22:56:31'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'RNG 2/25/2020 00:07:23'!
 test05FailsIfNewTemporaryIsEqualToInstanceVariableInClass
 
 	| methodNode oldVariable newVariable classToRefactor |
@@ -18854,9 +21718,9 @@ test05FailsIfNewTemporaryIsEqualToInstanceVariableInClass
 	
 	self 
 		assertCreation: [ RenameTemporary from: oldVariable to: newVariable in: methodNode ]
-		failsWith: [ RenameTemporary errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: classToRefactor ]! !
+		failsWith: [ NewTemporaryPrecondition errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: classToRefactor ]! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 3/7/2019 22:56:45'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'RNG 2/25/2020 00:07:38'!
 test06FailsIfNewTemporaryIsEqualToInstanceVariableInAnySuperclass
 
 	| methodNode oldVariable newVariable classToRefactor superclassToRefactor |
@@ -18870,9 +21734,9 @@ test06FailsIfNewTemporaryIsEqualToInstanceVariableInAnySuperclass
 	
 	self 
 		assertCreation: [ RenameTemporary from: oldVariable to: newVariable in: methodNode ]
-		failsWith: [ RenameTemporary errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: superclassToRefactor ]! !
+		failsWith: [ NewTemporaryPrecondition errorMessageFor: newVariable canNotBeNamedAsInstanceVariableDefinedIn: superclassToRefactor ]! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 8/9/2018 19:28:36'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test07RenameCreatesNewTemporaryVariableAndDeletesOldOne
 
 	| methodNode oldVariable newVariable rename newMethodNode |
@@ -18885,8 +21749,8 @@ test07RenameCreatesNewTemporaryVariableAndDeletesOldOne
 	rename := RenameTemporary from: oldVariable to: newVariable in: methodNode.
 	newMethodNode := rename methodNodeAfterApply.
 	
-	self deny: (newMethodNode hasArgumentOrTemporary: oldVariable).
-	self assert: (newMethodNode hasArgumentOrTemporary: newVariable)! !
+	self deny: (newMethodNode hasArgumentOrTemporaryNamed: oldVariable).
+	self assert: (newMethodNode hasArgumentOrTemporaryNamed: newVariable)! !
 
 !RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 8/9/2018 19:28:42'!
 test08RenameChangesReferencesFromOldVariableToNewVariable
@@ -18905,7 +21769,7 @@ test08RenameChangesReferencesFromOldVariableToNewVariable
 	self assert: newVariable equals: assigmentNode variable name.
 	self assert: newVariable equals: assigmentNode value arguments first name.! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 8/9/2018 19:28:47'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test09RenamesArguments
 
 	| methodNode oldVariable newVariable rename newMethodNode |
@@ -18918,11 +21782,11 @@ test09RenamesArguments
 	rename := RenameTemporary from: oldVariable to: newVariable in: methodNode.
 	newMethodNode := rename methodNodeAfterApply.
 	
-	self deny: (newMethodNode hasArgumentOrTemporary: oldVariable).
-	self assert: (newMethodNode hasArgumentOrTemporary: newVariable).
+	self deny: (newMethodNode hasArgumentOrTemporaryNamed: oldVariable).
+	self assert: (newMethodNode hasArgumentOrTemporaryNamed: newVariable).
 	self assert: newVariable equals: newMethodNode block statements first expr name.! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 6/25/2017 21:55:56'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'RNG 2/25/2020 00:07:53'!
 test10NewVariableNameCanNotBeDefinedAsBlockArgument
 
 	| methodNode oldVariable newVariable |
@@ -18934,9 +21798,9 @@ test10NewVariableNameCanNotBeDefinedAsBlockArgument
 	
 	self 
 		assertCreation: [RenameTemporary from: oldVariable to: newVariable in: methodNode ]
-		failsWith: [RenameTemporary  errorMessageForNewTemporaryVariable: newVariable isAlreadyDefinedIn: methodNode ]! !
+		failsWith: [ NewTemporaryPrecondition errorMessageForNewTemporaryVariable: newVariable isAlreadyDefinedIn: methodNode ]! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 8/14/2018 11:16:28'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test11RenamesBlockArguments
 
 	| methodNode oldVariable newVariable rename newMethodNode |
@@ -18949,14 +21813,14 @@ test11RenamesBlockArguments
 	rename := RenameTemporary from: oldVariable to: newVariable in: methodNode.
 	newMethodNode := rename methodNodeAfterApply.
 	
-	self deny: (newMethodNode hasArgumentOrTemporary: oldVariable).
-	self assert: (newMethodNode hasArgumentOrTemporary: newVariable).
+	self deny: (newMethodNode hasArgumentOrTemporaryNamed: oldVariable).
+	self assert: (newMethodNode hasArgumentOrTemporaryNamed: newVariable).
 	"asserts it renamed block argument - Hernan"
 	self assert: newVariable equals: newMethodNode block statements first arguments first name.
 	"asserts it renamed reference to block argument - Hernan"
 	self assert: newVariable equals: newMethodNode block statements first block statements first expr name! !
 
-!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 8/14/2018 11:18:03'!
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:12:33'!
 test12RenamesBlockTemporaries
 
 	| methodNode oldVariable newVariable rename newMethodNode |
@@ -18969,12 +21833,97 @@ test12RenamesBlockTemporaries
 	rename := RenameTemporary from: oldVariable to: newVariable in: methodNode.
 	newMethodNode := rename methodNodeAfterApply.
 	
-	self deny: (newMethodNode hasArgumentOrTemporary: oldVariable).
-	self assert: (newMethodNode hasArgumentOrTemporary: newVariable).
+	self deny: (newMethodNode hasArgumentOrTemporaryNamed: oldVariable).
+	self assert: (newMethodNode hasArgumentOrTemporaryNamed: newVariable).
 	"asserts it renamed block temporary - Hernan"
 	self assert: newVariable equals: newMethodNode block statements first temporaries first name.
 	"asserts it renamed reference to block temporary - Hernan"
 	self assert: newVariable equals: newMethodNode block statements first block statements first expr name! !
+
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:15:28'!
+test13OldNodeMustBePartOfMethodNode
+
+	| methodNode oldVariable newVariable oldVariableNode |
+	
+	oldVariable := 'old'.
+	newVariable := 'new'.
+	
+	methodNode := self methodNodeOf: 'm1 | ', oldVariable, ' | '.
+	oldVariableNode := methodNode tempNodes anyOne.
+	
+	self 
+		assertCreation: [RenameTemporary fromOldVariableNode: oldVariableNode copy to: newVariable in: methodNode ]
+		failsWith: [RenameTemporary oldVariableNodeNotPartOfMethodNodeErrorDescription ]	! !
+
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:15:28'!
+test14OldVariableNodeMustBeArgOrTempNode
+
+	| methodNode newVariable oldVariableNode |
+	
+	newVariable := 'new'.
+	
+	methodNode := self methodNodeOf: 'm1 self'.
+	oldVariableNode := methodNode block statements first.
+	
+	self 
+		assertCreation: [RenameTemporary fromOldVariableNode: oldVariableNode to: newVariable in: methodNode ]
+		failsWith: [RenameTemporary oldVariableNodeMustBeArgOrTempNodeErrorDescription ]	! !
+
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 12/17/2019 19:15:28'!
+test15RenameVariablesWithSameNameInDifferentBlocksCorrectly
+
+	| methodNode oldVariable newVariable oldVariableNode newMethodNode rename |
+	
+	oldVariable := 'old'.
+	newVariable := 'new'.
+	
+	methodNode := self methodNodeOf: 'm1 [|',oldVariable,'| ^',oldVariable, '].[|',oldVariable,'| ^',oldVariable, '].'.
+	oldVariableNode := methodNode block statements first temporaries first.
+	
+	rename := RenameTemporary fromOldVariableNode: oldVariableNode to: newVariable in: methodNode.
+	newMethodNode := rename methodNodeAfterApply.
+	
+	self 
+		assert: 'm1 [|',newVariable,'| ^',newVariable, '].[|',oldVariable,'| ^',oldVariable, '].'
+		equals: newMethodNode sourceText! !
+
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'RNG 2/25/2020 00:08:04'!
+test16CantRenameVariableToANameAlreadyUsedInAnUpperBlock
+
+	| methodNode oldVariable newVariable oldVariableNode |
+	
+	oldVariable := 'old'.
+	newVariable := 'new'.
+	
+	methodNode := self methodNodeOf: 'm1 [|',newVariable,'| [|',oldVariable,'| ^', oldVariable,']. ^',newVariable,' ]'.
+	oldVariableNode := methodNode block statements first statements first temporaries first.
+	
+	self 
+		assertCreation: [RenameTemporary fromOldVariableNode: oldVariableNode to: newVariable in: methodNode ]
+		failsWith: [
+			NewTemporaryPrecondition errorMessageForNewTemporaryVariable: newVariable isAlreadyDefinedIn: methodNode ]
+	! !
+
+!RenameTemporaryTest methodsFor: 'tests' stamp: 'HAW 2/29/2020 18:09:43'!
+test17RenamesOneCharVariableAfterAReturnWithoutCharsAfterThatCorrectly
+
+	| methodNode oldVariable newVariable rename newSource |
+	
+	"This test is due to a fixed error in the parser. 
+	See ParserTest>>#testRangesAreOkWhenReturningAVariableWithoutSpaceAfterThat"
+	
+	oldVariable := 'o'.
+	newVariable := 'n'.
+
+	methodNode := self methodNodeOf: 'm1 |',oldVariable,'| ^',oldVariable.
+	
+	rename := RenameTemporary from: oldVariable to: newVariable in: methodNode.
+	newSource := rename apply.
+	
+	self 
+		assert: 'm1 |',newVariable,'| ^',newVariable
+		equals: newSource
+		! !
 
 !SafelyRemoveClassTest methodsFor: 'tests' stamp: 'HAW 8/1/2018 16:43:08'!
 test02ClassesWithNoReferencesAndNoSubclassesAreSafetelyRemoved
@@ -19100,6 +22049,28 @@ test09CanRemoveIfReferencesToSubclassesAreInTheHierarchy
 	
 	self assert: classToRemove isObsolete.	
 	self assert: classToRemoveSubclass isObsolete.! !
+
+!SafelyRemoveClassTest methodsFor: 'tests' stamp: 'HAW 12/18/2019 16:04:18'!
+test10WarnWhenHasReferencesToName
+
+	| classToRemove classReferencing methodNameReferencingClass | 
+	
+	classToRemove := self createClassNamed: self classToRemoveName.
+	classReferencing := self createClassNamed: #ClassReferencingClassToRemove.
+	methodNameReferencingClass := #m1.
+	classReferencing compile: methodNameReferencingClass asString, ' ^#', classToRemove name asString.
+	
+	self
+		should: [ SafelyRemoveClass of: classToRemove ]
+		raise: self referencesRefactoringWarning 
+		withExceptionDo: [ :aWarning | | reference |
+			self 
+				assert: (SafelyRemoveClass warningMessageForReferencesToNames: (Array with: classToRemove))
+				equals: aWarning messageText.
+			self assert: 1 equals: aWarning numberOfReferences.
+			reference := aWarning anyReference.
+			self assert: classReferencing name equals: reference classSymbol.
+			self assert: methodNameReferencingClass equals: reference methodSymbol ]! !
 
 !SafelyRemoveClassTest methodsFor: 'test support' stamp: 'HAW 8/1/2018 15:48:56'!
 assertSubclassesReturnsACopy
@@ -19400,6 +22371,44 @@ test10RemovesPipesWhenRemovingLastTemporaryInBlock
 	
 	self assertMethodNamed: messageName in: classToRefactor hasSourceEqualTo: newSourceCode.! !
 
+!TemporaryToInstanceVariableTest methodsFor: 'testing' stamp: 'EB 12/22/2019 18:18:26'!
+test11TemporaryShouldNotExistAsArgumentInOtherBlocksInSameMethod
+
+	| classToRefactor messageName methodNode sourceText variableName blockWithTempString blockWithArgumentString |
+
+	classToRefactor _ self createClassNamed: self classToRefactorName.
+	
+	variableName _ 'a'.
+	messageName _ #m1.
+	blockWithTempString _ '[ | ', variableName, ' | ].'.
+	blockWithArgumentString _ '[ :', variableName, ' | ].'.
+	sourceText _ messageName, ' ', blockWithTempString, ' ', blockWithArgumentString.
+	methodNode _ self
+		compileMethodNodeIn: classToRefactor 
+		named: messageName 
+		sourceCode: sourceText.
+		
+	self assertCreation: [ TemporaryToInstanceVariable named: variableName fromMethod: methodNode ]
+		failsWith: [ TemporaryToInstanceVariable temporaryExistsInOtherBlockErrorDescription ].
+! !
+
+!TemporaryToInstanceVariableTest methodsFor: 'testing' stamp: 'EB 12/22/2019 18:38:40'!
+test12CantExtractArgument
+
+	| classToRefactor methodNode sourceText |
+
+	classToRefactor _ self createClassNamed: self classToRefactorName.
+	
+	sourceText := 'm1: a'.
+	methodNode _ self
+		compileMethodNodeIn: classToRefactor 
+		named: #m1:
+		sourceCode: sourceText.
+		
+	self assertCreation: [ TemporaryToInstanceVariable named: 'a' fromMethod: methodNode ]
+		failsWith: [ TemporaryToInstanceVariable inexistentTemporaryErrorDescription ].
+! !
+
 !TemporaryToInstanceVariableTest methodsFor: 'assertions' stamp: 'HAW 5/19/2019 17:29:33'!
 assertMethodNamed: aMethodName in: aClass hasSourceEqualTo: aSourceCode
 
@@ -19425,6 +22434,314 @@ compileMethodNodeIn: aClass named: aSelector sourceCode: sourceCode
 methodNodeIn: aClass named: aSelector
 
 	^ aClass compiledMethodAt: aSelector :: methodNode.! !
+
+!ChangesTest methodsFor: 'assertions' stamp: 'HAW 11/1/2019 17:04:26'!
+assertIsLogged: aString times: stringCount and: aBlock
+
+	| logContent startPosition indexOfSubstring |
+
+	logContent := self userChangesForTestsFile textContents.
+ 
+	startPosition := 1.
+	stringCount <= 0
+		ifTrue: [ self deny: (logContent includesSubString: aString) ]
+		ifFalse:[
+			stringCount timesRepeat: [
+				indexOfSubstring := logContent findString: aString startingAt: startPosition.
+				self assert: indexOfSubstring > 0.
+				startPosition := indexOfSubstring + 1 ].
+			indexOfSubstring := logContent findString: aString startingAt: startPosition.
+			self assert: 0 equals: indexOfSubstring].
+		
+	aBlock value: logContent value: startPosition.
+	
+
+	! !
+
+!ChangesTest methodsFor: 'assertions' stamp: 'HAW 11/1/2019 17:03:04'!
+assertIsLoggedOnce: aString
+
+	self assertIsLoggedOnce: aString and: [:logContents :nextPosition | ] ! !
+
+!ChangesTest methodsFor: 'assertions' stamp: 'HAW 11/1/2019 17:02:33'!
+assertIsLoggedOnce: aString and: aBlock
+
+	self assertIsLogged: aString times: 1 and: aBlock! !
+
+!ChangesTest methodsFor: 'assertions' stamp: 'HAW 11/1/2019 17:03:30'!
+assertIsLoggedTwice: aString
+
+	self assertIsLogged: aString times: 2 and: [:logContents :nextPosition | ] ! !
+
+!ChangesTest methodsFor: 'user changes' stamp: 'HAW 11/1/2019 17:07:50'!
+changeUserChangesFileWhile: aBlock
+
+	^ Preferences use: self userChangesForTestsFileExtension asUserChangesFileNameExtensionWhile: aBlock ! !
+
+!ChangesTest methodsFor: 'user changes' stamp: 'HAW 11/1/2019 17:07:57'!
+scanChangesFromFile
+
+	| fileStream changeList |
+
+	fileStream := Smalltalk defaultUserChangesName asFileEntry readStream.
+	changeList := ChangeList new scanFile: fileStream from: 0 to: fileStream size.
+
+	^ changeList changeList.
+! !
+
+!ChangesTest methodsFor: 'user changes' stamp: 'HAW 11/1/2019 17:08:00'!
+userChangesForTestsFile
+
+	^self userChangesForTestsFileName asFileEntry! !
+
+!ChangesTest methodsFor: 'user changes' stamp: 'HAW 11/1/2019 17:08:04'!
+userChangesForTestsFileExtension
+
+	^'.test.changes' ! !
+
+!ChangesTest methodsFor: 'user changes' stamp: 'HAW 11/1/2019 17:08:07'!
+userChangesForTestsFileName
+
+	^(FileIOAccessor default baseNameFor: Smalltalk imageName), self userChangesForTestsFileExtension! !
+
+!ChangesTest methodsFor: 'setUp/tearDown' stamp: 'HAW 12/17/2019 10:36:27'!
+tearDown
+
+	self userChangesForTestsFile delete.
+	super tearDown ! !
+
+!ChangesTest methodsFor: 'test data' stamp: 'HAW 12/17/2019 10:37:01'!
+createTestDataClass
+
+	^ self createClassNamed: self testDataClassName 
+		! !
+
+!ChangesTest methodsFor: 'test data' stamp: 'HAW 11/1/2019 17:08:21'!
+testDataClassName
+
+	^ #LogChangesTestClass__! !
+
+!ChangesTest methodsFor: 'scan tests' stamp: 'HAW 11/1/2019 17:08:27'!
+test01ScanNewClassChange
+
+	| newClass newClassChange |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClassChange := self scanChangesFromFile last.
+
+		self assert: newClassChange changeType equals: #classDefinition.
+		self assert: newClassChange changeClass equals: newClass.
+		self deny: newClassChange stamp isNil.
+		self deny: newClassChange isTestClassChange.
+	] ! !
+
+!ChangesTest methodsFor: 'scan tests' stamp: 'HAW 11/1/2019 17:08:31'!
+test02ScanNewMethodChange
+
+	| newMethodChange newClass |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClass compile: 'm1 ^ 1' classified: 'a-category'.
+
+		newMethodChange := self scanChangesFromFile last.
+
+		self assert: newMethodChange changeType equals: #method.
+		self assert: newMethodChange methodSelector equals: #m1.
+		self assert: newMethodChange changeClass equals: newClass.
+		self assert: newMethodChange prior isNil.
+		self deny: newMethodChange stamp isNil ] ! !
+
+!ChangesTest methodsFor: 'scan tests' stamp: 'HAW 11/1/2019 17:08:34'!
+test03ScanMethodModifiedChange
+
+	| methodModifiedChange newClass |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClass compile: 'm1 ^ 1' classified: 'a-category'.
+		newClass compile: 'm1 ^ 2' classified: 'a-category'.
+
+		methodModifiedChange := self scanChangesFromFile last.
+
+		self assert: methodModifiedChange changeType equals: #method.
+		self assert: methodModifiedChange methodSelector equals: #m1.
+		self assert: methodModifiedChange changeClass equals: newClass.
+		self deny: methodModifiedChange prior isNil.
+		self deny: methodModifiedChange stamp isNil ]
+! !
+
+!ChangesTest methodsFor: 'scan tests' stamp: 'HAW 11/1/2019 17:08:37'!
+test04ScanMethodRemovalChange
+
+	| methodRemovalChange newClass |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClass compile: 'm1 ^ 1' classified: 'a-category'.
+		newClass removeSelector: #m1.
+
+		methodRemovalChange := self scanChangesFromFile last.
+
+		self assert: methodRemovalChange isMethodDeletion.
+		self assert: methodRemovalChange methodSelector equals: #m1.
+		self deny: methodRemovalChange stamp isNil ]
+! !
+
+!ChangesTest methodsFor: 'scan tests' stamp: 'HAW 11/1/2019 17:08:40'!
+test05ScanClassRemovalChange
+
+	| classRemovalChange newClass |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClass removeFromSystem.
+
+		classRemovalChange := self scanChangesFromFile last.
+
+		self assert: classRemovalChange changeType equals: #classRemoval.
+		self assert: classRemovalChange changeClassName equals: self testDataClassName.
+		self assert: classRemovalChange isClassDeletion.
+		self deny: classRemovalChange stamp isNil ]
+
+! !
+
+!ChangesTest methodsFor: 'scan tests' stamp: 'MGD 12/19/2019 19:37:24'!
+test06ScanClassRenamedChange
+
+	| classRenamedChange newClass |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClass rename: #NewTestClass__.
+
+		classRenamedChange := self scanChangesFromFile last.
+
+		self assert: classRenamedChange changeType equals: #classRenamed.
+		self assert: classRenamedChange changeClassName equals: self testDataClassName.
+		self assert: classRenamedChange newClassName equals: #NewTestClass__.
+		self deny: classRenamedChange stamp isNil. ]
+! !
+
+!ChangesTest methodsFor: 'log tests' stamp: 'HAW 11/1/2019 17:08:45'!
+test01AddingAClassShouldBeLogged
+	" Log format expected:
+
+	!!classDefinition: #ClassName category: #'Category' stamp: changeStamp!!
+	Object subclass: #ClassName
+		instanceVariableNames: '...'
+		classVariableNames: '...'
+		poolDictionaries: '....'
+		category: 'Category'!!
+	"
+	| newClass |
+	
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+
+		self assertIsLoggedOnce: '!!classDefinition: #', self testDataClassName, ' category: #''', self classCategoryOfTestData,''' stamp:'.
+		self assertIsLoggedOnce: newClass definition ] ! !
+
+!ChangesTest methodsFor: 'log tests' stamp: 'HAW 11/1/2019 17:08:48'!
+test02AddingANewMethodShouldBeLogged
+	" Log format expected:
+
+	!!Class methodsFor: 'category' stamp: 'author stamp'!!
+	methodSourceCode
+	"
+	| aClass |
+	
+	self changeUserChangesFileWhile: [
+		aClass := self createTestDataClass.
+		aClass compile: 'm1 ^ 1' classified: 'a-category'.
+
+		self assertIsLoggedOnce: '!!', self testDataClassName, ' methodsFor: ''a-category'' stamp:'.
+		self assertIsLoggedOnce: 'm1 ^ 1'] 
+! !
+
+!ChangesTest methodsFor: 'log tests' stamp: 'HAW 11/1/2019 17:08:50'!
+test03ChangingAMethodShouldBeLogged
+	" Log format expected:
+
+	!!Class methodsFor: 'category' stamp: 'author stamp'!!
+	newMethodSourceCode
+	"
+	| aClass |
+	
+	self changeUserChangesFileWhile: [
+		aClass := self createTestDataClass.
+		aClass compile: 'm1 ^ 1' classified: 'a-category'.
+		aClass compile: 'm1 ^ 2' classified: 'a-category'.
+
+		self assertIsLoggedTwice: '!!', self testDataClassName , ' methodsFor: ''a-category'' stamp:'.
+		self assertIsLoggedOnce: 'prior: '.
+		self assertIsLoggedOnce: 'm1 ^ 2' ] ! !
+
+!ChangesTest methodsFor: 'log tests' stamp: 'HAW 11/1/2019 17:08:53'!
+test04RemovingAMethodShouldBeLogged
+	" Log format expected:
+
+	!!methodRemoval: #ClassName selector stamp: changeStamp!!
+	methodSourceCode
+	"
+	| newClass methodSource readStream |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClass compile: 'm1 ^ 1' classified: 'a-category'.
+		newClass removeSelector: #m1.
+
+		self 
+			assertIsLoggedOnce: '!!methodRemoval: ',self testDataClassName, ' #m1 stamp:'
+			and: [ :logContents :nextPosition |
+				readStream := ReadStream on: logContents.
+		 		readStream position: nextPosition.
+				readStream nextLine.
+				methodSource := readStream nextLine.
+		
+				self assert: 'm1 ^ 1!!' equals: methodSource ]]! !
+
+!ChangesTest methodsFor: 'log tests' stamp: 'HAW 11/1/2019 17:08:56'!
+test05RemovingAClassShouldBeLogged
+	" Log format expected:
+
+	!!classRemoval: #ClassName stamp: changeStamp!!
+	classDefinitionMessage
+	"
+	| newClass definition loggedDefinition readStream |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		definition := newClass definition.
+		newClass removeFromSystem.
+
+		self 
+			assertIsLoggedOnce: '!!classRemoval: #', self testDataClassName, ' stamp:'
+			and: [ :logContents :nextPosition |
+				readStream := ReadStream on: logContents.
+		 		readStream position: nextPosition.
+				readStream nextLine.
+				loggedDefinition := readStream upToEnd.
+				
+				self assert: definition,'!!' equals: loggedDefinition ]]! !
+
+!ChangesTest methodsFor: 'log tests' stamp: 'MGD 3/30/2020 17:00:58'!
+test06RenamingAClassShouldBeLogged
+	" Log format expected:
+
+	!!classRenamed: #OldName as: #NewName stamp  stamp:!!
+	Smalltalk renameClassNamed: #OldName as: #NewName
+	"
+	| newClass |
+
+	self changeUserChangesFileWhile: [
+		newClass := self createTestDataClass.
+		newClass rename: #NewTestClass__.
+
+		self assertIsLoggedOnce: '!!classRenamed: #', self testDataClassName, ' as: #NewTestClass__ stamp:'.
+		self assertIsLoggedOnce: 'Smalltalk renameClassNamed: #', self testDataClassName, ' as: #NewTestClass__'.
+	]! !
 
 !WriteStreamTest methodsFor: 'tests' stamp: 'jpb 8/2/2019 23:49:13'!
 testIsStream
@@ -19734,9 +23051,223 @@ testIsColorForm
 testIsGrayForm
 	self assert: (GrayForm new is: #GrayForm)! !
 
+!ObjectTest methodsFor: 'error tests' stamp: 'HAW 10/23/2019 09:23:56'!
+testErrorSignalsTheRightException
+
+	| reason |
+	
+	reason :=  'something went wrong'.
+	self 
+		should: [ self error: reason ]
+		raise: Error
+		withMessageText: reason ! !
+
+!ObjectTest methodsFor: 'error tests' stamp: 'HAW 10/23/2019 09:24:03'!
+testShouldNotHappenBecauseSignalsTheRightError
+
+	| reason |
+	
+	reason :=  'something went wrong'.
+	self 
+		should: [ self shouldNotHappenBecause: reason ]
+		raise: Error
+		withMessageText: self shouldNotHappenBecauseErrorMessage, reason ! !
+
+!ObjectTest methodsFor: 'error tests' stamp: 'HAW 10/23/2019 09:24:11'!
+testShouldNotHappenSignalsTheRightError
+
+	self 
+		should: [ self shouldNotHappen ]
+		raise: Error
+		withMessageText: self shouldNotHappenErrorMessage ! !
+
 !WeakMessageSendTest methodsFor: 'testing' stamp: 'jpb 8/2/2019 23:44:58'!
 testIsMessageSend
 	self assert: (WeakMessageSend new is: #MessageSend).! !
+
+!MethodReferenceTest methodsFor: 'test actual class' stamp: 'HAW 10/23/2019 21:08:24'!
+testActualClassIfAbsentEvaluatesBlockIfClassDoesNotExist
+
+	self 
+		assert: 1 
+		equals: ((MethodReference 
+			classSymbol: #X_Y_Z 
+			classIsMeta: false 
+			methodSymbol: #xx) actualClassIfAbsent: [ 1])! !
+
+!MethodReferenceTest methodsFor: 'test actual class' stamp: 'HAW 10/23/2019 21:09:29'!
+testActualClassIfAbsentReturnsClassIfClassExists
+
+	self 
+		assert: self class
+		equals: ((MethodReference 
+			class: self class  
+			selector: thisContext selector) actualClassIfAbsent: [ self fail])! !
+
+!MethodReferenceTest methodsFor: 'test actual class' stamp: 'HAW 10/23/2019 21:05:22'!
+testActualClassReturnNilWhenClassDoesNotExist
+
+	self assert: (MethodReference classSymbol: #X_Y_Z classIsMeta: false methodSymbol: #xx) actualClass isNil! !
+
+!MethodReferenceTest methodsFor: 'test actual class' stamp: 'HAW 10/23/2019 21:09:58'!
+testActualClassReturnsClassIfExists
+
+	self 
+		assert: self class
+		equals: (MethodReference 
+			class: self class 
+			selector: thisContext selector) actualClass ! !
+
+!MethodReferenceTest methodsFor: 'test source code' stamp: 'HAW 10/23/2019 21:42:10'!
+testSourceCodeIfAbsentEvaluatesBlockIfClassDoesNotExist
+
+	self 
+		assert: 1
+		equals: ((MethodReference classSymbol: #X_Y_Z classIsMeta: false methodSymbol:#xx) sourceCodeIfAbsent: [ 1 ])! !
+
+!MethodReferenceTest methodsFor: 'test source code' stamp: 'HAW 10/23/2019 21:42:34'!
+testSourceCodeIfAbsentEvaluatesBlockIfMethodDoesNotExist
+
+	self 
+		assert: 1
+		equals: ((MethodReference class: self class selector:#xx) sourceCodeIfAbsent: [ 1 ])! !
+
+!MethodReferenceTest methodsFor: 'test source code' stamp: 'HAW 10/23/2019 21:43:23'!
+testSourceCodeIfAbsentReturnsSourceCodeIfExists
+
+	self 
+		assert: (self class>>thisContext selector) sourceCode
+		equals: ((MethodReference class: self class selector: thisContext selector) sourceCodeIfAbsent: [ self fail ])! !
+
+!MethodReferenceTest methodsFor: 'test source code' stamp: 'HAW 10/23/2019 21:11:15'!
+testSourceCodeReturnsSourceCodeIfMethodExist
+
+	self 
+		assert: (self class compiledMethodAt: thisContext selector) sourceCode
+		equals: (MethodReference 
+			class: self class 
+			selector: thisContext selector) sourceCode ! !
+
+!MethodReferenceTest methodsFor: 'test source code' stamp: 'HAW 10/23/2019 21:39:16'!
+testSourceCodeSignalExceptionIfClassDoesNotExist
+
+	self 
+		should: [ (MethodReference classSymbol: #X_Y_Z classIsMeta: false methodSymbol:#xx) sourceCode ]
+		raise: Error
+		withMessageText: MethodReference classDoesNotExistErrorMessage ! !
+
+!MethodReferenceTest methodsFor: 'test source code' stamp: 'HAW 10/23/2019 21:13:28'!
+testSourceCodeSignalExceptionIfMethodDoesNotExist
+
+	self 
+		should: [ (MethodReference class: self class selector: #xx) sourceCode ]
+		raise: Error
+		withMessageText: Dictionary keyNotFoundErrorDescription ! !
+
+!MethodReferenceTest methodsFor: 'test compiled method' stamp: 'HAW 1/1/2020 19:46:58'!
+testCompiledMethodIfAbsentEvaluatesAbsentBlockWhenActualClassIsNil
+
+	self 
+		assert: 1 
+		equals: ((MethodReference 
+			classSymbol: #X_Y_Z 
+			classIsMeta: false 
+			methodSymbol: #xx) compiledMethodIfAbsent: [ 1])! !
+
+!MethodReferenceTest methodsFor: 'test compiled method' stamp: 'HAW 1/1/2020 19:47:05'!
+testCompiledMethodIfAbsentEvaluatesAbsentBlockWhenSelectorIsNotImplemented
+
+	self 
+		assert: 1 
+		equals: ((MethodReference 
+			classSymbol: self class name
+			classIsMeta: false 
+			methodSymbol: #xx) compiledMethodIfAbsent: [ 1])! !
+
+!MethodReferenceTest methodsFor: 'test compiled method' stamp: 'HAW 1/1/2020 19:47:13'!
+testCompiledMethodIfAbsentReturnsImplementedMethodWhenItExists
+
+	self 
+		assert: thisContext method 
+		equals: ((MethodReference 
+			classSymbol: self class name
+			classIsMeta: false 
+			methodSymbol: thisContext selector) compiledMethodIfAbsent: [ self fail ])! !
+
+!MethodReferenceTest methodsFor: 'test string version' stamp: 'HAW 4/9/2020 15:51:56'!
+test01DefaultStringVersionIsClassAndSelector
+
+	| stringVersion |
+	
+	stringVersion := (MethodReference method: thisContext method) stringVersion.
+	
+	self assert: self class name, ' ', thisContext selector equals: stringVersion! !
+
+!MethodReferenceTest methodsFor: 'test string version' stamp: 'HAW 4/9/2020 15:53:25'!
+test02CanPrefixStringVersion
+
+	| methodReference prefix |
+	
+	prefix := 'a prefix'.
+	methodReference := MethodReference method: thisContext method.
+	methodReference prefixStringVersionWith: prefix.
+	
+	self assert: prefix,self class name, ' ', thisContext selector equals: methodReference stringVersion! !
+
+!MethodReferenceTest methodsFor: 'test testing' stamp: 'HAW 1/2/2020 06:49:00'!
+testReferencesParameterAtReturnsFalseWhenInvalid
+
+	self deny: ((MethodReference 
+		classSymbol: #X_Y_Z 
+		classIsMeta: false 
+		methodSymbol: #xx) referencesParameterAt: 1)! !
+
+!MethodReferenceTest methodsFor: 'test testing' stamp: 'HAW 1/2/2020 06:49:03'!
+testReferencesParameterAtReturnsTrueWhenTheParameterIsReferenced
+
+	self assert: ((MethodReference 
+		classSymbol: #MethodReference 
+		classIsMeta: false 
+		methodSymbol: #referencesParameterAt:) referencesParameterAt: 1)! !
+
+!SymbolTest methodsFor: 'tests - selector validation' stamp: 'RNG 3/29/2020 19:59:47'!
+testIsNotValidBinarySelectorIfItContainsACharacterNotAllowed
+
+	self deny: #'(' isValidSelector! !
+
+!SymbolTest methodsFor: 'tests - selector validation' stamp: 'RNG 3/29/2020 20:01:07'!
+testIsNotValidKeywordSelectorIfItContainsSeparators
+
+	self deny: #'between: and:' isValidSelector! !
+
+!SymbolTest methodsFor: 'tests - selector validation' stamp: 'RNG 3/29/2020 19:52:35'!
+testIsNotValidUnarySelectorIfItContainsCharactersUsedInBinarySelectors
+
+	self deny: #'a+b' isValidSelector! !
+
+!SymbolTest methodsFor: 'tests - selector validation' stamp: 'RNG 3/29/2020 19:51:29'!
+testIsNotValidUnarySelectorIfItStartsWithALetterAndContainsSeparators
+
+	self deny: #'with spaces' isValidSelector! !
+
+!SymbolTest methodsFor: 'tests - selector validation' stamp: 'RNG 3/29/2020 19:53:43'!
+testIsValidBinarySelectorIfItContainsAnAllowedCharacterOrSequenceOfCharacters
+
+	self
+		assert: #+ isValidSelector;
+		assert: #+-+ isValidSelector! !
+
+!SymbolTest methodsFor: 'tests - selector validation' stamp: 'RNG 3/29/2020 20:00:35'!
+testIsValidKeywordSelectorIfItContainsKeywordsWithColons
+
+	self
+		assert: #includes: isValidSelector;
+		assert: #between:and: isValidSelector! !
+
+!SymbolTest methodsFor: 'tests - selector validation' stamp: 'RNG 3/29/2020 19:50:31'!
+testIsValidUnarySelectorIfItStartsWithALetterAndDoesNotContainSeparators
+
+	self assert: #t234 isValidSelector! !
 
 !BecomeTestExperiment methodsFor: 'as yet unclassified' stamp: 'jmv 1/11/2019 12:21:36'!
 initialize
@@ -20704,3 +24235,12 @@ primTestSubtract: aNumber
 primTestTruncated
 	<primitive: 551>
 	^ #fail! !
+
+!Preferences class methodsFor: '*BaseImageTests' stamp: 'RNG 3/24/2020 22:44:27'!
+withTemporaryValue: temporaryValue of: aPreferenceName do: aBlock
+	"Allows to execute a piece of code with a temporary value of the given preference. Useful for testing purposes."
+	
+	| currentValue |
+	currentValue := self perform: aPreferenceName.
+	self setPreference: aPreferenceName toValue: temporaryValue.
+	[ aBlock value ] ensure: [ self setPreference: aPreferenceName toValue: currentValue ]! !
