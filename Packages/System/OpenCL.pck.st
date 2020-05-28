@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #4127] on 30 April 2020 at 9:52:35 am'!
+'From Cuis 5.0 [latest update: #4145] on 15 May 2020 at 3:07:44 pm'!
 'Description '!
-!provides: 'OpenCL' 1 47!
+!provides: 'OpenCL' 1 49!
 !requires: 'FFI' 1 nil nil!
 SystemOrganization addCategory: #'OpenCL-Constants'!
 SystemOrganization addCategory: #OpenCL!
@@ -4096,6 +4096,11 @@ mapBuffer: buf block: shouldBlock flags: flags offset: offset size: sz waitOn: e
 	^evt
 	! !
 
+!OpenCLCommandQueue methodsFor: 'mem mapping' stamp: 'jmv 5/15/2020 15:06:42'!
+mapBuffer: buf waitOn: events
+
+	^self mapBuffer: buf block: true flags: CL_MAP_WRITE + CL_MAP_READ offset: 0 size: buf byteSize waitOn: events! !
+
 !OpenCLCommandQueue methodsFor: 'mem mapping' stamp: 'jmv 12/26/2016 09:32:10'!
 mapImage: image block: shouldBlock flags: flags origin: origin region: region waitOn: events
 	"This is the most general image-mapping method; it corresponds directly to the OpenCL API call.  In practice, more convenient methods will allow omitting many arguments."
@@ -4537,6 +4542,16 @@ argAt: index putDouble: aNumber
 	Given that bytes are copied right away, there's no problem with Garbage Collection moving or reclaiming them."
 
 	^ self argAt: index putBytesOf: aNumber asFloat! !
+
+!OpenCLKernel methodsFor: 'arguments' stamp: 'jmv 5/9/2020 11:47:57'!
+argAt: index putFloat2: aCollectionOfNumbers
+	"To be used with arguments declared in OpenCL as float2.
+	They are 2 32 bit floating point numbers together.
+
+	Argument to this method is a Smalltalk object. Argument passed to #argAt:putBytesOf: is also a Smalltalk object.
+	Given that bytes are copied right away, there's no problem with Garbage Collection moving or reclaiming them."
+
+	^ self argAt: index putBytesOf: (FloatArray new: 2 from: aCollectionOfNumbers)! !
 
 !OpenCLKernel methodsFor: 'arguments' stamp: 'jmv 1/5/2016 11:45'!
 argAt: index putFloat4: aCollectionOfNumbers

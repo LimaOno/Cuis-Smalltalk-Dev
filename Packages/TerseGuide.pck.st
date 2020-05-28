@@ -1,6 +1,6 @@
-'From Cuis 5.0 [latest update: #3969] on 13 December 2019 at 1:09:03 pm'!
+'From Cuis 5.0 [latest update: #4145] on 18 May 2020 at 2:33:32 pm'!
 'Description Add ability to dynamically add topic pages from other sources.'!
-!provides: 'TerseGuide' 1 135!
+!provides: 'TerseGuide' 1 137!
 SystemOrganization addCategory: #TerseGuide!
 
 
@@ -74,7 +74,7 @@ addAdditionalTopicsTo: topicsList
 		topicsList at: each title put: each
 	].! !
 
-!TerseGuideHelp methodsFor: 'topics' stamp: 'RNG 12/13/2019 12:47:09'!
+!TerseGuideHelp methodsFor: 'topics' stamp: 'jmv 5/6/2020 11:10:35'!
 coreTopics
 	
 	^ `Dictionary new
@@ -89,7 +89,6 @@ coreTopics
 	at: 'Canvas' put: #canvas;
 	at: 'Character' put: #character;
 	at: 'Coding' put: #coding;
-	at: 'Constants' put: #constants;
 	at: 'Colors' put: #colors;
 	at: 'Conditional Statements' put: #conditionalStatement;
 	at: 'Conversion' put: #conversion;
@@ -452,25 +451,25 @@ y _ x asSet.									"convert to set collection"
 
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 10/6/2018 13:10:28'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 5/11/2020 17:09:56'!
 assignment
 	"Assignment"
 	^
 '| x y z |
-												"either the Cuis or the ASCII convention can be used"
-x _ 4.										"assignment (Cuis)"
-z := 7.										"assignment (ASCII)"
-x _ y _ z _ 6.								"compound assignment"
+"either the Cuis or the ASCII convention can be used for assignment"
+x _ 4.								"assignment (Cuis) using the underline character ($_)"
+z := 7.								"assignment (ASCII)"
+x _ y _ z _ 6.						"compound assignment"
 x _ (y _ 6) + 1.
-x _ Object new.							"bind to an allocated instance of a class"
-x _ 123 class.								"discover the class of the object"
-x _ Integer superclass.					"discover the superclass of a class"
-x _ Object allInstances.				"get an array of all instances of a class"
-x _ Integer allSuperclasses.			"get all superclasses of a class"
-x _ 1.2 hash.								"hash value for object"
-y _ x copy.									"copy the object"
-y _ x shallowCopy.						"copy the object (not overridden)"
-y _ x veryDeepCopy.						"complete tree copy using a dictionary"
+x _ Object new.					"bind to an allocated instance of a class"
+x _ 123 class.						"discover the class of the object"
+x _ Integer superclass.			"discover the superclass of a class"
+x _ Object allInstances.		"get an array of all instances of a class"
+x _ Integer allSuperclasses.	"get all superclasses of a class"
+x _ 1.2 hash.						"hash value for object"
+y _ x copy.							"copy the object"
+y _ x shallowCopy.				"copy the object (not overridden)"
+y _ x veryDeepCopy.				"complete tree copy using a dictionary"
 
 '! !
 
@@ -738,29 +737,6 @@ switch at: $A put: [Transcript show: ''Case A''; newLine].
 switch at: $B put: [Transcript show: ''Case B''; newLine].
 switch at: $C put: [Transcript show: ''Case C''; newLine].
 result _ (switch at: $B) value.
-
-'! !
-
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 10/6/2018 16:33:15'!
-constants
-	"Constants"
-	^
-'| b x |
-b _ true.								"true constant"
-b _ false.								"false constant"
-x _ nil.									"nil object constant"
-x _ 1.									"integer constants"
-x _ 3.14.								"float constants"
-x _ 2e-2.								"fractional constants"
-x _ 16r0F.								"hex constant".
-x _ -1.									"negative constants"
-x _ ''Hello''.							"string constant"
-x _ ''I''''m here''.						"single quote escape"
-x _ $A.									"character constant"
-x _ $ .									"character constant (space)"
-x _ #aSymbol.							"symbol constants"
-x _ #(3 2 1).							"array constants"
-x _ #(''abc'' 2 $a).					"mixing of types allowed"
 
 '! !
 
@@ -1171,7 +1147,7 @@ DirectoryEntry vmDirectory.							"answer the VM directory"
 
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 10/6/2018 17:00:37'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 5/11/2020 20:35:15'!
 font
 	"Fonts"
 	^
@@ -1199,12 +1175,9 @@ nam _ ''DejaVu Sans Mono''.
 
 "
 Add a font, Method 2.
-Place .sf2 files in the ''AdditionalFontData'' directory, then...
 "
 
-Feature require: #''SF2-Import''.		"install the installer for fonts in .sf2 files"
-
-SF2Installer readSF2FontsFromDir: ''AdditionalFontData''.  "install the fonts from .sf2 files"
+FontFamily readAdditionalTrueTypeFonts.
 
 AbstractFont familyNames.				"list the installed fonts"
 
@@ -1274,7 +1247,7 @@ x sortBlock: sort.						"Specify how to sort the heap"
 x _ Heap withAll: #(11 32 19 21) sortBlock: sort.	"Create a new heap sorted according to a sortBlock"
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 10/6/2018 17:05:41'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 5/11/2020 17:59:02'!
 internalStream
 	"Internal  Streams"
 	^
@@ -1310,8 +1283,9 @@ str _ String new writeStream.				"use a stream to form a string"
 str nextPutAll: ''As of ''.					"more efficient than concatenation"
 str nextPutAll: Date today asString.
 str nextPut: $,; space.						"newLine and tab are also possible"
-str nextPutAll: (Complex real: 4.7 imaginary: -2.2) printString.
-str nextPutAll: '' is the location of the pole.''.  "complete the formation"
+str nextPutAll: Float pi printString, '' radians = ''.  "concatenation can be used"
+str nextPutAll: Float pi radiansToDegrees printString.
+str nextPutAll: '' degrees.''; newLine.  "complete the formation"
 x _ str contents.								"to get the results"
 
 x _ String streamContents: [:string |	"a more compact way"
@@ -1319,8 +1293,9 @@ x _ String streamContents: [:string |	"a more compact way"
 		nextPutAll: ''As of '';
 		nextPutAll: Date today asString;
 		nextPut: $,; space;
-		nextPutAll: (Complex real: 4.7 imaginary: -2.2) printString;
-		nextPutAll: '' is the location of the pole.''].
+		nextPutAll: Float twoPi printString, '' radians = '';  "concatenation can be used"
+		nextPutAll: Float twoPi radiansToDegrees printString;
+		nextPutAll: '' degrees.''; newLine].  "complete the formation"
 
 '! !
 
@@ -1357,7 +1332,7 @@ y _ x asSet.										"convert to set collection"
 
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 2/4/2016 21:23'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 5/11/2020 20:36:28'!
 introduction
 	"Using Terse Guide"
 	^
@@ -1368,7 +1343,13 @@ The SmalltalkEditor enables you to Do or Print a statement when the cursor is in
 
 This text pane is refreshed each time it is accessed. You can change the examples and run them without hurting anything. Go ahead and experiment!!
 
-The Terse Guide does not attempt to provide the entire protocol of a topic. You are encouraged to explore further.
+The Terse Guide does not attempt to provide the entire protocol of a topic. You are encouraged to explore further by using the Protocol Browser as follows:
+
+Button 1>World>Open...>Browser 
+then in the upper right pane:
+Button 2>Message List>browse protocol
+
+You can narrow the scope of protocol browsing by selecting a class in the upper left pane of the Protocol Browser.
 "
 '! !
 
@@ -1451,7 +1432,7 @@ area ySeparation.			"answer the y component of the specified separation"
 
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 10/6/2018 17:47:42'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 5/11/2020 17:36:14'!
 layoutSpec
 	"Layout Specification"
 	^
@@ -1464,10 +1445,6 @@ padding _ 0.3.
 available _ Rectangle origin: 0@0 corner: 300@200. 
 
 y _ LayoutSpec fixedExtent: 350@300.
-
-x fixedHeight.
-	"If proportional is zero, answer stored fixed extent, or actual morph extent if undefined. (no proportional extent is computed)
-	Otherwise, we do proportional layout, and the stored extent is a minimum extent, so we don''t  really a fixed extent."
 
 y _ LayoutSpec fixedHeight: height.
 	"the parameter is taken as the fixed height to use.
@@ -1490,10 +1467,6 @@ x fixedOrMorphHeight: height.
 x fixedOrMorphWidth: width.
 	"the parameter is taken as the fixed width to use.
 	No proportional part."
-
-x fixedWidth.
-	"If proportional is zero, answer stored fixed extent, or actual morph extent if undefined. (no proportional extent is computed)
-	Otherwise, we do proportional layout, and the stored extent is a minimum extent, so we don''t  really a fixed extent."
 
 x fixedWidth: width.
 	"the parameter is taken as the fixed width to use.
@@ -1542,14 +1515,10 @@ y _ LayoutSpec proportionalWidth: 0.2 proportionalHeight: 0.7 minorDirectionPadd
 
 y _ LayoutSpec useAll.		"Use all available space"
 
-x proportionalHeight.
-
 x proportionalHeight: height.
 
 x proportionalHeight: height minimum: 90.
 	"Alternatives: same as in #proportionalWidth:minimum:, see comment there"
-
-x proportionalWidth.
 
 x proportionalWidth: width.
 
@@ -1583,30 +1552,38 @@ x widthFor: available.
 
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 10/6/2018 12:59:54'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'jmv 5/6/2020 11:14:41'!
 literals
 	"Literals"
 	^
-'| b x |
-b _ true.								"true pseudo-variable"
-b _ false.								"false pseudo-variable"
-x _ nil.									"nil object pseudo-variable"
-x _ 1.									"integer constant"
-x _ 3.14.								"float constant"
-x _ 2e-2.								"fractional constant"
-x _ 2.0e-2.								"float constant"
-x _ 7/8.									"fractional constant"
-x _ 16r0F.								"small integer constant".
-x _ 16rFFFFFFFF.						"large positive integer constant".
-x _ 16rFFFFFFFF negated.			"large negative integer constant".
-x _ -1.									"negative integer constant"
-x _ ''Hello''.							"string constant"
-x _ ''I''''m here''.						"single quote escape"
-x _ $A.									"character constant"
-x _ $ .									"character constant (space)"
-x _ #aSymbol.							"symbol constants"
-x _ #(3 2 1).							"array constant"
-x _ #(''abc'' 2 $a).					"mixing of types allowed"
+'"Literals are objects that are created when you compile a method. They are always available when the method is run, and the same instance is used each time. Remember that when a method is run, the source code, compiled to create it, is no longer used at all. This includes the source code for the literals. In the example below, the CompiledMethod will not have a string ''3.14'', but the Float object built after it.
+Note: It is considered bad practice to later modify them, as they would no longer match their source code."
+| b x |
+b _ true.									"true pseudo-variable"
+b _ false.									"false pseudo-variable"
+x _ nil.										"nil object pseudo-variable"
+x _ 1.										"SmallInteger literal"
+x _ 3.14.									"Float literal"
+x _ 2e-2.									"Fraction literal"
+x _ 2.0e-2.									"Float literal"
+x _ 7/8.										"Fraction literal"
+x _ 16r0F.									"SmallInteger literal".
+x _ 16rFFFFFFFF.							"LargePositiveInteger literal".
+x _ 16rFFFFFFFF negated.				"LargeNegativeInteger literal".
+x _ -1.										"negative SmallInteger literal"
+x _ ''Hello''.								"String literal"
+x _ ''I''''m here''.							"single quote escape"
+x _ $A.										"Character literal"
+x _ $ .										"Character literal (space)"
+x _ #aSymbol.								"Symbol literal"
+x _ #(3 2 1).								"Array literal"
+x _ #(''abc'' 2 $a).						"mixing of types allowed (all literal)"
+x _ #[3 2 1 0].							"ByteArray literal"
+x _ #[1.0 3.141592 6.02e23].			"Float64Array literal"
+
+x _ {''Hello'' size. Float pi. 1.0 arcTan }.    "Warning: NOT a literal. Created on each run"
+x _ `{''Hello'' size. Float pi. 1.0 arcTan }`.  "Backtick syntax. Anything can be a literal!!"
+x _ `{ 1. 3. 5. 7. 11. 13. 17} asSet`.          "A literal Set"
 
 '! !
 
@@ -1646,7 +1623,7 @@ Object withAllSubclasses size.		"get total number of class entries"
 
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 10/6/2018 17:49:51'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'KenD 5/1/2020 16:49:17'!
 methodCall
 	"Method Calls"
 	^
@@ -1673,11 +1650,26 @@ x _ 2 raisedTo: 10.						"keyword message"
 x _ 194 * 9.								"binary message"
 Transcript show: (194 * 9) printString; newLine.	"combination (chaining)"
 x _ 2 perform: #sqrt.					"indirect method invocation"
-Transcript									"cascading - send multiple messages to receiver"
-   show: ''hello '';
-   show: ''world'';
+Transcript									"cascading ; send multiple messages to first receiver"
+   show: ''hello '' ;
+   show: ''world'' ;
    newLine.
-x _ 3 + 2; * 100.							"result=300. Sends message to same receiver (3)"
+"Without semicolon cascading"
+x := RectangleLikeMorph new.
+x color: Color yellow.
+x openInWorld.
+"Using semicolon cascade -- we don''t need the variable, x"
+RectangleLikeMorph new
+	color: Color yellow; 
+	openInWorld.
+3 + 2; * 100.							"result=300. Sends message to same receiver (3)"
+"Parentheses are used for grouping.  In many cases parentheses can be replaced by ::"
+3 squared ; + 5.  " 8 -- semicolon -> cascade to _original_ receiver (3)"
+(3 squared) + 5. " 14 -- use parens to group"
+3 squared :: + 5. " 14 -- same but double-colon -> cascade to _result_ of expression at left (9)"
+"The double colon is useful in eliding parens from complex keyword expressions"
+(3 squared between: 2 squared and: 4 squared) ifTrue: [ #Great ] ifFalse: [ #Oops ].
+3 squared between: 2 squared and: 4 squared :: ifTrue: [ #Great ] ifFalse: [ #Oops ].
 
 '! !
 
@@ -2095,7 +2087,7 @@ y _ x asSet.								"convert symbol to set collection"
 
 '! !
 
-!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 9/10/2016 17:20:30'!
+!TerseGuideHelp class methodsFor: 'pages' stamp: 'dhn 5/11/2020 17:05:02'!
 syntax
 	"Syntax Notes"
 	^
@@ -2108,7 +2100,7 @@ syntax
 		- a-z
 		- A-Z
 		- 0-9
-		- .+/\*~<=>@%|&?;:''#()[]{}
+		- .+/\*~<=>@%|&?;:''#()[]{}_
 		- blank, tab, cr, ff, lf
 
 	Variables:
@@ -2236,7 +2228,7 @@ additionalTopics
 
 	^ TerseGuideTopic allSubclasses collect: [ :topicClass | topicClass new ]! !
 
-!TerseGuideHelp class methodsFor: 'accessing' stamp: 'RNG 12/13/2019 12:46:06'!
+!TerseGuideHelp class methodsFor: 'accessing' stamp: 'jmv 5/6/2020 11:11:26'!
 pages
 	"Answer the topics, in order, for the window list pane"
 	^ #(
@@ -2245,7 +2237,6 @@ pages
 		'Transcript'
 		'Assignment'
 		'Literals'
-		'Constants'
 		'Booleans'
 		'Arithmetic'
 		'Bit-Wise'
